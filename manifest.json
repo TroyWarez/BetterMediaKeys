@@ -1,6 +1,6 @@
 {
   "name": "BetterMediaKeys", 
-  "version": "1.0.0.0",
+  "version": "1.0.0.1",
   "description": "A chromium extension that changes the handling of media keys.",
   "action": {},
   "manifest_version": 3,
