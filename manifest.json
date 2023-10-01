@@ -4,18 +4,9 @@
   "description": "A chromium extension that changes the handling of media keys.",
   "action": {},
   "manifest_version": 3,
-  "host_permissions": [
-    "https://*.youtube.com/*"
-   ],
-  "permissions": [
-      "activeTab",
-      "scripting",
-      "tabs",
-      "tabCapture"
-   ],
    "content_scripts": [
     {
-    "run_at": "document_end",
+    "run_at": "document_start",
     "matches": ["https://*.youtube.com/*"],
     "js": ["mediaKeys.js"]
     }
