@@ -1,7 +1,7 @@
 {
   "name": "BetterMediaKeys", 
   "version": "1.0.0.1",
-  "description": "A chromium extension that changes the handling of media keys.",
+  "description": "A browser extension that rebinds the previous/next track key to allow chapter navigation on YouTube.",
   "action": {},
   "manifest_version": 3,
    "content_scripts": [
