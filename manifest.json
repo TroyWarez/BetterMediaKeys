@@ -6,7 +6,7 @@
   "manifest_version": 3,
    "content_scripts": [
     {
-    "run_at": "document_start",
+    "run_at": "document_end",
     "matches": ["https://*.youtube.com/*"],
     "js": ["mediaKeys.js"]
     }
