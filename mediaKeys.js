@@ -29,7 +29,7 @@ function SetMediaKeys()// Must now be injected into the current video page.
     const url = window.location;
     let params = new URLSearchParams(url.search);
     let list = params.has('list');
-    if((typeof ytInitialData !== 'undefined')
+    if((ytChapterData === null)
         && ("playerOverlays" in ytInitialData)
         && ("playerOverlayRenderer" in ytInitialData.playerOverlays)
         && ("decoratedPlayerBarRenderer" in ytInitialData.playerOverlays.playerOverlayRenderer)
