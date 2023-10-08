@@ -21,11 +21,6 @@ document.addEventListener("yt-navigate-finish", function (event)
         ytChapterData = event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap[0].value;
     }
 }
-    else
-    {
-        navigator.mediaSession.setActionHandler('previoustrack', function() { });
-        navigator.mediaSession.setActionHandler('nexttrack', function() { });
-    }
 });
 
 function SetMediaKeys()// Must now be injected into the current video page.
@@ -49,11 +44,6 @@ function SetMediaKeys()// Must now be injected into the current video page.
         {
             ytChapterData = ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap[0].value;
         }
-    }
-    else
-    {
-        navigator.mediaSession.setActionHandler('previoustrack', function() { });
-        navigator.mediaSession.setActionHandler('nexttrack', function() { });
     }
     if( (typeof currentChapterText !== 'undefined') && ("textContent" in currentChapterText) && (currentChapterText.textContent !== ''))
     {
