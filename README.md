@@ -15,4 +15,4 @@ If you'd prefer the vanilla YouTube chapter experience (⏪) ArrowLeft + control
 
 ### License
 
-This project is licensed under MIT or any later version
+This project is licensed under MIT.
