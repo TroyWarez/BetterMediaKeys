@@ -1,7 +1,7 @@
 {
   "name": "BetterMediaKeys", 
   "version": "1.0.0.2",
-  "description": "A browser extension that rebinds the previous/next track key to allow chapter navigation on YouTube.",
+  "description": "Use your media keys to navigate YouTube chapters without browser focus.",
   "action": {},
   "manifest_version": 3,
    "content_scripts": [
