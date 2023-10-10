@@ -1,12 +1,12 @@
 {
   "name": "BetterMediaKeys", 
-  "version": "1.0.0.2",
+  "version": "1.0.0.3",
   "description": "Use your media keys to navigate YouTube chapters without browser focus.",
   "action": {},
   "manifest_version": 3,
    "content_scripts": [
     {
-    "run_at": "document_idle",
+    "run_at": "document_start",
     "matches": ["https://*.youtube.com/*"],
     "exclude_matches": ["https://music.youtube.com/*"],
     "js": ["main.js"]
