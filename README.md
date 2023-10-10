@@ -8,11 +8,11 @@ BetterMediaKeys is an open-source browser extension that works with Chromium-bas
 
 
 
-In addition, it mimics the way that playlists are handled on YouTube Music: If the current chapter is within 5 seconds of starting when the pervious track key (⏪) is pressed it will go back the previous chapter, otherwise it will restart the current chapter from the beginning. The title of current chapter is also set to the title of the meta data in the current media session.
+In addition, it mimics the way that playlists are handled on YouTube Music: If the current chapter is within 5 seconds of starting when the pervious track key (⏪) is pressed, it will go back to the previous chapter, otherwise it will restart the current chapter from the beginning. The title of current chapter is also set to the title of the meta data in the current media session.
 
 
 If you'd prefer the vanilla YouTube chapter experience (⏪) ArrowLeft + control ley or ArrowRight + control key (⏩), I'd recommend using the 1.0.0.1 release at this time.
 
 ### License
 
-This project is licensed under MIT or any later version
+This project is licensed under MIT.
