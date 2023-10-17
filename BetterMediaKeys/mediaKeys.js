@@ -1,45 +1,55 @@
 const config = { attributes: true, childList: true, subtree: true };
 var ytInitialData;
 var ytChapterData = null;
-var ytPlaylist = null;
 document.addEventListener("yt-navigate-finish", SetChapterData, true);
 document.addEventListener("DOMContentLoaded", SetChapterData, true);
 
 function SetChapterData(event)
 {
-if(
-        (typeof event !== 'undefined')
-    &&  ("detail" in event)//Cumbersome
-    && ("response" in event.detail)
-    && ("response" in event.detail.response)
-    && ("playerOverlays" in event.detail.response.response)
-    && ("playerOverlayRenderer" in event.detail.response.response.playerOverlays)
-    && ("decoratedPlayerBarRenderer" in event.detail.response.response.playerOverlays.playerOverlayRenderer)
-    && ("decoratedPlayerBarRenderer" in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
-    && ("playerBar" in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
-    && ("multiMarkersPlayerBarRenderer" in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
-    && ("markersMap" in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
-    && (event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
+switch(event.type)
 {
-    if( event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.length !== 0)
-    {
-        ytChapterData = event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap[0].value;
-    }
-}
-else if((ytChapterData === null)
-&& ("playerOverlays" in ytInitialData)
-&& ("playerOverlayRenderer" in ytInitialData.playerOverlays)
-&& ("decoratedPlayerBarRenderer" in ytInitialData.playerOverlays.playerOverlayRenderer)
-&& ("decoratedPlayerBarRenderer" in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
-&& ("playerBar" in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
-&& ("multiMarkersPlayerBarRenderer" in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
-&& ("markersMap" in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
-&& (ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
-{
-if( ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.length !== 0)
-    {
-    ytChapterData = ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap[0].value;
-    }
+
+    case 'yt-navigate-finish':
+        {
+            if((typeof event !== 'undefined')//Cumbersome
+            &&  ("detail" in event)
+            && ("response" in event.detail)
+            && ("response" in event.detail.response)
+            && ("playerOverlays" in event.detail.response.response)
+            && ("playerOverlayRenderer" in event.detail.response.response.playerOverlays)
+            && ("decoratedPlayerBarRenderer" in event.detail.response.response.playerOverlays.playerOverlayRenderer)
+            && ("decoratedPlayerBarRenderer" in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
+            && ("playerBar" in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
+            && ("multiMarkersPlayerBarRenderer" in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
+            && ("markersMap" in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
+            && (event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
+        {
+            if( event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.length !== 0)
+            {
+                ytChapterData = event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap[0].value;
+            }
+        }
+        break;
+        }
+    case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
+            { 
+        if((ytChapterData === null)
+        && ("playerOverlays" in ytInitialData)
+        && ("playerOverlayRenderer" in ytInitialData.playerOverlays)
+        && ("decoratedPlayerBarRenderer" in ytInitialData.playerOverlays.playerOverlayRenderer)
+        && ("decoratedPlayerBarRenderer" in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
+        && ("playerBar" in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
+        && ("multiMarkersPlayerBarRenderer" in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
+        && ("markersMap" in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
+        && (ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
+        {
+            if( ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.length !== 0)
+            {
+                ytChapterData = ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap[0].value;
+            }
+        }
+                break;
+            }
 }
 
 }
