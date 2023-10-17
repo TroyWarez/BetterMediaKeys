@@ -12,7 +12,11 @@ In addition, it mimics the way that playlists are handled on YouTube Music: If t
 
 
 If you'd prefer the vanilla YouTube chapter experience (⏪) ArrowLeft + control key or ArrowRight + control key (⏩), I'd recommend using the 1.0.0.1 release at this time.
+### Chromium Installation
 
+To install BetterMediaKeys, you'll need to clone the repo and load the sub folder "BetterMediaKeys" as an unpacked extension. 
+
+If you'd perfer to use .crx files on Chromium you'll have to add the extension id:"eokodajgpjmnhdlbijnhdlnbbefjbgjn" to "ExtensionInstallWhitelist" and "ExtensionInstallAllowlist". The location of this registry key on Windows is dependent on your specific Chromium-based browser. This only has to be done once.
 ### License
 
 This project is licensed under MIT.
