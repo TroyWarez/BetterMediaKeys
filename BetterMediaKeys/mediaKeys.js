@@ -1,4 +1,3 @@
-const config = { attributes: true, childList: true, subtree: true };
 var ytInitialData;
 var ytChapterData = null;
 document.addEventListener("yt-navigate-finish", SetChapterData, true);
@@ -32,7 +31,10 @@ switch(event.type)
         break;
         }
     case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
-            { 
+            {
+        const config = { attributes: true, childList: true, subtree: true };
+        const observer = new MutationObserver(SetMediaKeys);
+        const moviePlayer = document.getElementById("movie_player");
         if((ytChapterData === null)
         && ("playerOverlays" in ytInitialData)
         && ("playerOverlayRenderer" in ytInitialData.playerOverlays)
@@ -47,6 +49,9 @@ switch(event.type)
             {
                 ytChapterData = ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap[0].value;
             }
+        }
+        if ((moviePlayer !== null)){
+            observer.observe(moviePlayer, config);
         }
                 break;
             }
@@ -139,6 +144,3 @@ function SetMediaKeys()// Must now be injected into the current video page.
             });
     }
 }
-const observer = new MutationObserver(SetMediaKeys);
-
-observer.observe(document, config);

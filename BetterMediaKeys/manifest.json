@@ -6,7 +6,7 @@
   "manifest_version": 3,
    "content_scripts": [
     {
-    "run_at": "document_end",
+    "run_at": "document_start",
     "matches": ["https://*.youtube.com/*"],
     "exclude_matches": ["https://music.youtube.com/*"],
     "js": ["main.js"]
