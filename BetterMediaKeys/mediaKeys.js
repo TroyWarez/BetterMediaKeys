@@ -8,7 +8,12 @@ function SetChapterData(event)
 switch(event.type)
 {
 
+    case 'yt-navigate-cache':
+    case 'yt-navigate-start':
     case 'yt-navigate-finish':
+    case 'yt-player-updated':
+    case 'yt-page-data-updated':
+    case 'yt-page-type-changed':
         {
             if((typeof event !== 'undefined')//Cumbersome
             &&  ("detail" in event)
