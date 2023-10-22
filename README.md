@@ -4,7 +4,7 @@
 
 <h1 align="center">BetterMediaKeys</h1>
 </p>
-BetterMediaKeys is an open-source browser extension that works with Chromium-based browsers and Firefox. It allows you to skip forward to the next chapter using the next track key (⏩) and also go back to the pervious chapter using the pervious track key (⏪) on YouTube without window focus.
+BetterMediaKeys is an open-source browser extension that works with Chromium-based browsers and Firefox. It allows you to skip forward to the next chapter using the next track key (⏩) and also go back to the pervious chapter using the pervious track key (⏪) on YouTube.
 
 
 ### What are the differences between BetterMediaKeys and Tweaks for YouTube with global shortcuts?
