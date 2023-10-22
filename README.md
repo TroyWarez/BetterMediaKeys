@@ -7,13 +7,13 @@
 BetterMediaKeys is an open-source browser extension that works with Chromium-based browsers and Firefox. It allows you to skip forward to the next chapter using the next track key (⏩) and also go back to the pervious chapter using the pervious track key (⏪) on YouTube without window focus.
 
 
-## What are the differences between BetterMediaKeys and Tweaks for YouTube with global shortcuts?
+### What are the differences between BetterMediaKeys and Tweaks for YouTube with global shortcuts?
 BetterMediaKeys default behaviour is similar to Tweaks for YouTube with the pervious track and next track keys set to 'Next chapter or video' as a global shortcut. However, there are the following differences:
-- BetterMediaKeys will restart the current chapter from the begining instead of going to the previous chapter, if the current chapter is beyond the first five seconds of the chapter start. This is similar to how the music site works with playlists.
-- BetterMediaKeys does not effect the default handling of the hardware media keys on YouTube. Playlists will work correctly and play and stop do not need to be rebinded to be used again.
-- BetterMediaKeys does not require any configuration.
 
-In addition, it mimics the way that playlists are handled on YouTube Music: If the current chapter is within 5 seconds of starting when the pervious track key (⏪) is pressed, it will go back to the previous chapter, otherwise it will restart the current chapter from the beginning. The title of current chapter is also set to the title of the meta data in the current media session.
+**BetterMediaKeys does not effect the handling of the hardware media keys browser wide. A major limitation with using any media key as a global shortcut on Chromium is that it does not allow for any website to use your media keys and some of the media session api. You'll lose the ability to see video thumbnails and titles on the lockscreen mini player and it does not allow for control when your device is locked. Other sites that use your media keys will no longer work such as Spotify.**
+- BetterMediaKeys does not require any configuration or global shortcuts.
+- BetterMediaKeys will restart the current chapter from the begining instead of going to the previous chapter, if the video time is beyond the first five seconds of the chapter start. This is similar to how the music site works with playlists.
+- BetterMediaKeys will set the title of the media session metadata title to the current chapter title.  
 
 
 If you'd prefer the vanilla YouTube chapter experience (⏪) = ArrowLeft + control key or ArrowRight + control key = (⏩), I'd recommend using the 1.0.0.1 release at this time.
