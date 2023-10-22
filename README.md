@@ -13,7 +13,7 @@ BetterMediaKeys default behaviour is similar to Tweaks for YouTube with the perv
 **BetterMediaKeys does not effect the handling of the hardware media keys browser wide. A major limitation with using any media key as a global shortcut on Chromium is that it does not allow for any website to use your media keys and some of the media session api. You'll lose the ability to see video thumbnails and titles on the lockscreen mini player and it does not allow for control when your device is locked. Other sites that use your media keys will no longer work such as Spotify.**
 - BetterMediaKeys does not require any configuration or global shortcuts.
 - BetterMediaKeys will restart the current chapter from the begining instead of going to the previous chapter, if the video time is beyond the first five seconds of the chapter start. This is similar to how the music site works with playlists.
-- BetterMediaKeys will set the title of the media session metadata title to the current chapter title.  
+- BetterMediaKeys will set the lockscreen mini player title to the chapter title. Useful for single video music compilations/playlists.
 
 
 If you'd prefer the vanilla YouTube chapter experience (⏪) = ArrowLeft + control key or ArrowRight + control key = (⏩), I'd recommend using the 1.0.0.1 release at this time.
