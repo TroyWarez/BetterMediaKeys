@@ -1,7 +1,6 @@
 var ytInitialData;
 var ytChapterData = null;
-let actionHandler = null;
-actionHandler = navigator.mediaSession.setActionHandler;
+var __actionHandler = navigator.mediaSession.setActionHandler;
 navigator.mediaSession.setActionHandler = function setActionHandler(action, handler)
 {
     if(handler === null){
@@ -9,7 +8,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
     {
         case 'nexttrack':
             {
-                actionHandler.call(navigator.mediaSession, 'nexttrack', (dictionary) => {
+                __actionHandler.call(navigator.mediaSession, 'nexttrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
@@ -32,7 +31,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
             }
         case 'previoustrack':
             {
-                actionHandler.call(navigator.mediaSession, 'previoustrack', (dictionary) => {
+                __actionHandler.call(navigator.mediaSession, 'previoustrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
@@ -74,7 +73,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
         }
     }
     //console.log('ActionHandler Type: ' + type);
-    actionHandler.call(navigator.mediaSession, action, handler);
+    __actionHandler.call(navigator.mediaSession, action, handler);
 };
 document.addEventListener('yt-navigate-finish', SetChapterData, true);
 document.addEventListener('yt-player-updated', SetChapterData, true);
