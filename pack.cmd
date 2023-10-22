@@ -5,4 +5,4 @@ set keyFolder=%cd%
 cd "C:\Program Files (x86)\Microsoft\Edge\Application"
 msedge.exe --pack-extension=%devFolder%\BetterMediaKeys --pack-extension-key=%keyFolder%\BetterMediaKeys.pem
 cd "%devFolder%"
-echo Done!
+echo Done building BetterMediaKeys at this time and date: %DATE:/=-%_%TIME::=-%!
