@@ -136,11 +136,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
     }
     const chapterTextConfig = { attributes: true, childList: false, subtree: false };
     const chapterTextobserver = new MutationObserver(SetMetaDataTitle);
-    const chapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
-    if( (typeof chapterText !== 'undefined'))
-    {
-        chapterTextobserver.observe(chapterText, chapterTextConfig);
-    }
+    chapterTextobserver.observe(document, chapterTextConfig);
 }
 function SetMetaDataTitle()
 {

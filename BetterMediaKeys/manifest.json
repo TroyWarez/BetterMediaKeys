@@ -1,7 +1,7 @@
 {
   "name": "BetterMediaKeys", 
-  "version": "1.0.0.4",
-  "description": "Use your media keys to navigate YouTube chapters without browser focus.",
+  "version": "1.0.0.5",
+  "description": "Use your media keys to navigate YouTube chapters or videos.",
   "action": {},
   "manifest_version": 3,
    "content_scripts": [
