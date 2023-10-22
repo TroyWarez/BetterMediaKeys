@@ -134,7 +134,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     }
     }
-    const chapterTextConfig = { attributes: true, childList: false, subtree: false };
+    const chapterTextConfig = { attributes: false, childList: true, subtree: true };
     const chapterTextobserver = new MutationObserver(SetMetaDataTitle);
     chapterTextobserver.observe(document, chapterTextConfig);
 }
