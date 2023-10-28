@@ -1,6 +1,9 @@
 var ytInitialData;
 var ytChapterData = null;
 var __actionHandler = navigator.mediaSession.setActionHandler;
+Object.defineProperty(navigator.mediaSession, "metadata", {
+    configurable: true,
+    set: SetMetaDataTitle});
 navigator.mediaSession.setActionHandler = function setActionHandler(action, handler)
 {
     if(handler === null){
@@ -8,7 +11,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
     {
         case 'nexttrack':
             {
-                __actionHandler.call(navigator.mediaSession, 'nexttrack', (dictionary) => {
+                __actionHandler.call(this, 'nexttrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
@@ -18,7 +21,11 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                            if(CurrentChapterIndex !== -1 && (CurrentChapterIndex + 1) >= 0)
                            {
                                 moviePlayer.seekToChapterWithAnimation((CurrentChapterIndex + 1));
+                                delete navigator.mediaSession.metadata;
                                 navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
+                                Object.defineProperty(navigator.mediaSession, "metadata", {
+                                    configurable: true,
+                                    set: SetMetaDataTitle});
                            }
                         }
         
@@ -31,7 +38,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
             }
         case 'previoustrack':
             {
-                __actionHandler.call(navigator.mediaSession, 'previoustrack', (dictionary) => {
+                __actionHandler.call(this, 'previoustrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
@@ -57,8 +64,11 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                 CurrentChapterIndex = CurrentChapterIndex - 1;
                                 moviePlayer.seekToChapterWithAnimation(CurrentChapterIndex);
                             }
-        
+                            delete navigator.mediaSession.metadata;
                             navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
+                            Object.defineProperty(navigator.mediaSession, "metadata", {
+                                configurable: true,
+                                set: SetMetaDataTitle});
                            }
                         }
         
@@ -72,11 +82,9 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                 }
         }
     }
-    //console.log('ActionHandler Type: ' + type);
-    __actionHandler.call(navigator.mediaSession, action, handler);
+    __actionHandler.call(this, action, handler);
 };
 document.addEventListener('yt-navigate-finish', SetChapterData, true);
-document.addEventListener('yt-player-updated', SetChapterData, true);
 document.addEventListener('DOMContentLoaded', SetChapterData, true);
 
 function SetChapterData (event)
@@ -133,16 +141,45 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                 break;
         }
     }
-    }
-    const chapterTextConfig = { attributes: false, childList: true, subtree: true };
-    const chapterTextobserver = new MutationObserver(SetMetaDataTitle);
-    chapterTextobserver.observe(document, chapterTextConfig);
-}
-function SetMetaDataTitle()
-{
-    const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
-    if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
+
+    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+
+    if(typeof currentChapterText !== 'undefined' && ('mediaSession' in navigator) && ('metadata' in navigator.mediaSession))
     {
+        delete navigator.mediaSession.metadata;
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            set: SetMetaDataTitle});
+
+        const chapterTextConfig = { attributes: false, childList: true, subtree: true };
+        const chapterTextobserver = new MutationObserver(SetTitle);
+        chapterTextobserver.observe(currentChapterText, chapterTextConfig);
     }
+}
+}
+function SetTitle()
+{
+    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
+    {
+        delete navigator.mediaSession.metadata;
+        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            set: SetMetaDataTitle});
+    }
+}
+function SetMetaDataTitle(metadata)
+{
+    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
+    {
+        metadata.title = currentChapterText.textContent;
+    }
+    delete navigator.mediaSession.metadata;
+    navigator.mediaSession.metadata = metadata;
+    Object.defineProperty(navigator.mediaSession, "metadata", {
+        configurable: true,
+        set: SetMetaDataTitle});
 }
