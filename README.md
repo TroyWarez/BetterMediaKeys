@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/TroyWarez/BetterMediaKeys/main"><img src="/BetterMediaKeys/icons/icon128.png" alt="Logo"></img></a>
+  <a href="https://github.com/TroyWarez/BetterMediaKeys"><img src="/BetterMediaKeys/icons/icon128.png" alt="Logo"></img></a>
 </p>
 
 <h1 align="center">BetterMediaKeys</h1>
