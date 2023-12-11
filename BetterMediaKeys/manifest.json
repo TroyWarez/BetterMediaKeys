@@ -7,14 +7,20 @@
    "content_scripts": [
     {
     "run_at": "document_start",
-    "matches": ["https://*.youtube.com/*", "https://www.youtube-nocookie.com/embed/*"],
+    "matches": [
+      "https://*.youtube.com/*",
+      "https://www.youtube-nocookie.com/*"
+    ],
     "exclude_matches": ["https://music.youtube.com/*"],
     "js": ["main.js"]
     }
    ],
    "web_accessible_resources": [{ 
     "resources": ["mediaKeys.js"],
-    "matches": ["https://*.youtube.com/*", "https://www.youtube-nocookie.com/embed/*"],
+    "matches": [
+      "https://*.youtube.com/*",
+      "https://www.youtube-nocookie.com/*"
+    ],
     "exclude_matches": ["https://music.youtube.com/*"]
   }],
    "icons": {
