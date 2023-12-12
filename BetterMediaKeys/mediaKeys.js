@@ -113,10 +113,25 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
             && ('markersMap' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
             && (event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
         {
-            if( event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.length !== 0)
-            {
-                ytChapterData = event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap[0].value;
-            }
+                event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
+                    if('key' in element)
+                    switch(element.key)
+                    {
+                        case 'AUTO_CHAPTERS':
+                            {
+                                ytChapterData = element.value;
+                                break;
+                            }
+                        case 'DESCRIPTION_CHAPTERS':
+                            {
+                                ytChapterData = element.value;
+                                break;
+                            }
+                    }
+                    
+
+                });
+
         }
         break;
         }
