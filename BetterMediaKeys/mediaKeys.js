@@ -100,7 +100,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     case 'yt-navigate-finish':
         {
-            if((typeof event !== 'undefined')//Cumbersome
+            if((typeof event !== 'undefined')
             &&  ('detail' in event)
             && ('response' in event.detail)
             && ('response' in event.detail.response)
@@ -134,7 +134,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
         break;
         }
-    case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
+    case 'DOMContentLoaded':
         {
 
         if((ytChapterData === null)
