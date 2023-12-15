@@ -6,11 +6,15 @@
 </p>
 BetterMediaKeys is an open-source browser extension that works with Chromium-based browsers and Firefox. It allows you to skip forward to the next chapter/video using the next track key (⏩) and also go back to the pervious chapter or restart the current video from the beginning using the pervious track key (⏪) on YouTube.
 
+<p align="center">
+  <b>Download:</b>
+  <a href="https://chromewebstore.google.com/detail/hgkdlkhheakimlklkhaokglbgokjplaj">Chrome/Chromium</a>
+</p>
 
-### What are the differences between BetterMediaKeys and Tweaks for YouTube with global shortcuts?
+### Question: What are the differences between BetterMediaKeys and Tweaks for YouTube with global shortcuts?
 BetterMediaKeys default behaviour is similar to Tweaks for YouTube with the pervious track and next track keys set to 'Next/Previous chapter or video' as a global shortcut. However, there are the following differences:
 
-**BetterMediaKeys does not effect the handling of the hardware media keys browser wide. A major limitation with using any media key as a global shortcut on Chromium is that it does not allow for any website to use your media keys and some of the media session api. You'll lose the ability to see video thumbnails and titles on the lockscreen mini player and it does not allow for control when your device is locked. Other sites that use your media keys will no longer work, such as Spotify.**
+<b>BetterMediaKeys does not effect the handling of the hardware media keys browser wide. A major limitation with using any media keys as a global shortcut on Chromium is that it does not allow for any website to use your media keys and some of the media session api. You'll lose the ability to see video thumbnails and titles on the lockscreen mini player and it does not allow for control when your device is locked. Other sites that use your media keys will no longer work, such as Spotify.<b>
 - BetterMediaKeys does not go back to the previous video, only to the beginning of the current video.
 - BetterMediaKeys does not require any configuration or global shortcuts.
 - BetterMediaKeys will restart the current chapter from the begining instead of going to the previous chapter, if the video time is beyond the first five seconds of the chapter start. This is similar to how the music site works with playlists.
@@ -18,13 +22,25 @@ BetterMediaKeys default behaviour is similar to Tweaks for YouTube with the perv
 
 
 If you'd prefer the vanilla YouTube chapter experience (⏪) = ArrowLeft + control key or ArrowRight + control key = (⏩), I'd recommend using the 1.0.0.1 release at this time.
-### Chromium Installation
 
-To install BetterMediaKeys, you'll need to clone the repo and load the sub folder "BetterMediaKeys" as an unpacked extension. 
+Note: This release isn't signed and requires extra installation steps to install.
 
-If you'd perfer to use .crx files on Chromium you'll have to add the extension id:"eokodajgpjmnhdlbijnhdlnbbefjbgjn" to "ExtensionInstallWhitelist" and "ExtensionInstallAllowlist". The location of this registry key on Windows is dependent on your specific Chromium-based browser. 
+# Non-Chrome Webstore Manual Installation
 
-Next, restart your browser, then go to your browsers extensions page and turn on developer mode and drag and drop the BetterMediaKeys.crx file downloaded from the releases page on to the browser window to install the extension. You can now off developer mode.
-### License
+### First, toggle on developer mode in your extensions management page inside your browser.
+
+To install BetterMediaKeys 1.0.0.6 or above, download the .crx from the releases page, then open the extensions management page and enable developer mode. Now, drag and drop the .crx file on to the extensions page to finish the installation.
+
+To install BetterMediaKeys 1.0.0.5 or below, you'll have to either load the extracted zip folder as an unpacked extension or add the extenesion id to the extension whitelist and allow list: 
+
+Find the location of the Policies key(Folder) in the registry (HKEY_LOCAL_MACHINE\SOFTWARE for Windows), then the chromium developer's name (/Google) and finally the browser's name (/Chrome). Now, create two keys called "ExtensionInstallWhitelist" and "ExtensionInstallAllowlist". 
+
+Lastly, create a string value (REG_SZ) with the name being "1" and "eokodajgpjmnhdlbijnhdlnbbefjbgjn" as the value inside both "ExtensionInstallWhitelist" and "ExtensionInstallAllowlist" keys, then restart your browser.
+
+If done correctly, you should now be able to drag and drop the .crx file on to the extensions management page to finish the installation without any warnings.
+
+### You can now turn off developer mode if you used a .crx file for installation.
+
+# License
 
 This project is licensed under MIT.
