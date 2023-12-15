@@ -3,8 +3,9 @@
 </p>
 
 <h1 align="center">BetterMediaKeys</h1>
-</p>
+<p>
 BetterMediaKeys is an open-source browser extension that works with Chromium-based browsers and Firefox. It allows you to skip forward to the next chapter/video using the next track key (⏩) and also go back to the pervious chapter or restart the current video from the beginning using the pervious track key (⏪) on YouTube.
+</p>
 
 <p align="center">
   <b>Download:</b>
