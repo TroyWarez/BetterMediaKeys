@@ -34,7 +34,7 @@ To install BetterMediaKeys 1.0.0.6 or above, download the .crx from the releases
 
 To install BetterMediaKeys 1.0.0.5 or below, you'll have to either load the extracted zip folder as an unpacked extension or add the extenesion id to the extension whitelist and allow list: 
 
-Find the location of the Policies key(Folder) in the registry (HKEY_LOCAL_MACHINE\SOFTWARE for Windows), then the chromium developer's name (/Google) and finally the browser's name (/Chrome). Now, create two keys called "ExtensionInstallWhitelist" and "ExtensionInstallAllowlist". 
+Find the location of the Policies key(Folder) in the registry (HKEY_LOCAL_MACHINE\SOFTWARE for Windows), then the chromium developer's name (/Google) and finally the browser's name (/Chrome). Now, create two keys called "ExtensionInstallWhitelist" and "ExtensionInstallAllowlist".
 
 Lastly, create a string value (REG_SZ) with the name being "1" and "eokodajgpjmnhdlbijnhdlnbbefjbgjn" as the value inside both "ExtensionInstallWhitelist" and "ExtensionInstallAllowlist" keys, then restart your browser.
 
