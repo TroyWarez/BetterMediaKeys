@@ -1,5 +1,6 @@
+
 var ytInitialData;
-var ytChapterData = null;
+var ytChapterData = {};//Add video duration and timestamps for nexttrack and previoustrack.
 var __actionHandler = navigator.mediaSession.setActionHandler;
 Object.defineProperty(navigator.mediaSession, "metadata", {
     configurable: true,
@@ -12,7 +13,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
         case 'nexttrack':
             {
                 __actionHandler.call(this, 'nexttrack', (dictionary) => {
-                    const moviePlayer = document.getElementById('movie_player');
+                    const moviePlayer = document.getElementById('movie_player') || document.getElementsByClassName("html5-video-player")[0];
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
@@ -20,9 +21,38 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                            let CurrentChapterIndex = ytChapterData.chapters.findIndex(i => i.chapterRenderer.title.simpleText === currentChapterText.textContent);
                            if(CurrentChapterIndex !== -1 && (CurrentChapterIndex + 1) >= 0)
                            {
-                                moviePlayer.seekToChapterWithAnimation((CurrentChapterIndex + 1));
+                                if (('nextVideo' in moviePlayer) && (ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.timeRangeStartMillis + 3000) <= (moviePlayer?.getCurrentTime() * 1000) && (CurrentChapterIndex + 1) === ytChapterData.chapters.length)
+                                {
+                                    moviePlayer.nextVideo();
+                                }
+                                else
+                                {
+                                    moviePlayer.seekToChapterWithAnimation((CurrentChapterIndex + 1));
+                                }
                                 delete navigator.mediaSession.metadata;
-                                navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
+                                let MetaDataArray = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText.split(/[:-]/);
+                                if (ytChapterData.longVideo === true && MetaDataArray.length === 2) {
+                                    let newArtist = MetaDataArray[0].trimEnd();
+                                    if((newArtist.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
+                                    {
+                                        navigator.mediaSession.metadata.artist = newArtist + ' & ' + ytChapterData?.videoArtist;
+                                    }
+                                    else
+                                    {
+                                        navigator.mediaSession.metadata.artist = newArtist;
+                                    }
+                                    navigator.mediaSession.metadata.title = MetaDataArray[1].trimStart();
+                                }
+                                else {
+                                    if((currentChapterText.textContent.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
+                                    {
+                                        navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' & ' + ytChapterData?.videoArtist;
+                                    }
+                                    else
+                                    {
+                                        navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+                                    }
+                                }
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
                                     configurable: true,
                                     set: SetMetaDataTitle});
@@ -39,33 +69,59 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
         case 'previoustrack':
             {
                 __actionHandler.call(this, 'previoustrack', (dictionary) => {
-                    const moviePlayer = document.getElementById('movie_player');
+                    const moviePlayer = document.getElementById('movie_player') || document.getElementsByClassName("html5-video-player")[0];
+                    ytChapterData["previousTrackTimestamp"] = Date.now();
+                    if((ytChapterData?.LastPreviousTrackTimestamp) && ytChapterData?.previousTrackTimestamp <= (ytChapterData?.LastPreviousTrackTimestamp + 800) && moviePlayer?.getCurrentTime() <= 10)
+                    {
+                        const videoStream = document.getElementsByClassName('video-stream html5-main-video')[0];
+                        ytChapterData["previousTrackTimestamp"] = 0;
+                        ytChapterData["LastPreviousTrackTimestamp"] = 0;
+                        videoStream.loop = true;
+                    }
+                    ytChapterData["LastPreviousTrackTimestamp"] = Date.now();
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
                         {
                            let CurrentChapterIndex = ytChapterData.chapters.findIndex(i => i.chapterRenderer.title.simpleText === currentChapterText.textContent);
-                           if(CurrentChapterIndex !== -1 && CurrentChapterIndex >= 0)
+                           if(CurrentChapterIndex !== -1)
                            {
-                            let StartTimeSec = ((ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.timeRangeStartMillis + 5000) / 1000);
-                            let CurrentTime = moviePlayer.getCurrentTime();
-                            if((StartTimeSec <= CurrentTime))
+                            if((ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.timeRangeStartMillis + 3000) <= (moviePlayer?.getCurrentTime() * 1000))
                             {
                                 moviePlayer.seekToChapterWithAnimation(CurrentChapterIndex);
-        
                             }
-                            else if((StartTimeSec - 5) === 0)//Cleaner
+                            else if(((ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.timeRangeStartMillis) === 0) && moviePlayer.getCurrentTime() >= 5)
                             {
                                 moviePlayer.seekTo(0);
-                                return;
                             }
-                            else
+                            else if((CurrentChapterIndex - 1) >= 0)
                             {
-                                CurrentChapterIndex = CurrentChapterIndex - 1;
-                                moviePlayer.seekToChapterWithAnimation(CurrentChapterIndex);
+                                moviePlayer.seekToChapterWithAnimation(CurrentChapterIndex - 1);
                             }
                             delete navigator.mediaSession.metadata;
-                            navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
+                            let MetaDataArray = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText.split(/[:-]/);
+                            if (ytChapterData.longVideo === true && MetaDataArray.length === 2) {
+                                let newArtist = MetaDataArray[0].trimEnd();
+                                if((newArtist.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
+                                {
+                                   navigator.mediaSession.metadata.artist = newArtist + ' & ' + ytChapterData?.videoArtist;
+                                }
+                                else
+                                {
+                                   navigator.mediaSession.metadata.artist = newArtist;
+                                }
+                               navigator.mediaSession.metadata.title = MetaDataArray[1].trimStart();
+                            }
+                            else {
+                                if((currentChapterText.textContent.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
+                                {
+                                   navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' & ' + ytChapterData?.videoArtist;
+                                }
+                                else
+                                {
+                                   navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+                                }
+                            }
                             Object.defineProperty(navigator.mediaSession, "metadata", {
                                 configurable: true,
                                 set: SetMetaDataTitle});
@@ -73,20 +129,19 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
         
                     }
-                    else if ((moviePlayer !== null) && ('seekTo' in moviePlayer)){
+                    else if ((moviePlayer !== null) && ('seekTo' in moviePlayer) && moviePlayer.getCurrentTime() >= 5){
                         moviePlayer.seekTo(0);
-                        return;
                     }
                     });
                 return undefined;
-                }
+            }
         }
     }
     __actionHandler.call(this, action, handler);
 };
-document.addEventListener('yt-navigate-finish', SetChapterData, true);
-document.addEventListener('DOMContentLoaded', SetChapterData, true);
-
+document.addEventListener('yt-navigate-finish', SetChapterData);
+document.addEventListener('yt-player-updated', SetChapterData);
+document.addEventListener('DOMContentLoaded', SetChapterData);
 function SetChapterData (event)
 {
 if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('setActionHandler' in navigator.mediaSession)) {
@@ -100,31 +155,32 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     case 'yt-navigate-finish':
         {
-            if((typeof event !== 'undefined')
-            &&  ('detail' in event)
-            && ('response' in event.detail)
-            && ('response' in event.detail.response)
-            && ('playerOverlays' in event.detail.response.response)
-            && ('playerOverlayRenderer' in event.detail.response.response.playerOverlays)
-            && ('decoratedPlayerBarRenderer' in event.detail.response.response.playerOverlays.playerOverlayRenderer)
-            && ('decoratedPlayerBarRenderer' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
-            && ('playerBar' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
-            && ('multiMarkersPlayerBarRenderer' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
-            && ('markersMap' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
-            && (event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
-        {
+            if ( event?.detail?.response?.response?.playerOverlays?.playerOverlayRenderer?.decoratedPlayerBarRenderer?.decoratedPlayerBarRenderer?.playerBar?.multiMarkersPlayerBarRenderer?.markersMap instanceof Array )
+            {
                 event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
-                    if('key' in element){
+
+                    if ( 'key' in element ){
                     switch(element.key)
                     {
                         case 'AUTO_CHAPTERS':
                             {
                                 ytChapterData = element.value;
+                                ytChapterData["LastPreviousTrackTimestamp"] = 0;
+                                (event.detail.response?.playerResponse?.videoDetails?.lengthSeconds >= 900) ? ytChapterData["longVideo"] = true : ytChapterData["longVideo"] = false;
+                                (event.detail.response?.playerResponse?.videoDetails?.author !== '') ? ytChapterData["videoArtist"] = event.detail.response?.playerResponse?.videoDetails?.author : ytChapterData["videoArtist"] = '';
                                 break;
                             }
                         case 'DESCRIPTION_CHAPTERS':
                             {
                                 ytChapterData = element.value;
+                                ytChapterData["LastPreviousTrackTimestamp"] = 0;
+                                (event.detail.response?.playerResponse?.videoDetails?.lengthSeconds >= 900) ? ytChapterData["longVideo"] = true : ytChapterData["longVideo"] = false;
+                                (event.detail.response?.playerResponse?.videoDetails?.author !== '') ? ytChapterData["videoArtist"] = event.detail.response?.playerResponse?.videoDetails?.author : ytChapterData["videoArtist"] = '';
+                                break;
+                            }
+                        default:
+                            {
+                                console.error(`BetterMediaKeys Error: Defaulted in 'yt-navigate-finish' with this as the value: ${ytChapterData} `);
                                 break;
                             }
                     }
@@ -138,14 +194,8 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         {
 
         if((ytChapterData === null)
-        && ('playerOverlays' in ytInitialData)
-        && ('playerOverlayRenderer' in ytInitialData.playerOverlays)
-        && ('decoratedPlayerBarRenderer' in ytInitialData.playerOverlays.playerOverlayRenderer)
-        && ('decoratedPlayerBarRenderer' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
-        && ('playerBar' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
-        && ('multiMarkersPlayerBarRenderer' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
-        && ('markersMap' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
-        && (ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
+        && (typeof ytInitialData !== 'undefined')
+        && (ytInitialData?.playerOverlays?.playerOverlayRenderer?.decoratedPlayerBarRenderer?.decoratedPlayerBarRenderer?.playerBar?.multiMarkersPlayerBarRenderer?.markersMap instanceof Array) )
         {
             ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
                 if('key' in element){
@@ -154,11 +204,20 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                     case 'AUTO_CHAPTERS':
                         {
                             ytChapterData = element.value;
+                            ytChapterData["LastPreviousTrackTimestamp"] = 0;
+                            (ytInitialData?.playerOverlays?.playerOverlayRenderer?.playerOverlayVideoDetailsRenderer?.subtitle?.runs[0] >= 900) ? ytChapterData["videoArtist"] = ytInitialData?.playerOverlays?.playerOverlayRenderer?.videoDetails?.author : ytChapterData["videoArtist"] = '';
                             break;
                         }
                     case 'DESCRIPTION_CHAPTERS':
                         {
                             ytChapterData = element.value;
+                            ytChapterData["LastPreviousTrackTimestamp"] = 0;
+                            (ytInitialData?.playerOverlays?.playerOverlayRenderer?.playerOverlayVideoDetailsRenderer?.subtitle?.runs[0] >= 900) ? ytChapterData["videoArtist"] = ytInitialData?.playerOverlays?.playerOverlayRenderer?.videoDetails?.author : ytChapterData["videoArtist"] = '';
+                            break;
+                        }
+                    default:
+                        {
+                            console.error(`BetterMediaKeys Error: Defaulted in 'DOMContentLoaded' with this as the value: ${ element.key } `);
                             break;
                         }
                 }
@@ -171,14 +230,39 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
 
     let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
 
-    if(typeof currentChapterText !== 'undefined' && ('mediaSession' in navigator) && ('metadata' in navigator.mediaSession))
+    if(typeof currentChapterText !== 'undefined' && ('textContent' in currentChapterText) && ('mediaSession' in navigator) && ('metadata' in navigator.mediaSession))
     {
+        if(typeof navigator.mediaSession.metadata === 'undefined' )
+        {
+            navigator.mediaSession.metadata  = new MediaMetadata({});
+        }
         delete navigator.mediaSession.metadata;
-        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        let MetaDataArray = currentChapterText.textContent.split(/[:-]/);
+        if (ytChapterData.longVideo === true && MetaDataArray.length === 2) {
+            let newArtist = MetaDataArray[0].trimEnd();
+            if((newArtist.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
+            {
+               navigator.mediaSession.metadata.artist = newArtist + ' & ' + ytChapterData?.videoArtist;
+            }
+            else
+            {
+               navigator.mediaSession.metadata.artist = newArtist;
+            }
+           navigator.mediaSession.metadata.title = MetaDataArray[1].trimStart();
+        }
+        else {
+            if((currentChapterText.textContent.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
+            {
+               navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' & ' + ytChapterData?.videoArtist;
+            }
+            else
+            {
+               navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+            }
+        }
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
             set: SetMetaDataTitle});
-
         const chapterTextConfig = { attributes: false, childList: true, subtree: true };
         const chapterTextobserver = new MutationObserver(SetTitle);
         chapterTextobserver.observe(currentChapterText, chapterTextConfig);
@@ -191,7 +275,32 @@ function SetTitle()
     if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
     {
         delete navigator.mediaSession.metadata;
-        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        let MetaDataArray = currentChapterText.textContent.split(/[:-]/);
+        if (ytChapterData.longVideo === true && MetaDataArray.length === 2) {
+            let newArtist = MetaDataArray[0].trimEnd();
+            if((newArtist.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
+            {
+               navigator.mediaSession.metadata.artist = newArtist + ' & ' + ytChapterData?.videoArtist;
+            }
+            else
+            {
+               navigator.mediaSession.metadata.artist = newArtist;
+            }
+            if ( navigator.mediaSession.metadata?.title )
+            {
+                navigator.mediaSession.metadata.title = MetaDataArray[1].trimStart();
+            }
+        }
+        else {
+            if((currentChapterText.textContent.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
+            {
+               navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' & ' + ytChapterData?.videoArtist;
+            }
+            else
+            {
+               navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+            }
+        }
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
             set: SetMetaDataTitle});
@@ -202,7 +311,38 @@ function SetMetaDataTitle(metadata)
     let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
     if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
     {
-        metadata.title = currentChapterText.textContent;
+        let MetaDataArray = currentChapterText.textContent.split(/[:-]/);
+        if (ytChapterData.longVideo === true && MetaDataArray.length === 2) {
+            let newArtist = MetaDataArray[0].trimEnd();
+            if((newArtist.length + metadata?.artist.length + 3) <= 40)
+            {
+               metadata.artist = newArtist + ' & ' + ytChapterData?.videoArtist;
+            }
+            else if (metadata?.artist)
+            {
+               metadata.artist = newArtist;
+            }
+
+            if ( metadata?.title )
+            {
+                metadata.title = MetaDataArray[1].trimStart();
+            }
+        }
+        else {
+            if((currentChapterText.textContent.length + metadata?.artist.length + 3) <= 40)
+            {
+               metadata.artist = currentChapterText.textContent + ' & ' + ytChapterData?.videoArtist;
+            }
+            else if (metadata?.artist)
+            {
+               metadata.artist = currentChapterText.textContent;
+            }
+            
+            if ( metadata?.title )
+            {
+                metadata.title = MetaDataArray[1].trimStart();
+            }
+        }
     }
     delete navigator.mediaSession.metadata;
     navigator.mediaSession.metadata = metadata;
