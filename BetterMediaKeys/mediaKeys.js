@@ -87,7 +87,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                 __actionHandler.call(this, 'previoustrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player') || document.getElementsByClassName("html5-video-player")[0];
                     ytChapterData["previousTrackTimestamp"] = performance.now();
-                    if((ytChapterData?.LastPreviousTrackTimestamp) && (1000 >= (ytChapterData?.previousTrackTimestamp - ytChapterData?.LastPreviousTrackTimestamp)) && moviePlayer?.getCurrentTime() <= 1 && (ytChapterData?.bVideoLooped === false))
+                    if((ytChapterData?.LastPreviousTrackTimestamp) && (1000 >= (ytChapterData?.previousTrackTimestamp - ytChapterData?.LastPreviousTrackTimestamp)) && moviePlayer?.getCurrentTime() <= 3 && (ytChapterData?.bVideoLooped === false))
                     {
                         const videoStream = document.getElementsByClassName('video-stream html5-main-video')[0];
                         ytChapterData["previousTrackTimestamp"] = 0;
