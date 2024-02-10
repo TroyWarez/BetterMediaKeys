@@ -13,6 +13,8 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
         case 'nexttrack':
             {
                 __actionHandler.call(this, 'nexttrack', (dictionary) => {
+                    ytChapterData["previousTrackTimestamp"] = 0;
+                    ytChapterData["LastPreviousTrackTimestamp"] = 0;
                     const moviePlayer = document.getElementById('movie_player') || document.getElementsByClassName("html5-video-player")[0];
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
@@ -46,11 +48,25 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                 else {
                                     if((currentChapterText.textContent.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
                                     {
-                                        navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' & ' + ytChapterData?.videoArtist;
+                                        if (ytChapterData.longVideo === true)
+                                        {
+                                            navigator.mediaSession.metadata.title = currentChapterText.textContent;
+                                        }
+                                        else
+                                        {
+                                            navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (ytChapterData.longVideo === true)
+                                    {
+                                        navigator.mediaSession.metadata.title = currentChapterText.textContent;
                                     }
                                     else
                                     {
                                         navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+                                    }
                                     }
                                 }
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -70,15 +86,16 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
             {
                 __actionHandler.call(this, 'previoustrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player') || document.getElementsByClassName("html5-video-player")[0];
-                    ytChapterData["previousTrackTimestamp"] = Date.now();
-                    if((ytChapterData?.LastPreviousTrackTimestamp) && ytChapterData?.previousTrackTimestamp <= (ytChapterData?.LastPreviousTrackTimestamp + 800) && moviePlayer?.getCurrentTime() <= 10)
+                    ytChapterData["previousTrackTimestamp"] = performance.now();
+                    if((ytChapterData?.LastPreviousTrackTimestamp) && (1000 >= (ytChapterData?.previousTrackTimestamp - ytChapterData?.LastPreviousTrackTimestamp)) && moviePlayer?.getCurrentTime() <= 1 && (ytChapterData?.bVideoLooped === false))
                     {
                         const videoStream = document.getElementsByClassName('video-stream html5-main-video')[0];
                         ytChapterData["previousTrackTimestamp"] = 0;
                         ytChapterData["LastPreviousTrackTimestamp"] = 0;
                         videoStream.loop = true;
+                        ytChapterData["bVideoLooped"] = videoStream.loop;
                     }
-                    ytChapterData["LastPreviousTrackTimestamp"] = Date.now();
+                    ytChapterData["LastPreviousTrackTimestamp"] = performance.now();
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
@@ -115,12 +132,27 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                             else {
                                 if((currentChapterText.textContent.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
                                 {
-                                   navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' & ' + ytChapterData?.videoArtist;
+                                    if (ytChapterData.longVideo === true)
+                                    {
+                                        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+                                    }
+                                    else
+                                    {
+                                        navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+                                    }
                                 }
                                 else
                                 {
-                                   navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+                                    if (ytChapterData.longVideo === true)
+                                    {
+                                        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+                                    }
+                                    else
+                                    {
+                                        navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+                                    }
                                 }
+                                
                             }
                             Object.defineProperty(navigator.mediaSession, "metadata", {
                                 configurable: true,
@@ -155,6 +187,10 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     case 'yt-navigate-finish':
         {
+            ytChapterData["bVideoLooped"] = false;
+            ytChapterData["previousTrackTimestamp"] = 0;
+            ytChapterData["LastPreviousTrackTimestamp"] = 0;
+            ytChapterData["longVideo"] = false;
             if ( event?.detail?.response?.response?.playerOverlays?.playerOverlayRenderer?.decoratedPlayerBarRenderer?.decoratedPlayerBarRenderer?.playerBar?.multiMarkersPlayerBarRenderer?.markersMap instanceof Array )
             {
                 event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
@@ -166,6 +202,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                             {
                                 ytChapterData = element.value;
                                 ytChapterData["LastPreviousTrackTimestamp"] = 0;
+                                ytChapterData["bVideoLooped"] = false;
                                 (event.detail.response?.playerResponse?.videoDetails?.lengthSeconds >= 900) ? ytChapterData["longVideo"] = true : ytChapterData["longVideo"] = false;
                                 (event.detail.response?.playerResponse?.videoDetails?.author !== '') ? ytChapterData["videoArtist"] = event.detail.response?.playerResponse?.videoDetails?.author : ytChapterData["videoArtist"] = '';
                                 break;
@@ -174,6 +211,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                             {
                                 ytChapterData = element.value;
                                 ytChapterData["LastPreviousTrackTimestamp"] = 0;
+                                ytChapterData["bVideoLooped"] = false;
                                 (event.detail.response?.playerResponse?.videoDetails?.lengthSeconds >= 900) ? ytChapterData["longVideo"] = true : ytChapterData["longVideo"] = false;
                                 (event.detail.response?.playerResponse?.videoDetails?.author !== '') ? ytChapterData["videoArtist"] = event.detail.response?.playerResponse?.videoDetails?.author : ytChapterData["videoArtist"] = '';
                                 break;
@@ -192,7 +230,10 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     case 'DOMContentLoaded':
         {
-
+        ytChapterData["bVideoLooped"] = false;
+        ytChapterData["previousTrackTimestamp"] = 0;
+        ytChapterData["LastPreviousTrackTimestamp"] = 0;
+        ytChapterData["longVideo"] = false;
         if((ytChapterData === null)
         && (typeof ytInitialData !== 'undefined')
         && (ytInitialData?.playerOverlays?.playerOverlayRenderer?.decoratedPlayerBarRenderer?.decoratedPlayerBarRenderer?.playerBar?.multiMarkersPlayerBarRenderer?.markersMap instanceof Array) )
@@ -205,6 +246,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                         {
                             ytChapterData = element.value;
                             ytChapterData["LastPreviousTrackTimestamp"] = 0;
+                            ytChapterData["bVideoLooped"] = false;
                             (ytInitialData?.playerOverlays?.playerOverlayRenderer?.playerOverlayVideoDetailsRenderer?.subtitle?.runs[0] >= 900) ? ytChapterData["videoArtist"] = ytInitialData?.playerOverlays?.playerOverlayRenderer?.videoDetails?.author : ytChapterData["videoArtist"] = '';
                             break;
                         }
@@ -212,6 +254,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                         {
                             ytChapterData = element.value;
                             ytChapterData["LastPreviousTrackTimestamp"] = 0;
+                            ytChapterData["bVideoLooped"] = false;
                             (ytInitialData?.playerOverlays?.playerOverlayRenderer?.playerOverlayVideoDetailsRenderer?.subtitle?.runs[0] >= 900) ? ytChapterData["videoArtist"] = ytInitialData?.playerOverlays?.playerOverlayRenderer?.videoDetails?.author : ytChapterData["videoArtist"] = '';
                             break;
                         }
@@ -243,7 +286,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
             if((newArtist.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
             {
                navigator.mediaSession.metadata.artist = newArtist + ' & ' + ytChapterData?.videoArtist;
-            }
+                           }
             else
             {
                navigator.mediaSession.metadata.artist = newArtist;
@@ -253,11 +296,18 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         else {
             if((currentChapterText.textContent.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
             {
-               navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' & ' + ytChapterData?.videoArtist;
+                if (ytChapterData.longVideo === true)
+                {
+                    navigator.mediaSession.metadata.title = currentChapterText.textContent;
+                }
+                else
+                {
+                    navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' - ' + ytChapterData?.videoArtist;
+                }
             }
             else
             {
-               navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+                navigator.mediaSession.metadata.artist = currentChapterText.textContent;
             }
         }
         Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -294,11 +344,22 @@ function SetTitle()
         else {
             if((currentChapterText.textContent.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
             {
-               navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' & ' + ytChapterData?.videoArtist;
+                if (ytChapterData.longVideo === true)
+                {
+                    navigator.mediaSession.metadata.title = currentChapterText.textContent;
+                }
+                else
+                {
+                    navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' - ' + ytChapterData?.videoArtist;
+                }
+            }
+            else if (ytChapterData.longVideo === true)
+            {
+                navigator.mediaSession.metadata.title = currentChapterText.textContent;
             }
             else
             {
-               navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+                navigator.mediaSession.metadata.artist = currentChapterText.textContent;
             }
         }
         Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -331,16 +392,18 @@ function SetMetaDataTitle(metadata)
         else {
             if((currentChapterText.textContent.length + metadata?.artist.length + 3) <= 40)
             {
-               metadata.artist = currentChapterText.textContent + ' & ' + ytChapterData?.videoArtist;
+                if (ytChapterData?.longVideo === true)
+                {
+                    metadata.title = currentChapterText.textContent;
+                }
+                else
+                {
+                    metadata.artist = currentChapterText.textContent + ' - ' + ytChapterData?.videoArtist;
+                }
             }
-            else if (metadata?.artist)
+            else if (metadata?.artist && ytChapterData?.videoArtist)
             {
-               metadata.artist = currentChapterText.textContent;
-            }
-            
-            if ( metadata?.title )
-            {
-                metadata.title = MetaDataArray[1].trimStart();
+               metadata.artist = ytChapterData.videoArtist;
             }
         }
     }
