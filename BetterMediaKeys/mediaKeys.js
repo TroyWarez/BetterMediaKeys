@@ -1,5 +1,6 @@
 
 var ytInitialData;
+var ytcfg;
 var ytChapterData = {};//Add video duration and timestamps for nexttrack and previoustrack.
 var __actionHandler = navigator.mediaSession.setActionHandler;
 Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -76,9 +77,19 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
         
                     }
-                    else if(moviePlayer !== null && ('nextVideo' in moviePlayer)){
+                    else if(moviePlayer !== null && ('nextVideo' in moviePlayer && ytChapterData?.bEmbedded === false)){
                         moviePlayer.nextVideo();
-                    };
+                    }
+                    else if(moviePlayer !== null && ('seekTo' in moviePlayer) && ('getDuration' in moviePlayer) && ('getCurrentTime' in moviePlayer) && (ytChapterData?.bEmbedded === true)){
+                        if((moviePlayer.getCurrentTime() + 10) > moviePlayer.getDuration())
+                        {
+                            moviePlayer.seekTo(moviePlayer.getDuration());
+                        }
+                        else
+                        {
+                            moviePlayer.seekTo(moviePlayer.getCurrentTime() + 10);
+                        }
+                    }
                 });
                 return undefined;
             }
@@ -192,6 +203,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
             ytChapterData["LastPreviousTrackTimestamp"] = 0;
             ytChapterData["longVideo"] = false;
             ytChapterData["videoArtist"] = "";
+            ytChapterData["bEmbedded"] = false;
             if ( event?.detail?.response?.response?.playerOverlays?.playerOverlayRenderer?.decoratedPlayerBarRenderer?.decoratedPlayerBarRenderer?.playerBar?.multiMarkersPlayerBarRenderer?.markersMap instanceof Array )
             {
                 event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
@@ -235,6 +247,20 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         ytChapterData["previousTrackTimestamp"] = 0;
         ytChapterData["LastPreviousTrackTimestamp"] = 0;
         ytChapterData["longVideo"] = false;
+        if((typeof ytcfg !== 'undefined') && (ytcfg?.data_?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_EMBEDDED_PLAYER?.isEmbed))
+        {
+            ytChapterData["bEmbedded"] = true;
+            (JSON.parse(ytcfg.data_.PLAYER_VARS.embedded_player_response)?.embedPreview?.thumbnailPreviewRenderer?.videoDetails?.embeddedPlayerOverlayVideoDetailsRenderer?.expandedRenderer?.embeddedPlayerOverlayVideoDetailsExpandedRenderer?.title?.runs[0]?.text !== '') ? ytChapterData["videoArtist"] = JSON.parse(ytcfg.data_.PLAYER_VARS.embedded_player_response)?.embedPreview?.thumbnailPreviewRenderer?.videoDetails?.embeddedPlayerOverlayVideoDetailsRenderer?.expandedRenderer?.embeddedPlayerOverlayVideoDetailsExpandedRenderer?.title?.runs[0]?.text : ytChapterData["videoArtist"] = '';            
+        }
+        else
+        {
+            ytChapterData["bEmbedded"] = false;
+        }
+        const moviePlayer = document.getElementById('movie_player') || document.getElementsByClassName("html5-video-player")[0];
+        if(moviePlayer !== null && moviePlayer?.getDuration())
+        {
+            (moviePlayer.getDuration() >= 900) ? ytChapterData["longVideo"] = true : ytChapterData["longVideo"] = false;
+        }
         if((ytChapterData === null)
         && (typeof ytInitialData !== 'undefined')
         && (ytInitialData?.playerOverlays?.playerOverlayRenderer?.decoratedPlayerBarRenderer?.decoratedPlayerBarRenderer?.playerBar?.multiMarkersPlayerBarRenderer?.markersMap instanceof Array) )
@@ -284,7 +310,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         let MetaDataArray = currentChapterText.textContent.split(/[:-]/);
         if (ytChapterData.longVideo === true && MetaDataArray.length === 2) {
             let newArtist = MetaDataArray[0].trimEnd();
-            if((newArtist.length + navigator.mediaSession.metadata?.artist.length + 3) <= 40)
+            if((newArtist?.length + navigator.mediaSession.metadata?.artist?.length + 3) <= 40)
             {
                navigator.mediaSession.metadata.artist = newArtist + ' & ' + ytChapterData?.videoArtist;
             }
