@@ -231,7 +231,7 @@ function SetChapterData(event) {
                                     break;
                                 }
                                 default: {
-                                    console.error(`BetterMediaKeys Error: Defaulted in 'yt-navigate-finish' with this as the value: ${ytChapterData} `);
+                                    console.error(`BetterMediaKeys Error: Defaulted in 'yt-navigate-finish' with this as the value: ${ element.key } `);
                                     break;
                                 }
                             }
