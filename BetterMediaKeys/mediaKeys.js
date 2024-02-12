@@ -513,7 +513,6 @@ function SetMetaDataTitle(metadata) {
             }
         }
     }
-    delete navigator.mediaSession.metadata;
     if ((metadata) && (metadata?.artist?.charCodeAt(metadata?.artist?.length - 1) !== 56577) &&
         (metadata?.artist?.charCodeAt(metadata?.artist?.length - 2) !== 56577)) {
         const videoStream = document.getElementsByClassName('video-stream html5-main-video')[0];
@@ -526,6 +525,7 @@ function SetMetaDataTitle(metadata) {
             ytChapterData.videoArtist = `${ytChapterData.videoArtist} 🔁`;
         }
     }
+    delete navigator.mediaSession.metadata;
     navigator.mediaSession.metadata = metadata;
     Object.defineProperty(navigator.mediaSession, "metadata", {
         configurable: true,
