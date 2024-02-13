@@ -46,7 +46,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                     }
                                     navigator.mediaSession.metadata.title = MetaDataArray[1].trimStart();
                                 } else {
-                                    if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '') {
+                                    if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '' &&  currentChapterText.textContent.trim() !== '') {
                                         if (ytChapterData.bLongVideo === true) {
                                             navigator.mediaSession.metadata.title = currentChapterText.textContent;
                                             navigator.mediaSession.metadata.artist = ytChapterData?.videoArtist;
@@ -137,7 +137,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                     }
                                     navigator.mediaSession.metadata.title = MetaDataArray[1].trimStart();
                                 } else {
-                                    if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '' ) {
+                                    if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '' &&  currentChapterText.textContent.trim() !== '') {
                                         if (ytChapterData.bLongVideo === true) {
                                             navigator.mediaSession.metadata.title = currentChapterText.textContent;
                                             navigator.mediaSession.metadata.artist = ytChapterData?.videoArtist;
@@ -199,7 +199,7 @@ function SetChapterData(event) {
                         ytChapterData.videoArtist = `${ytChapterData.videoArtist} 🔁`;
                     }
                 }
-                SetMetaDataTitle(navigator.mediaSession.metadata);
+                SetTitle();
                 break;
             }
             case 'yt-navigate-finish': {
@@ -239,6 +239,7 @@ function SetChapterData(event) {
                     });
 
                 }
+                SetTitle();
                 break;
             }
             case 'DOMContentLoaded': {
@@ -283,6 +284,7 @@ function SetChapterData(event) {
                         }
                     });
                 }
+                SetTitle();
                 break;
             }
         }
@@ -307,7 +309,7 @@ function SetChapterData(event) {
                     }
                     navigator.mediaSession.metadata.title = MetaDataArray[1].trimStart();
                 } else {
-                    if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '') {
+                    if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '' &&  currentChapterText.textContent.trim() !== '') {
                         if (ytChapterData.bLongVideo === true) {
                             navigator.mediaSession.metadata.title = currentChapterText.textContent;
                             navigator.mediaSession.metadata.artist = ytChapterData?.videoArtist;
@@ -373,7 +375,7 @@ function WaitForText(mutationList, observer) {
                 }
                 navigator.mediaSession.metadata.title = MetaDataArray[1].trimStart();
             } else {
-                if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '') {
+                if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '' &&  currentChapterText.textContent.trim() !== '') {
                     if (ytChapterData.bLongVideo === true) {
                         navigator.mediaSession.metadata.title = currentChapterText.textContent;
                         navigator.mediaSession.metadata.artist = ytChapterData?.videoArtist;
@@ -400,11 +402,11 @@ function WaitForText(mutationList, observer) {
     }
 }
 
-function SetTitle(mutationList, observer) {
+function SetTitle() {
     let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
     if (currentChapterText?.textContent === '') {
         currentChapterText = document.getElementsByClassName('sponsorChapterText')[0];
-        if (typeof videoStream !== 'undefined') {
+        if (typeof currentChapterText === 'undefined') {
             currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
         }
     }
@@ -441,7 +443,7 @@ function SetTitle(mutationList, observer) {
                 navigator.mediaSession.metadata.title = MetaDataArray[1].trimStart();
             }
         } else {
-            if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '') {
+            if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== ''  &&  currentChapterText.textContent.trim() !== '') {
                 if (ytChapterData.bLongVideo === true) {
                     navigator.mediaSession.metadata.title = currentChapterText.textContent;
                     navigator.mediaSession.metadata.artist = ytChapterData?.videoArtist;
@@ -453,6 +455,24 @@ function SetTitle(mutationList, observer) {
                 navigator.mediaSession.metadata.artist = ytChapterData?.videoArtist;
             } else {
                 navigator.mediaSession.metadata.artist = currentChapterText.textContent;
+            }
+        }
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            set: SetMetaDataTitle
+        });
+    }
+    else if ((navigator?.mediaSession?.metadata?.title) && (navigator?.mediaSession?.metadata?.artist) ) {
+        let MetaDataArray = navigator.mediaSession.metadata.title.split(/[:-]/);
+        if (MetaDataArray.length === 2) {
+            let newArtist = MetaDataArray[0].trimEnd();
+            if ((newArtist.length + ytChapterData?.videoArtist.length + 3) <= 40 && (navigator?.mediaSession?.metadata?.artist !== newArtist)) {
+                navigator.mediaSession.metadata.artist = newArtist + ' & ' + ytChapterData.videoArtist;
+            } else if (navigator?.mediaSession?.metadata?.artist) {
+                navigator.mediaSession.metadata.artist = newArtist;
+            }
+            if (navigator?.mediaSession?.metadata?.title) {
+                navigator.mediaSession.metadata.title = MetaDataArray[1].trimStart();
             }
         }
         Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -484,7 +504,7 @@ function SetMetaDataTitle(metadata) {
                 metadata.title = MetaDataArray[1].trimStart();
             }
         } else if (currentChapterText.textContent !== '') {
-            if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '') {
+            if ((currentChapterText.textContent.length + ytChapterData?.videoArtist.length + 3) <= 40 && ytChapterData?.videoArtist !== '' &&  currentChapterText.textContent.trim() !== '') {
                 if (ytChapterData.bLongVideo === true) {
                     metadata.title = currentChapterText.textContent;
                     metadata.artist = ytChapterData?.videoArtist;
