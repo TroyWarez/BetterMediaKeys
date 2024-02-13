@@ -161,7 +161,8 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                             }
                         }
 
-                    } else if (moviePlayer !== null && ('seekTo' in moviePlayer) && ('getDuration' in moviePlayer) && ('getCurrentTime' in moviePlayer) && (ytChapterData?.bEmbedded === true)) {
+                    }
+                    else if (moviePlayer !== null && ('seekTo' in moviePlayer) && ('getDuration' in moviePlayer) && ('getCurrentTime' in moviePlayer) && (ytChapterData?.bEmbedded === true)) {
                         if ((moviePlayer.getCurrentTime() - 10) < 0) {
                             moviePlayer.seekTo(0);
                         } else {
@@ -186,7 +187,6 @@ function SetChapterData(event) {
 
         switch (event.type) {
             case 'yt-player-updated': {
-                ytChapterData["bChapterObserved"] = false;
                 ytChapterData["lastChapterText"] = '';
                 if ((navigator?.mediaSession?.metadata) && (navigator?.mediaSession?.metadata?.artist?.charCodeAt(navigator?.mediaSession?.metadata?.artist?.length - 1) !== 56577)) {
                     const videoStream = document.getElementsByClassName('video-stream html5-main-video')[0];
@@ -204,9 +204,9 @@ function SetChapterData(event) {
             }
             case 'yt-navigate-finish': {
                 ytChapterData["bVideoLooped"] = false;
+                ytChapterData["bEmbedded"] = false;
                 ytChapterData["previousTrackTimestamp"] = 0;
                 ytChapterData["LastPreviousTrackTimestamp"] = 0;
-                ytChapterData["bEmbedded"] = false;
                 ytChapterData["chapters"] = new Array(0);
                 ytChapterData["lastChapterText"] = '';
                 (event.detail.response?.playerResponse?.videoDetails?.lengthSeconds >= 900) ? ytChapterData["bLongVideo"] = true: ytChapterData["bLongVideo"] = false;
@@ -239,7 +239,6 @@ function SetChapterData(event) {
                     });
 
                 }
-                SetTitle();
                 break;
             }
             case 'DOMContentLoaded': {
@@ -316,7 +315,7 @@ function SetChapterData(event) {
                         } else {
                             navigator.mediaSession.metadata.artist = currentChapterText.textContent + ' - ' + ytChapterData.videoArtist;
                         }
-                    } else {
+                    } else if (currentChapterText.textContent !== ''){
                         navigator.mediaSession.metadata.artist = currentChapterText.textContent;
                     }
                 }
@@ -333,19 +332,13 @@ function SetChapterData(event) {
                 };
                 ytChapterData["bChapterObserved"] = true;
                 const chapterTextobserver = new MutationObserver(SetTitle);
+                let chapterContainer = document.getElementsByClassName('ytp-chapter-container')[0];
+                if(typeof chapterContainer !== 'undefined')
+                {
+                    const chapterTextobserverAlt = new MutationObserver(WaitForText);
+                    chapterTextobserverAlt.observe(chapterContainer, chapterTextConfig);
+                }
                 chapterTextobserver.observe(currentChapterText, chapterTextConfig);
-            }
-        } else if (typeof currentChapterText !== 'undefined' && currentChapterText?.textContent === '') {
-            let chapterContainer = document.getElementsByClassName('ytp-chapter-container')[0];
-            if (typeof currentChapterText !== 'undefined' && ytChapterData?.bChapterObserved === false) {
-                const chapterTextConfig = {
-                    attributes: false,
-                    childList: true,
-                    subtree: true
-                };
-                const chapterTextobserver = new MutationObserver(WaitForText);
-                ytChapterData["bChapterObserved"] = true;
-                chapterTextobserver.observe(chapterContainer, chapterTextConfig);
             }
         }
     }
@@ -522,7 +515,7 @@ function SetMetaDataTitle(metadata) {
         let MetaDataArray = metadata.title.split(/[:-]/);
         if (MetaDataArray.length === 2) {
             let newArtist = MetaDataArray[0].trimEnd();
-            if ((newArtist.length + ytChapterData?.videoArtist.length + 3) <= 40 && (metadata?.artist) && (metadata?.artist !== newArtist)) {
+            if ((newArtist.length + ytChapterData?.videoArtist?.length + 3) <= 40 && (metadata?.artist) && (metadata?.artist !== newArtist) && (ytChapterData?.videoArtist !== newArtist) && (metadata?.artist !== ytChapterData?.videoArtist ) ) {
                 metadata.artist = newArtist + ' & ' + ytChapterData.videoArtist;
             } else if (metadata?.artist) {
                 metadata.artist = newArtist;
@@ -545,8 +538,9 @@ function SetMetaDataTitle(metadata) {
             ytChapterData.videoArtist = `${ytChapterData.videoArtist} 🔁`;
         }
     }
+    if(typeof navigator.mediaSession.metadata === 'undefined'){
     delete navigator.mediaSession.metadata;
-    navigator.mediaSession.metadata = metadata;
+    }
     Object.defineProperty(navigator.mediaSession, "metadata", {
         configurable: true,
         set: SetMetaDataTitle
