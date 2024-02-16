@@ -3,7 +3,8 @@ var ytChapterData = null;
 var __actionHandler = navigator.mediaSession.setActionHandler;
 var __mediaMetadata = new MediaMetadata({ });
 var __ActiveMediaMetadata = null;
-MediaMetadata = class MediaMetadataEx {
+MediaMetadata = class MediaMetadataEx 
+{
     constructor(init) {
         
         this.album = '';
@@ -56,7 +57,7 @@ MediaMetadata = class MediaMetadataEx {
         }
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
-            set: this.SetMetaDataTitle});
+            set: this.SetMetaData});
    }
    SetMetaData(metadata) {
     if(( metadata === null ) || ( typeof metadata?.bTrusted === 'undefined' ))
@@ -85,10 +86,13 @@ MediaMetadata = class MediaMetadataEx {
     {
         delete navigator.mediaSession.metadata;
         navigator.mediaSession.metadata = __mediaMetadata;
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            set: __ActiveMediaMetadata});
     }
 
    }
- }
+}
  navigator.mediaSession.setActionHandler = function setActionHandler(action, handler)
 {
     if(handler === null){
@@ -108,9 +112,6 @@ MediaMetadata = class MediaMetadataEx {
                                 moviePlayer.seekToChapterWithAnimation((CurrentChapterIndex + 1));
                                 delete navigator.mediaSession.metadata;
                                 navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
-                                Object.defineProperty(navigator.mediaSession, "metadata", {
-                                    configurable: true,
-                                    set: SetMetaDataTitle});
                            }
                         }
         
@@ -151,9 +152,6 @@ MediaMetadata = class MediaMetadataEx {
                             }
                             delete navigator.mediaSession.metadata;
                             navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
-                            Object.defineProperty(navigator.mediaSession, "metadata", {
-                                configurable: true,
-                                set: SetMetaDataTitle});
                            }
                         }
         
@@ -186,12 +184,6 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                 let NewMetaData = __mediaMetadata;
                 NewMetaData['bTrusted'] = true;
                 __ActiveMediaMetadata(NewMetaData);
-                if(navigator.mediaSession.metadata === 'undefined')
-                {
-                    Object.defineProperty(navigator.mediaSession, "metadata", {
-                        configurable: true,
-                        set: __ActiveMediaMetadata});
-                }
             }
             break;
         }
