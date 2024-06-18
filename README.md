@@ -10,6 +10,7 @@ BetterMediaKeys is an open-source browser extension that works with Chromium-bas
 <p align="center">
   <b>Download:</b>
   <a href="https://chromewebstore.google.com/detail/hgkdlkhheakimlklkhaokglbgokjplaj">Chrome/Chromium</a>
+  <a href="https://microsoftedge.microsoft.com/addons/detail/bettermediakeys/cnmnmildigcbajiojdonmiaafacbcaoi">Edge</a>
 </p>
 
 ### Question: What are the differences between BetterMediaKeys and Tweaks for YouTube with global shortcuts?
