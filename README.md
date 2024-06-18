@@ -9,7 +9,8 @@ BetterMediaKeys is an open-source browser extension that works with Chromium-bas
 
 <p align="center">
   <b>Download:</b>
-  <a href="https://chromewebstore.google.com/detail/hgkdlkhheakimlklkhaokglbgokjplaj">Chrome/Chromium</a>
+  <a href="https://chromewebstore.google.com/detail/hgkdlkhheakimlklkhaokglbgokjplaj">Chrome</a>
+  
   <a href="https://microsoftedge.microsoft.com/addons/detail/bettermediakeys/cnmnmildigcbajiojdonmiaafacbcaoi">Edge</a>
 </p>
 
