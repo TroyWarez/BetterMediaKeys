@@ -1,99 +1,10 @@
 var ytInitialData;
 var ytChapterData = null;
 var __actionHandler = navigator.mediaSession.setActionHandler;
-var __mediaMetadata = new MediaMetadata({ });
-var __ActiveMediaMetadata = null;
-MediaMetadata = class MediaMetadataEx 
-{
-    constructor(init) {
-        
-        this.album = '';
-        this.artist = '';
-        this.artwork = new Array(0);
-        this.title = '';
-
-        if(init?.title)
-        {
-            Object.defineProperty(this, "_title", {
-                enumerable: false,
-                writable: true
-            });
-            this._title = init.title;
-            __mediaMetadata.title = 'One. Man. Army.';
-        }
-        if(init?.artist)
-        {
-            Object.defineProperty(this, "_artist", {
-                enumerable: false,
-                writable: true
-            });
-            this._artist = init.artist;
-            __mediaMetadata.artist = init?.artist;
-        }
-        if(init?.album)
-        {
-            Object.defineProperty(this, "_album", {
-                enumerable: false,
-                writable: true
-            });
-            this._album = init.album;
-            __mediaMetadata.album = init?.album;
-        }
-        if(init?.artwork)
-        {
-            Object.defineProperty(this, "_artwork", {
-                enumerable: false,
-                writable: true
-            });
-            this._artwork = init.artwork;
-            __mediaMetadata.artwork = init.artwork;
-        }
-
-        navigator.mediaSession.metadata = __mediaMetadata;
-
-        if(__ActiveMediaMetadata === null)
-        {
-            __ActiveMediaMetadata = this.SetMetaData;
-        }
-        Object.defineProperty(navigator.mediaSession, "metadata", {
-            configurable: true,
-            set: this.SetMetaData});
-   }
-   SetMetaData(metadata) {
-    if(( metadata === null ) || ( typeof metadata?.bTrusted === 'undefined' ))
-    {
-        return;
-    }
-
-
-    if(metadata?.title)
-    {
-        __mediaMetadata.title = 'One. Man. Army.';
-    }
-    if(metadata?.artist)
-    {
-        __mediaMetadata.artist = metadata.artist;
-    }
-    if(metadata?.album)
-    {
-        __mediaMetadata.album = metadata.album;
-    }
-    if(metadata?.artwork)
-    {
-        __mediaMetadata.artwork = metadata.artwork;
-    }
-    if(typeof navigator?.mediaSession?.metadata === 'undefined')
-    {
-        delete navigator.mediaSession.metadata;
-        navigator.mediaSession.metadata = __mediaMetadata;
-        Object.defineProperty(navigator.mediaSession, "metadata", {
-            configurable: true,
-            set: __ActiveMediaMetadata});
-    }
-
-   }
-}
- navigator.mediaSession.setActionHandler = function setActionHandler(action, handler)
+Object.defineProperty(navigator.mediaSession, "metadata", {
+    configurable: true,
+    set: SetMetaDataTitle});
+navigator.mediaSession.setActionHandler = function setActionHandler(action, handler)
 {
     if(handler === null){
     switch(action)
@@ -112,6 +23,9 @@ MediaMetadata = class MediaMetadataEx
                                 moviePlayer.seekToChapterWithAnimation((CurrentChapterIndex + 1));
                                 delete navigator.mediaSession.metadata;
                                 navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
+                                Object.defineProperty(navigator.mediaSession, "metadata", {
+                                    configurable: true,
+                                    set: SetMetaDataTitle});
                            }
                         }
         
@@ -152,6 +66,9 @@ MediaMetadata = class MediaMetadataEx
                             }
                             delete navigator.mediaSession.metadata;
                             navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
+                            Object.defineProperty(navigator.mediaSession, "metadata", {
+                                configurable: true,
+                                set: SetMetaDataTitle});
                            }
                         }
         
@@ -167,9 +84,8 @@ MediaMetadata = class MediaMetadataEx
     }
     __actionHandler.call(this, action, handler);
 };
-document.documentElement.addEventListener('yt-navigate-finish', SetChapterData, true);
-document.documentElement.addEventListener('yt-player-updated', SetChapterData, true);
-document.documentElement.addEventListener('DOMContentLoaded', SetChapterData, true);
+document.addEventListener('yt-navigate-finish', SetChapterData, true);
+document.addEventListener('DOMContentLoaded', SetChapterData, true);
 
 function SetChapterData (event)
 {
@@ -179,17 +95,12 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
     {
     case 'yt-player-updated':
         {
-            if(__ActiveMediaMetadata !== null)
-            {
-                let NewMetaData = __mediaMetadata;
-                NewMetaData['bTrusted'] = true;
-                __ActiveMediaMetadata(NewMetaData);
-            }
+            SetMetaDataTitle();
             break;
         }
     case 'yt-navigate-finish':
         {
-            if((typeof event !== 'undefined')
+            if((typeof event !== 'undefined')//Cumbersome
             &&  ('detail' in event)
             && ('response' in event.detail)
             && ('response' in event.detail.response)
@@ -223,7 +134,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
         break;
         }
-    case 'DOMContentLoaded':
+    case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
         {
 
         if((ytChapterData === null)
@@ -257,5 +168,45 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                 break;
         }
     }
+
+    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+
+    if(typeof currentChapterText !== 'undefined' && ('mediaSession' in navigator) && ('metadata' in navigator.mediaSession))
+    {
+        delete navigator.mediaSession.metadata;
+        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            set: SetMetaDataTitle});
+
+        const chapterTextConfig = { attributes: false, childList: true, subtree: true };
+        const chapterTextobserver = new MutationObserver(SetTitle);
+        chapterTextobserver.observe(currentChapterText, chapterTextConfig);
+    }
 }
+}
+function SetTitle()
+{
+    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
+    {
+        delete navigator.mediaSession.metadata;
+        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            set: SetMetaDataTitle});
+    }
+}
+function SetMetaDataTitle(metadata)
+{
+    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
+    {
+        metadata.title = currentChapterText.textContent;
+    }
+    delete navigator.mediaSession.metadata;
+    navigator.mediaSession.metadata = metadata;
+    Object.defineProperty(navigator.mediaSession, "metadata", {
+        configurable: true,
+        set: SetMetaDataTitle});
 }
