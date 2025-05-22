@@ -9,7 +9,8 @@ BetterMediaKeys is an open-source browser extension that works with Chromium-bas
 
 <p align="center">
   <b>Download:</b>
-  <a href="https://chromewebstore.google.com/detail/hgkdlkhheakimlklkhaokglbgokjplaj">Chrome/Chromium</a>
+  <a href="https://chromewebstore.google.com/detail/hgkdlkhheakimlklkhaokglbgokjplaj">Chrome</a>
+  <a href="https://microsoftedge.microsoft.com/addons/detail/bettermediakeys/cnmnmildigcbajiojdonmiaafacbcaoi">Edge</a>
 </p>
 
 ### Question: What are the differences between BetterMediaKeys and Tweaks for YouTube with global shortcuts?
@@ -34,9 +35,9 @@ To install BetterMediaKeys 1.0.0.6 or above, download the .crx from the releases
 
 To install BetterMediaKeys 1.0.0.5 or below, you'll have to either load the extracted zip folder as an unpacked extension or add the extenesion id to the extension whitelist and allow list: 
 
-Find the location of the Policies key(Folder) in the registry (HKEY_LOCAL_MACHINE\SOFTWARE for Windows), then the chromium developer's name (/Google) and finally the browser's name (/Chrome). Now, create two keys called "ExtensionInstallWhitelist" and "ExtensionInstallAllowlist".
+Find the location of the Policies key(Folder) in the registry (HKEY_LOCAL_MACHINE\SOFTWARE for Windows), then the chromium developer's name (/Google) and finally the browser's name (/Chrome). Now, create two keys called "ExtensionInstallAllowlist".
 
-Lastly, create a string value (REG_SZ) with the name being "1" and "eokodajgpjmnhdlbijnhdlnbbefjbgjn" as the value inside both "ExtensionInstallWhitelist" and "ExtensionInstallAllowlist" keys, then restart your browser.
+Lastly, create a string value (REG_SZ) with the name being "1" and "eokodajgpjmnhdlbijnhdlnbbefjbgjn" as the value inside "ExtensionInstallAllowlist" keys, then restart your browser.
 
 If done correctly, you should now be able to drag and drop the .crx file on to the extensions management page to finish the installation without any warnings.
 
