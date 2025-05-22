@@ -1,10 +1,11 @@
 var ytInitialData;
 var ytChapterData = null;
 var __actionHandler = navigator.mediaSession.setActionHandler;
+var isShorts = false;
 Object.defineProperty(navigator.mediaSession, "metadata", {
     configurable: true,
     set: SetMetaDataTitle});
-navigator.mediaSession.setActionHandler = function setActionHandler(action, handler)
+navigator.mediaSession.setActionHandler = setActionHandler(action, handler);
 {
     if(handler === null){
     switch(action)
@@ -13,6 +14,8 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
             {
                 __actionHandler.call(this, 'nexttrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player');
+                    const shortsplayer = document.getElementById('shorts-player');
+                    const nextButtonparent = document.getElementById('navigation-button-up');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
@@ -30,16 +33,19 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
         
                     }
-                    else if(moviePlayer !== null && ('nextVideo' in moviePlayer)){
+                    else if(moviePlayer !== null && ('nextVideo' in moviePlayer) && (typeof nextButtonparent?.firstElementChild?.firstElementChild?.firstElementChild !== 'undefined') && ('click' in nextButtonparent?.firstElementChild?.firstElementChild?.firstElementChild)){
+                        nextButtonparent.firstElementChild.firstElementChild.firstElementChild.click();
                         moviePlayer.nextVideo();
                     };
                 });
-                return undefined;
+                return;
             }
         case 'previoustrack':
             {
                 __actionHandler.call(this, 'previoustrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player');
+                    const shortsplayer = document.getElementById('shorts-player');
+                    const previousButtonparent = document.getElementById('navigation-button-down');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
@@ -54,7 +60,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                 moviePlayer.seekToChapterWithAnimation(CurrentChapterIndex);
         
                             }
-                            else if((StartTimeSec - 5) === 0)//Cleaner
+                            else if((StartTimeSec - 5) === 0)
                             {
                                 moviePlayer.seekTo(0);
                                 return;
@@ -73,12 +79,11 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
         
                     }
-                    else if ((moviePlayer !== null) && ('seekTo' in moviePlayer)){
-                        moviePlayer.seekTo(0);
-                        return;
-                    }
+                    else if(moviePlayer !== null && ('seekTo' in moviePlayer) && (typeof previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild !== 'undefined') && ('click' in previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild)){
+                        previousButtonparent.firstElementChild.firstElementChild.firstElementChild.click();
+                    };
                     });
-                return undefined;
+                return;
                 }
         }
     }
@@ -93,6 +98,11 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
 
     switch(event.type)
     {
+    case 'yt-shorts-reset':
+        {
+            isShorts = true;
+            break;
+        }
     case 'yt-player-updated':
         {
             SetMetaDataTitle();
@@ -100,7 +110,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     case 'yt-navigate-finish':
         {
-            if((typeof event !== 'undefined')//Cumbersome
+            if((typeof event !== 'undefined')
             &&  ('detail' in event)
             && ('response' in event.detail)
             && ('response' in event.detail.response)
@@ -129,12 +139,22 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                             }
                     }
                 }
-            });
-
+            }
+        );
         }
+        if((typeof event !== 'undefined')
+            &&  ('detail' in event)
+            && ('pageType' in event.detail)
+            && (event.detail.pageType === 'shorts'))
+            {
+                isShorts = true;
+            }
+            else {
+                isShorts = false;
+            }
         break;
         }
-    case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
+    case 'DOMContentLoaded':
         {
 
         if((ytChapterData === null)
