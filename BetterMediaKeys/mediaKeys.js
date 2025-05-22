@@ -1,7 +1,6 @@
 var ytInitialData;
 var ytChapterData = null;
 var __actionHandler = navigator.mediaSession.setActionHandler;
-var isShorts = false;
 Object.defineProperty(navigator.mediaSession, "metadata", {
     configurable: true,
     set: SetMetaDataTitle});
@@ -38,7 +37,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         moviePlayer.nextVideo();
                     };
                 });
-                break;
+                return undefined;
             }
         case 'previoustrack':
             {
@@ -60,7 +59,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                 moviePlayer.seekToChapterWithAnimation(CurrentChapterIndex);
         
                             }
-                            else if((StartTimeSec - 5) === 0)
+                            else if((StartTimeSec - 5) === 0)//Cleaner
                             {
                                 moviePlayer.seekTo(0);
                                 return;
@@ -79,11 +78,12 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
         
                     }
-                    else if(moviePlayer !== null && ('seekTo' in moviePlayer) && (typeof previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild !== 'undefined') && ('click' in previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild)){
+                    else if((moviePlayer !== null) && ('seekTo' in moviePlayer) && (typeof previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild !== 'undefined') && ('click' in previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild)){
                         previousButtonparent.firstElementChild.firstElementChild.firstElementChild.click();
+                        moviePlayer.seekTo(0);
                     };
                     });
-                break;
+                return undefined;
                 }
         }
     }
@@ -98,11 +98,6 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
 
     switch(event.type)
     {
-    case 'yt-shorts-reset':
-        {
-            isShorts = true;
-            break;
-        }
     case 'yt-player-updated':
         {
             SetMetaDataTitle();
@@ -110,7 +105,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     case 'yt-navigate-finish':
         {
-            if((typeof event !== 'undefined')
+            if((typeof event !== 'undefined')//Cumbersome
             &&  ('detail' in event)
             && ('response' in event.detail)
             && ('response' in event.detail.response)
@@ -139,22 +134,12 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                             }
                     }
                 }
-            }
-        );
+            });
+
         }
-        if((typeof event !== 'undefined')
-            &&  ('detail' in event)
-            && ('pageType' in event.detail)
-            && (event.detail.pageType === 'shorts'))
-            {
-                isShorts = true;
-            }
-            else {
-                isShorts = false;
-            }
         break;
         }
-    case 'DOMContentLoaded':
+    case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
         {
 
         if((ytChapterData === null)
