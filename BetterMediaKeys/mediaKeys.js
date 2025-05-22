@@ -5,7 +5,7 @@ var isShorts = false;
 Object.defineProperty(navigator.mediaSession, "metadata", {
     configurable: true,
     set: SetMetaDataTitle});
-navigator.mediaSession.setActionHandler = setActionHandler(action, handler);
+navigator.mediaSession.setActionHandler = function setActionHandler(action, handler)
 {
     if(handler === null){
     switch(action)
@@ -15,7 +15,7 @@ navigator.mediaSession.setActionHandler = setActionHandler(action, handler);
                 __actionHandler.call(this, 'nexttrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player');
                     const shortsplayer = document.getElementById('shorts-player');
-                    const nextButtonparent = document.getElementById('navigation-button-up');
+                    const nextButtonparent = document.getElementById('navigation-button-down');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
@@ -38,14 +38,14 @@ navigator.mediaSession.setActionHandler = setActionHandler(action, handler);
                         moviePlayer.nextVideo();
                     };
                 });
-                return;
+                break;
             }
         case 'previoustrack':
             {
                 __actionHandler.call(this, 'previoustrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player');
                     const shortsplayer = document.getElementById('shorts-player');
-                    const previousButtonparent = document.getElementById('navigation-button-down');
+                    const previousButtonparent = document.getElementById('navigation-button-up');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
@@ -83,7 +83,7 @@ navigator.mediaSession.setActionHandler = setActionHandler(action, handler);
                         previousButtonparent.firstElementChild.firstElementChild.firstElementChild.click();
                     };
                     });
-                return;
+                break;
                 }
         }
     }
