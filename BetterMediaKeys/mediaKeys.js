@@ -3,6 +3,8 @@ var ytChapterData = null;
 var isShorts = false;
 var __actionHandler = navigator.mediaSession.setActionHandler;
 var __actionHandlerPrevious = null;
+var __lastClickPrevious = 0;
+var __lastClickNext = 0;
 Object.defineProperty(navigator.mediaSession, "metadata", {
     configurable: true,
     set: SetMetaDataTitle});
@@ -37,7 +39,10 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     }
                     else if(moviePlayer !== null && ('nextVideo' in moviePlayer)){
                     if( isShorts && (typeof nextButtonparent?.firstElementChild?.firstElementChild?.firstElementChild !== 'undefined') && ('click' in nextButtonparent?.firstElementChild?.firstElementChild?.firstElementChild)){
-                        nextButtonparent.firstElementChild.firstElementChild.firstElementChild.click();
+                        if(__lastClickNext < Date.now()) {
+                            nextButtonparent.firstElementChild.firstElementChild.firstElementChild.click();
+                            __lastClickNext = Date.now() + 1000;
+                        }
                         }
                         else {
                             moviePlayer.nextVideo();
@@ -66,7 +71,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                 moviePlayer.seekToChapterWithAnimation(CurrentChapterIndex);
         
                             }
-                            else if((StartTimeSec - 5) === 0)//Cleaner
+                            else if((StartTimeSec - 3) === 0)
                             {
                                 moviePlayer.seekTo(0);
                                 return undefined;
@@ -92,8 +97,9 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         {
                             shortsplayer.seekTo(0);
                         }
-                        else {
+                        else if(__lastClickPrevious < Date.now()) {
                             previousButtonparent.firstElementChild.firstElementChild.firstElementChild.click();
+                            __lastClickPrevious = Date.now() + 1000;
                         }
                         }
                         else {
@@ -110,10 +116,13 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
         __actionHandlerPrevious = handler;
         __actionHandler.call(this, 'previoustrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player');
-                    if((moviePlayer !== null) && ('seekTo' in moviePlayer)){
+                    if((moviePlayer !== null) && ('seekTo' in moviePlayer) && ('getCurrentTime' in moviePlayer)){
                                      __actionHandlerPrevious.call(this, 'previoustrack', (dictionary) => {
                                      });
-                        moviePlayer.seekTo(0);
+                        if (moviePlayer.getCurrentTime() < 3)
+                        {
+                            moviePlayer.seekTo(0);
+                        }
                     };
                     });
         return undefined;
