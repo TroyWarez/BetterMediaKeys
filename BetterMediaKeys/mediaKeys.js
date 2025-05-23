@@ -2,11 +2,13 @@ var ytInitialData;
 var ytChapterData = null;
 var isShorts = false;
 var __actionHandler = navigator.mediaSession.setActionHandler;
+var __actionHandlerPrevious = null;
 Object.defineProperty(navigator.mediaSession, "metadata", {
     configurable: true,
     set: SetMetaDataTitle});
 navigator.mediaSession.setActionHandler = function setActionHandler(action, handler)
 {
+    const urlParams = new URLSearchParams(window.location.search);
     if(handler === null){
     switch(action)
     {
@@ -102,6 +104,19 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                 return undefined;
                 }
         }
+    }
+    else if (urlParams.has('list') && action === 'previoustrack' && isShorts === false)
+    {
+        __actionHandlerPrevious = handler;
+        __actionHandler.call(this, 'previoustrack', (dictionary) => {
+                    const moviePlayer = document.getElementById('movie_player');
+                    if((moviePlayer !== null) && ('seekTo' in moviePlayer)){
+                                     __actionHandlerPrevious.call(this, 'previoustrack', (dictionary) => {
+                                     });
+                        moviePlayer.seekTo(0);
+                    };
+                    });
+        return undefined;
     }
     __actionHandler.call(this, action, handler);
 };
