@@ -119,7 +119,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     if((moviePlayer !== null) && ('seekTo' in moviePlayer) && ('getCurrentTime' in moviePlayer)){
                                      __actionHandlerPrevious.call(this, 'previoustrack', (dictionary) => {
                                      });
-                        if (moviePlayer.getCurrentTime() < 3)
+                        if (moviePlayer.getCurrentTime() > 3)
                         {
                             moviePlayer.seekTo(0);
                         }
