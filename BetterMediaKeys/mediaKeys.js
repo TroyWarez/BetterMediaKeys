@@ -85,7 +85,14 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     }
                     else if((moviePlayer !== null) && ('seekTo' in moviePlayer)){
                     if( isShorts && (typeof previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild !== 'undefined') && ('click' in previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild)){
-                        previousButtonparent.firstElementChild.firstElementChild.firstElementChild.click();
+                        if (previousButtonparent.firstElementChild.firstElementChild.firstElementChild.ariaDisabled === 'true' &&
+                            (shortsplayer !== null) && ('seekTo' in shortsplayer))
+                        {
+                            shortsplayer.seekTo(0);
+                        }
+                        else {
+                            previousButtonparent.firstElementChild.firstElementChild.firstElementChild.click();
+                        }
                         }
                         else {
                             moviePlayer.seekTo(0);
