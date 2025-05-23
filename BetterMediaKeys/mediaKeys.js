@@ -93,9 +93,12 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     else if((moviePlayer !== null) && ('seekTo' in moviePlayer)){
                     if( isShorts && (typeof previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild !== 'undefined') && ('click' in previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild)){
                         if (previousButtonparent.firstElementChild.firstElementChild.firstElementChild.ariaDisabled === 'true' &&
-                            (shortsplayer !== null) && ('seekTo' in shortsplayer))
+                            (shortsplayer !== null) && ('seekTo' in shortsplayer) && ('getCurrentTime' in shortsplayer))
                         {
-                            shortsplayer.seekTo(0);
+                            if(shortsplayer.getCurrentTime() > 3)
+                            {
+                                shortsplayer.seekTo(0);
+                            }
                         }
                         else if(__lastClickPrevious < Date.now()) {
                             previousButtonparent.firstElementChild.firstElementChild.firstElementChild.click();
