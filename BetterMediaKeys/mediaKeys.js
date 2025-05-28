@@ -213,9 +213,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     case 'yt-navigate-finish':
         {
-            if(window.location.search){
             const urlParams = new URLSearchParams(window.location.search);
-            }
             if ((document.getElementById('movie_player') !== null) &&
                  ('seekTo' in document.getElementById('movie_player')) && ('getCurrentTime' in document.getElementById('movie_player')) && ('setLoopVideo' in document.getElementById('movie_player')) && urlParams.has('list') === false  && isShorts === false)
                 {
