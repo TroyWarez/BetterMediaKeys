@@ -269,6 +269,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
     case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
         {
         if((ytChapterData === null)
+        && (typeof ytInitialData !== 'undefined')
         && ('playerOverlays' in ytInitialData)
         && ('playerOverlayRenderer' in ytInitialData.playerOverlays)
         && ('decoratedPlayerBarRenderer' in ytInitialData.playerOverlays.playerOverlayRenderer)
