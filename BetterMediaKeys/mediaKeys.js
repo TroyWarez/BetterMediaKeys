@@ -18,6 +18,38 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
             {
                 __actionHandler.call(this, 'nexttrack', (dictionary) => {
                     const moviePlayer = document.getElementById('movie_player');
+                    if(moviePlayer !== null && ('getWatchNextResponse' in moviePlayer))
+                    {
+                    const watchNextResponse = moviePlayer.getWatchNextResponse();
+                    if((ytChapterData === null) 
+                    &&  (watchNextResponse !== null)
+                    && ('playerOverlays' in watchNextResponse)
+                    && ('playerOverlayRenderer' in watchNextResponse.playerOverlays)
+                    && ('decoratedPlayerBarRenderer' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
+                    && ('playerBar' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
+                    && ('multiMarkersPlayerBarRenderer' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
+                    && ('markersMap' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
+                    && (watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array))
+                    {
+                    watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
+                            if('key' in element){
+                            switch(element.key)
+                            {
+                                case 'AUTO_CHAPTERS':
+                                    {
+                                        ytChapterData = element.value;
+                                        break;
+                                    }
+                                case 'DESCRIPTION_CHAPTERS':
+                                    {
+                                        ytChapterData = element.value;
+                                        break;
+                                    }
+                            }
+                        }
+                    });
+                }
+                    }
                     const shortsplayer = document.getElementById('shorts-player');
                     const nextButtonparent = document.getElementById('navigation-button-down');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
@@ -58,6 +90,34 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     const shortsplayer = document.getElementById('shorts-player');
                     const previousButtonparent = document.getElementById('navigation-button-up');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+                    if((ytChapterData === null) 
+                    &&  (watchNextResponse !== null)
+                    && ('playerOverlays' in watchNextResponse)
+                    && ('playerOverlayRenderer' in watchNextResponse.playerOverlays)
+                    && ('decoratedPlayerBarRenderer' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
+                    && ('playerBar' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
+                    && ('multiMarkersPlayerBarRenderer' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
+                    && ('markersMap' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
+                    && (watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array))
+                    {
+                    watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
+                            if('key' in element){
+                            switch(element.key)
+                            {
+                                case 'AUTO_CHAPTERS':
+                                    {
+                                        ytChapterData = element.value;
+                                        break;
+                                    }
+                                case 'DESCRIPTION_CHAPTERS':
+                                    {
+                                        ytChapterData = element.value;
+                                        break;
+                                    }
+                            }
+                        }
+                    });
+                }
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
                         {
@@ -153,6 +213,17 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     case 'yt-navigate-finish':
         {
+            if(window.location.search){
+            const urlParams = new URLSearchParams(window.location.search);
+            }
+            if ((document.getElementById('movie_player') !== null) &&
+                 ('seekTo' in document.getElementById('movie_player')) && ('getCurrentTime' in document.getElementById('movie_player')) && ('setLoopVideo' in document.getElementById('movie_player')) && urlParams.has('list') === false  && isShorts === false)
+                {
+                    if (document.getElementById('movie_player').getCurrentTime() < 360)
+                        {
+                            document.getElementById('movie_player').setLoopVideo(true);
+                        }
+                }
             if((typeof event !== 'undefined')//Cumbersome
             &&  ('detail' in event)
             && ('response' in event.detail)
@@ -199,7 +270,6 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
         {
-
         if((ytChapterData === null)
         && ('playerOverlays' in ytInitialData)
         && ('playerOverlayRenderer' in ytInitialData.playerOverlays)
@@ -227,9 +297,8 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                 }
             }
         });
-        }
                 break;
-        }
+        }}
     }
 
     let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
