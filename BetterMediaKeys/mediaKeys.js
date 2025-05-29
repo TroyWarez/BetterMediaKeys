@@ -54,7 +54,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     const shortsplayer = document.getElementById('shorts-player');
                     const nextButtonparent = document.getElementById('navigation-button-down');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
-                    if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) 
+                    if(!isShorts && (moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) 
                     && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') 
                     && ('textContent' in currentChapterText) 
                     && (currentChapterText.textContent !== '')){
@@ -75,7 +75,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
         
                     }
-                    else if((moviePlayer !== null) 
+                    else if(!isShorts && (moviePlayer !== null) 
                     && !('seekToChapterWithAnimation' in moviePlayer) 
                     && ('seekTo' in moviePlayer) 
                     && (typeof currentChapterText !== 'undefined') 
@@ -102,7 +102,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
 
                     }
-                    else if(moviePlayer !== null && !('seekToChapterWithAnimation' in moviePlayer) && ('handleGlobalKeyDown' in moviePlayer)){
+                    else if(!isShorts && moviePlayer !== null && !('seekToChapterWithAnimation' in moviePlayer) && ('handleGlobalKeyDown' in moviePlayer)){
                         moviePlayer.handleGlobalKeyDown(39, false, false);
 
                     }
@@ -160,7 +160,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     });
                 }
             }
-                    if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
+                    if(!isShorts && (moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
                         {
                            let CurrentChapterIndex = ytChapterData.chapters.findIndex(i => i.chapterRenderer.title.simpleText === currentChapterText.textContent);
@@ -192,7 +192,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
         
                     }
-                    else if((moviePlayer !== null) 
+                    else if(!isShorts && (moviePlayer !== null) 
                     && !('seekToChapterWithAnimation' in moviePlayer) 
                     && ('seekTo' in moviePlayer) 
                     && (typeof currentChapterText !== 'undefined') 
@@ -229,7 +229,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                            }
                         }
                     }
-                    else if(moviePlayer !== null && !('seekToChapterWithAnimation' in moviePlayer) && ('handleGlobalKeyDown' in moviePlayer)){
+                    else if(!isShorts && moviePlayer !== null && !('seekToChapterWithAnimation' in moviePlayer) && ('handleGlobalKeyDown' in moviePlayer)){
                         moviePlayer.handleGlobalKeyDown(37, false, false);
 
                     }
