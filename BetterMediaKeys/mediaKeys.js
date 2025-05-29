@@ -248,7 +248,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                             __lastClickPrevious = Date.now() + 1000;
                         }
                         }
-                        else {
+                        else if (moviePlayer.getCurrentTime() > 3){
                             moviePlayer.seekTo(0);
                         }
                     };
