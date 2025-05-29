@@ -77,7 +77,8 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     }
                     else if(!isShorts && (moviePlayer !== null) 
                     && !('seekToChapterWithAnimation' in moviePlayer) 
-                    && ('seekTo' in moviePlayer) 
+                    && ('seekTo' in moviePlayer)
+                    && ('wakeUpControls' in moviePlayer) 
                     && (typeof currentChapterText !== 'undefined') 
                     && ('textContent' in currentChapterText) 
                     && (currentChapterText.textContent !== '')){
@@ -93,6 +94,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                             && ((CurrentChapterIndex + 1) < ytChapterData.chapters.length))
                            {
                                 moviePlayer.seekTo((ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.timeRangeStartMillis / 1000));
+                                moviePlayer.wakeUpControls();
                                 delete navigator.mediaSession.metadata;
                                 navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.title.runs.at(0)?.text;
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -195,6 +197,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     else if(!isShorts && (moviePlayer !== null) 
                     && !('seekToChapterWithAnimation' in moviePlayer) 
                     && ('seekTo' in moviePlayer) 
+                    && ('wakeUpControls' in moviePlayer) 
                     && (typeof currentChapterText !== 'undefined') 
                     && ('textContent' in currentChapterText) 
                     && (currentChapterText.textContent !== '')){
@@ -208,17 +211,20 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                             if((StartTimeSec <= CurrentTime))
                             {
                                 moviePlayer.seekTo((ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.timeRangeStartMillis / 1000));
+                                moviePlayer.wakeUpControls();
         
                             }
                             else if((StartTimeSec - 3) === 0)
                             {
                                 moviePlayer.seekTo(0);
+                                moviePlayer.wakeUpControls();
                                 return undefined;
                             }
                             else
                             {
                                 CurrentChapterIndex = CurrentChapterIndex - 1;
                                 moviePlayer.seekTo((ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.timeRangeStartMillis / 1000));
+                                moviePlayer.wakeUpControls();
 
                             }
                             delete navigator.mediaSession.metadata;
