@@ -25,6 +25,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     &&  (watchNextResponse !== null)
                     && ('playerOverlays' in watchNextResponse)
                     && ('playerOverlayRenderer' in watchNextResponse.playerOverlays)
+                    && ('decoratedPlayerBarRenderer' in watchNextResponse.playerOverlays.playerOverlayRenderer)
                     && ('decoratedPlayerBarRenderer' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
                     && ('playerBar' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
                     && ('multiMarkersPlayerBarRenderer' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
@@ -53,21 +54,57 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     const shortsplayer = document.getElementById('shorts-player');
                     const nextButtonparent = document.getElementById('navigation-button-down');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
-                    if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
+                    if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) 
+                    && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') 
+                    && ('textContent' in currentChapterText) 
+                    && (currentChapterText.textContent !== '')){
+
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
                         {
                            let CurrentChapterIndex = ytChapterData.chapters.findIndex(i => i.chapterRenderer.title.simpleText === currentChapterText.textContent);
-                           if(CurrentChapterIndex !== -1 && (CurrentChapterIndex + 1) >= 0)
+                           if(CurrentChapterIndex !== -1 
+                            && (CurrentChapterIndex + 1) >= 0)
                            {
                                 moviePlayer.seekToChapterWithAnimation((CurrentChapterIndex + 1));
                                 delete navigator.mediaSession.metadata;
-                                navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
+                                navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.title.simpleText;
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
                                     configurable: true,
                                     set: SetMetaDataTitle});
                            }
                         }
         
+                    }
+                    if((moviePlayer !== null) 
+                    && !('seekToChapterWithAnimation' in moviePlayer) 
+                    && ('seekTo' in moviePlayer) 
+                    && (typeof currentChapterText !== 'undefined') 
+                    && ('textContent' in currentChapterText) 
+                    && (currentChapterText.textContent !== '')){
+
+                    if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
+                        {
+                           let CurrentChapterIndex = ytChapterData.chapters.findIndex(i => i.chapterRenderer.title.simpleText === currentChapterText.textContent);
+                           if(CurrentChapterIndex === -1) {
+                            CurrentChapterIndex = ytChapterData.chapters.findIndex(i => i.chapterRenderer.title.runs.at(0)?.text === currentChapterText.textContent);
+                           }
+                           if(CurrentChapterIndex !== -1 
+                            && (CurrentChapterIndex + 1) >= 0
+                            && ((CurrentChapterIndex + 1) < ytChapterData.chapters.length))
+                           {
+                                moviePlayer.seekTo((ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.timeRangeStartMillis / 1000));
+                                delete navigator.mediaSession.metadata;
+                                navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.title.runs.at(0)?.text;
+                                Object.defineProperty(navigator.mediaSession, "metadata", {
+                                    configurable: true,
+                                    set: SetMetaDataTitle});
+                           }
+                        }
+
+                    }
+                    else if(moviePlayer !== null && !('seekToChapterWithAnimation' in moviePlayer) && ('handleGlobalKeyDown' in moviePlayer)){
+                        moviePlayer.handleGlobalKeyDown(39, false, false);
+
                     }
                     else if(moviePlayer !== null && ('nextVideo' in moviePlayer)){
                     if( isShorts && (typeof nextButtonparent?.firstElementChild?.firstElementChild?.firstElementChild !== 'undefined') && ('click' in nextButtonparent?.firstElementChild?.firstElementChild?.firstElementChild)){
@@ -90,10 +127,14 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     const shortsplayer = document.getElementById('shorts-player');
                     const previousButtonparent = document.getElementById('navigation-button-up');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+                    if(moviePlayer !== null && ('getWatchNextResponse' in moviePlayer))
+                    {
+                    const watchNextResponse = moviePlayer.getWatchNextResponse();
                     if((ytChapterData === null) 
                     &&  (watchNextResponse !== null)
                     && ('playerOverlays' in watchNextResponse)
                     && ('playerOverlayRenderer' in watchNextResponse.playerOverlays)
+                    && ('decoratedPlayerBarRenderer' in watchNextResponse.playerOverlays.playerOverlayRenderer)
                     && ('decoratedPlayerBarRenderer' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
                     && ('playerBar' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
                     && ('multiMarkersPlayerBarRenderer' in watchNextResponse.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
@@ -118,6 +159,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
                     });
                 }
+            }
                     if((moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) && ('seekTo' in moviePlayer) && (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== '')){
                         if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
                         {
@@ -149,6 +191,47 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                            }
                         }
         
+                    }
+                    else if((moviePlayer !== null) 
+                    && !('seekToChapterWithAnimation' in moviePlayer) 
+                    && ('seekTo' in moviePlayer) 
+                    && (typeof currentChapterText !== 'undefined') 
+                    && ('textContent' in currentChapterText) 
+                    && (currentChapterText.textContent !== '')){
+                    if( (typeof currentChapterText !== 'undefined') && ('textContent' in currentChapterText) && (currentChapterText.textContent !== ''))
+                        {
+                           let CurrentChapterIndex = ytChapterData.chapters.findIndex(i => i.chapterRenderer.title.runs.at(0)?.text === currentChapterText.textContent);
+                           if(CurrentChapterIndex !== -1 && CurrentChapterIndex >= 0 && ((CurrentChapterIndex - 1) >= 0))
+                           {
+                            let StartTimeSec = ((ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.timeRangeStartMillis + 3000) / 1000);
+                            let CurrentTime = moviePlayer.getCurrentTime();
+                            if((StartTimeSec <= CurrentTime))
+                            {
+                                moviePlayer.seekTo((ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.timeRangeStartMillis / 1000));
+        
+                            }
+                            else if((StartTimeSec - 3) === 0)
+                            {
+                                moviePlayer.seekTo(0);
+                                return undefined;
+                            }
+                            else
+                            {
+                                CurrentChapterIndex = CurrentChapterIndex - 1;
+                                moviePlayer.seekTo((ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.timeRangeStartMillis / 1000));
+
+                            }
+                            delete navigator.mediaSession.metadata;
+                            navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
+                            Object.defineProperty(navigator.mediaSession, "metadata", {
+                                configurable: true,
+                                set: SetMetaDataTitle});
+                           }
+                        }
+                    }
+                    else if(moviePlayer !== null && !('seekToChapterWithAnimation' in moviePlayer) && ('handleGlobalKeyDown' in moviePlayer)){
+                        moviePlayer.handleGlobalKeyDown(37, false, false);
+
                     }
                     else if((moviePlayer !== null) && ('seekTo' in moviePlayer)){
                     if( isShorts && (typeof previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild !== 'undefined') && ('click' in previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild)){
@@ -302,7 +385,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
 
     let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
 
-    if(typeof currentChapterText !== 'undefined' && ('mediaSession' in navigator) && ('metadata' in navigator.mediaSession))
+    if((currentChapterText) && typeof currentChapterText !== 'undefined' && ('mediaSession' in navigator) && ('metadata' in navigator.mediaSession))
     {
         delete navigator.mediaSession.metadata;
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
