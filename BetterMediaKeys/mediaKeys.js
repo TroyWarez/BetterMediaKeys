@@ -75,7 +75,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
         
                     }
-                    if((moviePlayer !== null) 
+                    else if((moviePlayer !== null) 
                     && !('seekToChapterWithAnimation' in moviePlayer) 
                     && ('seekTo' in moviePlayer) 
                     && (typeof currentChapterText !== 'undefined') 
