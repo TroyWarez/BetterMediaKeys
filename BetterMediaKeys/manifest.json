@@ -2,7 +2,9 @@
   "name": "Better Media Keys for YouTube", 
   "version": "1.0.1.2",
   "description": "Use your media keys to navigate YouTube chapters or videos.",
-  "action": {},
+  "action": {
+    "default_popup": "popup.html"
+  },
   "manifest_version": 3,
    "content_scripts": [
     {

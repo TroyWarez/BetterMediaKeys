@@ -394,7 +394,10 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
     if((currentChapterText) && typeof currentChapterText !== 'undefined' && ('mediaSession' in navigator) && ('metadata' in navigator.mediaSession))
     {
         delete navigator.mediaSession.metadata;
-        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        if(navigator.mediaSession.metadata?.title)
+        {
+            navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        }
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
             set: SetMetaDataTitle});
