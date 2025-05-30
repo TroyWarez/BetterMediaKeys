@@ -18,6 +18,14 @@ h3 {
         color: #f5f5f5;
     }
 }
+select {
+    width: 20rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    font-size: larger;
+    border: none;
+}
 .toggle {
     display: flex;
     width: 32rem;
@@ -29,7 +37,7 @@ h3 {
   margin-left: 1rem;
   font-size: larger;
 }
-.settingsWarning {
+.optionsWarning {
   margin-top: 1rem;
   margin-bottom: 1rem;
   font-size: larger;

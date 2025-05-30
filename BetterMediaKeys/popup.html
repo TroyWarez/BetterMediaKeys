@@ -25,7 +25,9 @@
     max="100"
     value="0"
     step="10" />
-  <label for="duration">Video must be shorter than X minutes long.</label>
+  <div>
+  <label for="duration">Video must be shorter than <p id="loop_time"></p> minutes long.</label>
+  </div>
 </div>
 
 <div class="toggle">
@@ -45,48 +47,43 @@
     max="100"
     value="50"
     step="10" />
-  <label for="durationLong">Video must be longer than X minutes long.</label>
+    <div>
+  <label for="durationLong">Video must be longer than <p id="title_time"></p> minutes long.</label>
+  </div>
 </div>
-  <b class="settingsWarning">These settings will only apply to videos without chapters and that aren't in a playlist.</b>
+  <b class="optionsWarning">The options below will only apply to videos without chapters and that aren't apart of a playlist.</b>
 
 <div>
   <select
     type="range"
     id="previous"
-    name="previous"
-    min="0"
-    max="100"
-    value="90"
-    step="10">
-    <option value="0">Restart the video without an animation</option>
-    <option value="10">Restart the video with an animation</option>
-    <option value="20">Go back 5 seconds with an animation</option>
-    <option value="30">Go back 15 seconds with an animation</option>
-    <option value="40">Go back 5 seconds without an animation</option>
-    <option value="50">Go back 15 seconds without an animation</option>
-    <option value="60">Do nothing</option>
+    name="previous">
+    <option value="RESTART_VIDEO">Restart the video without an animation</option>
+    <option value="RESTART_VIDEO_ANIMATED">Restart the video with an animation</option>
+    <option value="GO_BACK_5_SECONDS_VIDEO_ANIMATED">Go back 5 seconds with an animation</option>
+    <option value="GO_BACK_15_SECONDS_VIDEO_ANIMATED">Go back 15 seconds with an animation</option>
+    <option value="GO_BACK_5_SECONDS_VIDEO_ANIMATED">Go back 5 seconds without an animation</option>
+    <option value="GO_BACK_15_SECONDS_VIDEO_ANIMATED">Go back 15 seconds without an animation</option>
+    <option value="NOTHING">Do nothing</option>
   </select>
-  <label for="previous">Custom Previous Track Command</label>
+  <label for="previous"><b>Previous Track Command</b></label>
 </div>
 
 <div>
   <select
     type="range"
     id="next"
-    name="next"
-    min="0"
-    max="100"
-    value="90"
-    step="10">
-    <option value="0">Go to the video up next</option>
-    <option value="10">Skip forward 5 seconds with an animation</option>
-    <option value="20">Skip forward 15 seconds with an animation</option>
-    <option value="30">Skip forward 5 seconds without an animation</option>
-    <option value="40">Skip forward 15 seconds without an animation</option>
-    <option value="50">Do nothing</option>
+    name="next">
+    <option value="NEXT_VIDEO">Go to the video up next</option>
+    <option value="SKIP_FORWARD_5_SECONDS_VIDEO_ANIMATED">Skip forward 5 seconds with an animation</option>
+    <option value="SKIP_FORWARD_15_SECONDS_VIDEO_ANIMATED">Skip forward 15 seconds with an animation</option>
+    <option value="SKIP_FORWARD_5_SECONDS_VIDEO">Skip forward 5 seconds without an animation</option>
+    <option value="SKIP_FORWARD_5_SECONDS_VIDEO">Skip forward 15 seconds without an animation</option>
+    <option value="NOTHING">Do nothing</option>
   </select>
-  <label for="previous">Custom Next Track Command</label>
+  <label for="next"><b>Next Track Command</b></label>
 </div>
 
+<script src="popup.js"></script>
 </body>
 </html>
