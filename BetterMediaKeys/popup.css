@@ -26,6 +26,10 @@ select {
     font-size: larger;
     border: none;
 }
+.rangeLabel {
+  display: flex;
+  align-items: center;
+}
 .toggle {
     display: flex;
     width: 32rem;
