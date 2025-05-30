@@ -13,19 +13,80 @@
   <input type="checkbox" title="Toggle Looping Videos">
   <span class="slider round"></span>
 </label>
-<b class="toggleLabel">Always loop videos short than:</b>
+<b class="toggleLabel">Auto loop videos</b>
 </div>
 
 <div>
   <input
     type="range"
-    id="cowbell"
-    name="cowbell"
+    id="duration"
+    name="duration"
     min="0"
     max="100"
     value="90"
     step="10" />
-  <label for="cowbell">Cowbell</label>
+  <label for="duration">Video must be shorter than X minutes long.</label>
 </div>
+
+<div class="toggle">
+<label class="switch">
+  <input type="checkbox" title="Replace title in mini player with chapter title">
+  <span class="slider round"></span>
+</label>
+<b class="toggleLabel">Replace title in mini player with chapter title</b>
+</div>
+
+<div>
+  <input
+    type="range"
+    id="durationLong"
+    name="durationLong"
+    min="0"
+    max="100"
+    value="90"
+    step="10" />
+  <label for="durationLong">Video must be longer than X minutes long.</label>
+</div>
+  <b class="settingsWarning">These settings will only apply to videos without chapters and that aren't in a playlist.</b>
+
+<div>
+  <select
+    type="range"
+    id="previous"
+    name="previous"
+    min="0"
+    max="100"
+    value="90"
+    step="10">
+    <option value="0">Restart video without animation</option>
+    <option value="10">Restart video with animation</option>
+    <option value="20">Go back 5 seconds with animation</option>
+    <option value="30">Go back 15 seconds with animation</option>
+    <option value="40">Go back 5 seconds without animation</option>
+    <option value="50">Go back 15 seconds without animation</option>
+    <option value="60">Do nothing</option>
+  </select>
+  <label for="previous">Custom Previous Track Command</label>
+</div>
+
+<div>
+  <select
+    type="range"
+    id="next"
+    name="next"
+    min="0"
+    max="100"
+    value="90"
+    step="10">
+    <option value="0">Go to the video up next</option>
+    <option value="10">Skip forward 5 seconds with animation</option>
+    <option value="20">Skip forward 15 seconds with animation</option>
+    <option value="30">Skip forward 5 seconds without animation</option>
+    <option value="40">Skip forward 15 seconds without animation</option>
+    <option value="50">Do nothing</option>
+  </select>
+  <label for="previous">Custom Next Track Command</label>
+</div>
+
 </body>
 </html>
