@@ -26,9 +26,28 @@ select {
     font-size: larger;
     border: none;
 }
-.duration {
-  color: #ff0000;
-  background-color: #ff0000;
+input[type="range" i] {
+    position: relative;
+    background: #fff0;
+    overflow: hidden;
+}
+
+input[type="range" i] {
+  accent-color: #ff0000;
+  cursor: pointer;
+}
+input[type="range" i]:hover {
+  accent-color: #ff0000;
+  cursor: pointer;
+}
+input[type="range" i]:active {
+    cursor: grabbing;
+}
+
+input[type="range" i]:disabled {
+    filter: grayscale(1);
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 .rangeLabel {
   display: flex;
