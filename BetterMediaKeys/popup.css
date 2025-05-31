@@ -26,6 +26,10 @@ select {
     font-size: larger;
     border: none;
 }
+.duration {
+  color: #ff0000;
+  background-color: #ff0000;
+}
 .rangeLabel {
   display: flex;
   align-items: center;
