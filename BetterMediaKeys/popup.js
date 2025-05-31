@@ -6,7 +6,12 @@ const title_time_range = document.querySelector("#durationLong");
 title_time.textContent = title_time_range.value;
 loop_time.textContent = loop_time_range.value;
 loop_time_range.addEventListener("input", (event) => {
-  loop_time.textContent = event.target.value;
+  if (event.target.value < 60) {
+    loop_time.textContent = event.target.value;
+  }
+  else {
+        loop_time.textContent = (event.target.value / 60) + " min";
+  }
 });
 title_time_range.addEventListener("input", (event) => {
   title_time.textContent = event.target.value;
