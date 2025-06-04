@@ -13,20 +13,25 @@
   <input type="checkbox" title="Toggle Looping Videos">
   <span class="slider round"></span>
 </label>
-<b class="toggleLabel">Auto loop videos</b>
+<b class="toggleLabel">Always loop videos</b>
 </div>
 
-<div>
+<div class="wrapperRange">
   <input
     type="range"
     id="duration"
     name="duration"
-    min="15"
-    max="100"
+    min="0"
+    max="900"
     value="0"
-    step="15" />
+    step="15" 
+    list="markers"
+    class="RangeInput"/>
+    <div class="left-bar"></div>
+    <div class="right-bar"></div>
+
   <div>
-  <label for="duration" class="rangeLabel">Video must be shorter than&nbsp<p id="loop_time"></p>&nbspminutes long.</label>
+  <label for="duration" class="rangeLabel">Video must be shorter than&nbsp<p id="loop_time"></p></label>
   </div>
 </div>
 
