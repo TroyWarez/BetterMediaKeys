@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="popup.css">
-    <title>Better Media Keys Options</title>
+    <title>Better Media Keys Settings</title>
 </head>
 <body>
-<h2>Settings</h2>
+<div class="header">
+  <img title='Logo' src="icons/logo.svg"/><h1>Better Media Keys</h1>
+</div>
+<div>
+  <h2>Settings</h2>
+  <b>(Shorts and Playlists will not be affected)</b>
+</div>
 <div class="toggle">
 <label class="switch">
   <input type="checkbox" title="Toggle Looping Videos">
@@ -17,20 +23,8 @@
 </div>
 
 <div class="wrapperRange">
-  <input
-    type="range"
-    id="duration"
-    name="duration"
-    min="0"
-    max="900"
-    value="0"
-    step="15" 
-    list="markers"
-    class="RangeInput"/>
-    <div class="left-bar"></div>
-    <div class="right-bar"></div>
-
-  <div>
+  <input type="range" name="km" min=0 max=10001 step=1 value=0>
+  <output>M</output>
   <label for="duration" class="rangeLabel">Video must be shorter than&nbsp<p id="loop_time"></p></label>
   </div>
 </div>
@@ -40,7 +34,7 @@
   <input type="checkbox" title="Replace the title in the media controls with the current chapter title">
   <span class="slider round"></span>
 </label>
-<b class="toggleLabel">Replace the title in the media controls with the current chapter title</b>
+<b class="toggleLabel">Replace mini player title with chapter title</b>
 </div>
 
 <div>
@@ -56,37 +50,47 @@
   <label for="durationLong" class="rangeLabel">Video must be longer than&nbsp<p id="title_time"></p>&nbspminutes long.</label>
   </div>
 </div>
-  <b class="optionsWarning">The options below will only apply to videos without chapters and that aren't apart of a playlist.</b>
+  <h3>The following options only apply to videos without chapters:</h3>
 
 <div>
+  <form>
+ <fieldset class="fieldset">
+  <legend>Previous Track Command</legend>
   <select
     type="range"
     id="previous"
-    name="previous">
-    <option value="RESTART_VIDEO">Restart the video without an animation</option>
-    <option value="RESTART_VIDEO_ANIMATED">Restart the video with an animation</option>
-    <option value="GO_BACK_5_SECONDS_VIDEO_ANIMATED">Go back 5 seconds with an animation</option>
-    <option value="GO_BACK_15_SECONDS_VIDEO_ANIMATED">Go back 15 seconds with an animation</option>
-    <option value="GO_BACK_5_SECONDS_VIDEO_ANIMATED">Go back 5 seconds without an animation</option>
-    <option value="GO_BACK_15_SECONDS_VIDEO_ANIMATED">Go back 15 seconds without an animation</option>
+    name="previous"
+    title="Select the action to perform when the previous track button is pressed.">
+    <option value="RESTART_VIDEO">Restart the video</option>
+    <option value="RESTART_VIDEO_ANIMATED">Restart the video (Animated)</option>
+    <option value="GO_BACK_5_SECONDS_VIDEO_ANIMATED">Go back 5 seconds (Animated)</option>
+    <option value="GO_BACK_15_SECONDS_VIDEO_ANIMATED">Go back 15 seconds (Animated)</option>
+    <option value="GO_BACK_5_SECONDS_VIDEO_ANIMATED">Go back 5 seconds</option>
+    <option value="GO_BACK_15_SECONDS_VIDEO_ANIMATED">Go back 15 seconds</option>
     <option value="NOTHING">Do nothing</option>
   </select>
-  <label for="previous"><b>Previous Track Command</b></label>
+   </fieldset>
+</form>
 </div>
 
 <div>
+<form>
+ <fieldset class="fieldset">
+  <legend>Next Track Command</legend>
   <select
     type="range"
     id="next"
-    name="next">
+    name="next"
+    title="Select the action to perform when the next track button is pressed.">
     <option value="NEXT_VIDEO">Go to the video up next</option>
-    <option value="SKIP_FORWARD_5_SECONDS_VIDEO_ANIMATED">Skip forward 5 seconds with an animation</option>
-    <option value="SKIP_FORWARD_15_SECONDS_VIDEO_ANIMATED">Skip forward 15 seconds with an animation</option>
-    <option value="SKIP_FORWARD_5_SECONDS_VIDEO">Skip forward 5 seconds without an animation</option>
-    <option value="SKIP_FORWARD_5_SECONDS_VIDEO">Skip forward 15 seconds without an animation</option>
+    <option value="SKIP_FORWARD_5_SECONDS_VIDEO_ANIMATED">Skip forward 5 seconds (Animated)</option>
+    <option value="SKIP_FORWARD_15_SECONDS_VIDEO_ANIMATED">Skip forward 15 seconds (Animated)</option>
+    <option value="SKIP_FORWARD_5_SECONDS_VIDEO">Skip forward 5 seconds</option>
+    <option value="SKIP_FORWARD_5_SECONDS_VIDEO">Skip forward 15 seconds</option>
     <option value="NOTHING">Do nothing</option>
   </select>
-  <label for="next"><b>Next Track Command</b></label>
+ </fieldset>
+</form>
 </div>
 
 <script src="popup.js"></script>
