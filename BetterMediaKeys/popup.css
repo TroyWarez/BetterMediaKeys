@@ -4,7 +4,9 @@ body {
     align-items: start;
     background-color: #f5f5f5;
     color: #545454;
-    margin: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
     min-width: 17rem;
     min-height: 21rem;
     justify-content: space-between;
