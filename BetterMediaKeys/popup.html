@@ -16,7 +16,7 @@
 </div>
 <div class="toggle">
 <label class="switch">
-  <input type="checkbox" title="Toggle Looping Videos">
+  <input type="checkbox" title="Toggle Looping Videos" id="loopVideos">
   <span class="slider round"></span>
 </label>
 <b class="toggleLabel">Always loop videos</b>
@@ -25,8 +25,8 @@
 <div class="wrapperRange">
 
   <label for="duration" class="rangeLabel">Only loop videos shorter than:</label>
-  <input title="Videos shorter than this will not be looped." id="duration" class="RangeInput" type="range" name="km" min=60 max=3600 step=60 value=0 list="markers">
-  <output><b id="loop_time">1:00</b></output>
+  <input disabled title="Videos shorter than this will not be looped." id="duration" class="RangeInput" type="range" name="km" min=60 max=3600 step=60 value=3600 list="markers">
+  <output><b id="loop_time" hidden>Any duration</b></output>
   <datalist id="markers">
   <option value="60">1</option>
   <option value="600">10</option>
@@ -41,7 +41,7 @@
 
 <div class="toggle">
 <label class="switch">
-  <input type="checkbox" checked="true" title="Replace the title in the media controls with the current chapter title">
+  <input id="swapChapterTitle" type="checkbox" checked="true" title="Replace the title in the media controls with the current chapter title">
   <span class="slider round"></span>
 </label>
 <b class="toggleLabel">Swap the mini player title for the current chapter title</b>
@@ -50,8 +50,8 @@
 <div class="wrapperRange">
 
   <label for="durationLong" class="rangeLabel">Only swap the title for videos longer than:</label>
-  <input title="Videos shorter than this will not be looped." id="durationLong" class="RangeInput" type="range" name="km" min=60 max=3600 step=60 value=0 list="markersLong">
-  <output><b id="loop_timeLong">1:00</b></output>
+  <input title="Videos shorter than this will not be looped." id="durationLong" class="RangeInput" type="range" name="km" min=60 max=3600 step=60 value=3600 list="markersLong">
+  <output><b id="loop_timeLong">Any duration</b></output>
   <datalist id="markersLong">
   <option value="60">1</option>
   <option value="600">10</option>
