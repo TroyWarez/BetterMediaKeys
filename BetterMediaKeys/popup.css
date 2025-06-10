@@ -38,13 +38,9 @@ legend {
 }
 datalist {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  writing-mode: vertical-lr;
-  width: 200px;
-  margin-bottom: 1rem;
-  position: relative;
-  z-index: 3;
+  justify-content: space-evenly;
+  width: 135px;
+  font-size: small;
 }
 
 option {
@@ -79,70 +75,9 @@ select:focus {
   display: inline-block;
   position: relative;
 }
-.range {
-  --thumbWidth: 100;
-  --thumbHeight: 30;
-  --sliderHeight: 10;
-
-  position: relative;
-  display: flex;
-  height: calc(var(--thumbHeight) * 1px);
-  touch-action: none;
-  color: #fff;
-  margin: 2em;
-
-  input {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: linear-gradient(to right, #1299E6, #A0D9F9);
-    width: 100%;
-    height: calc(var(--sliderHeight) * 1px);
-    margin: auto 0;
-    outline: none;
-
-  }
-
-  input:active::-webkit-slider-thumb {
-    box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.4);
-  }
-
-  input::-webkit-slider-thumb {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    height: calc(var(--thumbHeight) * 1px);
-    width: calc(var(--thumbWidth) * 1px);
-    background: #1299E6;
-    border-radius: 30px;
-    cursor: grab;
-    box-shadow: 0 0 0 0.2em #fff;
-  }
-
-  output {
-    --x: 0;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    left: calc(var(--x) * 1%);
-    width: calc(var(--thumbWidth) * 1px);
-    height: 100%;
-
-    font-size: 0.85em;
-    pointer-events: none;
-
-    &::before {
-      content: attr(data-val);
-      margin-right: 0.5em;
-    }
-  }
-}
 .RangeInput {
   accent-color: #FF0000;
-  background: transparent;
-  border: none;
-  outline: none;
+  color: #f5f5f5;
 }
 .RangeInput:focus {
   outline: none;
@@ -152,6 +87,10 @@ select:focus {
   cursor: grabbing;
   opacity: inherit;
 }
+
+
+
+
 /* The switch - the box around the slider */
 .switch {
   position: relative;
@@ -222,5 +161,4 @@ input:checked + .slider:before {
   border: solid 1px rgb(207, 206, 206);
   accent-color: #ff0000;
   padding-top: 0;
-  margin-bottom: 1rem;
 }

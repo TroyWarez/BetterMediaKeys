@@ -23,31 +23,44 @@
 </div>
 
 <div class="wrapperRange">
-  <input type="range" name="km" min=0 max=10001 step=1 value=0>
-  <output>M</output>
-  <label for="duration" class="rangeLabel">Video must be shorter than&nbsp<p id="loop_time"></p></label>
+
+  <label for="duration" class="rangeLabel">Only loop videos shorter than:</label>
+  <input title="Videos shorter than this will not be looped." id="duration" class="RangeInput" type="range" name="km" min=60 max=3600 step=60 value=0 list="markers">
+  <output><b id="loop_time">1:00</b></output>
+  <datalist id="markers">
+  <option value="60">1</option>
+  <option value="600">10</option>
+  <option value="1200">20</option>
+  <option value="1800">30</option>
+  <option value="2400">40</option>
+  <option value="3000">50</option>
+  <option value="3600">60</option>
+  </datalist>
   </div>
 </div>
 
 <div class="toggle">
 <label class="switch">
-  <input type="checkbox" title="Replace the title in the media controls with the current chapter title">
+  <input type="checkbox" checked="true" title="Replace the title in the media controls with the current chapter title">
   <span class="slider round"></span>
 </label>
 <b class="toggleLabel">Swap the mini player title for the current chapter title</b>
 </div>
 
-<div>
-  <input
-    type="range"
-    id="durationLong"
-    name="durationLong"
-    min="0"
-    max="1800"
-    value="30 Seconds"
-    step="30"  />
-    <div>
-  <label for="durationLong" class="rangeLabel">Video must be longer than&nbsp<p id="title_time"></p>&nbspminutes long.</label>
+<div class="wrapperRange">
+
+  <label for="durationLong" class="rangeLabel">Only swap the title for videos longer than:</label>
+  <input title="Videos shorter than this will not be looped." id="durationLong" class="RangeInput" type="range" name="km" min=60 max=3600 step=60 value=0 list="markersLong">
+  <output><b id="loop_timeLong">1:00</b></output>
+  <datalist id="markersLong">
+  <option value="60">1</option>
+  <option value="600">10</option>
+  <option value="1200">20</option>
+  <option value="1800">30</option>
+  <option value="2400">40</option>
+  <option value="3000">50</option>
+  <option value="3600">60</option>
+  </datalist>
   </div>
 </div>
   <h3>The following options only apply to videos without chapters:</h3>
