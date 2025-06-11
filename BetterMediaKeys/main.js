@@ -39,6 +39,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         const configEvent = new CustomEvent("bettermediakeys-config", { detail: config });
         document.dispatchEvent(configEvent);
+        sendResponse({ status: 'success', config: config });
   }
 })
 const script = document.createElement('script');
