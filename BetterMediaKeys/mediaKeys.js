@@ -135,6 +135,13 @@ document.addEventListener('bettermediakeys-config', (event) => {
         {
             document.getElementById('movie_player').setLoopVideo(false);
         }
+        if(config.swapTitle === true && config.minSwapTitleVideoDuration >= 0)
+        {
+            SetMetaDataTitle();
+        }
+        else {
+            delete navigator.mediaSession.metadata;
+        }
         __config = config;
     }
   },
@@ -145,11 +152,21 @@ const SetTitle = () =>
     let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
     if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
     {
+        const movie_player = document.getElementById('movie_player');
+        if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
+        {
+            if(movie_player !== null && ('getDuration' in movie_player))
+            {
+                if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
+                {
         delete navigator.mediaSession.metadata;
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
             set: SetMetaDataTitle});
+        }
+    }
+    }
     }
 }
 const SetMetaDataTitle = (metadata) =>
@@ -159,11 +176,21 @@ const SetMetaDataTitle = (metadata) =>
     {
         metadata.title = currentChapterText.textContent;
     }
-    delete navigator.mediaSession.metadata;
-    navigator.mediaSession.metadata = metadata;
-    Object.defineProperty(navigator.mediaSession, "metadata", {
-        configurable: true,
-        set: SetMetaDataTitle});
+        const movie_player = document.getElementById('movie_player');
+        if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
+        {
+            if(movie_player !== null && ('getDuration' in movie_player))
+            {
+                if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
+                {
+        delete navigator.mediaSession.metadata;
+        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            set: SetMetaDataTitle});
+        }
+    }
+    }
 }
 
 const SetChapterData = (event) =>
@@ -289,14 +316,21 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
 
     if((currentChapterText) && typeof currentChapterText !== 'undefined' && ('mediaSession' in navigator) && ('metadata' in navigator.mediaSession))
     {
-        delete navigator.mediaSession.metadata;
-        if(navigator.mediaSession.metadata?.title)
+        const movie_player = document.getElementById('movie_player');
+        if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
         {
-            navigator.mediaSession.metadata.title = currentChapterText.textContent;
-        }
+            if(movie_player !== null && ('getDuration' in movie_player))
+            {
+                if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
+                {
+        delete navigator.mediaSession.metadata;
+        navigator.mediaSession.metadata.title = currentChapterText.textContent;
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
             set: SetMetaDataTitle});
+        }
+    }
+    }
 
         const chapterTextConfig = { attributes: false, childList: true, subtree: true };
         const chapterTextobserver = new MutationObserver(SetTitle);
@@ -361,11 +395,21 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                             && (CurrentChapterIndex + 1) >= 0)
                            {
                                 moviePlayer.seekToChapterWithAnimation((CurrentChapterIndex + 1));
+                                const movie_player = document.getElementById('movie_player');
+                                if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
+                                {
+                                    if(movie_player !== null && ('getDuration' in movie_player))
+                                    {
+                                        if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
+                                        {
                                 delete navigator.mediaSession.metadata;
                                 navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.title.simpleText;
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
                                     configurable: true,
                                     set: SetMetaDataTitle});
+                                }
+                            }
+                            }
                            }
                         }
         
@@ -390,11 +434,21 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                            {
                                 moviePlayer.seekTo((ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.timeRangeStartMillis / 1000));
                                 moviePlayer.wakeUpControls();
+                                const movie_player = document.getElementById('movie_player');
+                                if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
+                                {
+                                    if(movie_player !== null && ('getDuration' in movie_player))
+                                    {
+                                        if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
+                                        {
                                 delete navigator.mediaSession.metadata;
-                                navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.title.runs.at(0)?.text;
+                                navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.title.simpleText;
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
                                     configurable: true,
                                     set: SetMetaDataTitle});
+                                }
+                            }
+                            }
                            }
                         }
 
@@ -582,11 +636,21 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                 CurrentChapterIndex = CurrentChapterIndex - 1;
                                 moviePlayer.seekToChapterWithAnimation(CurrentChapterIndex);
                             }
-                            delete navigator.mediaSession.metadata;
+                                const movie_player = document.getElementById('movie_player');
+                                if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
+                                {
+                                    if(movie_player !== null && ('getDuration' in movie_player))
+                                    {
+                                        if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
+                                        {
+                                delete navigator.mediaSession.metadata;
                             navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
-                            Object.defineProperty(navigator.mediaSession, "metadata", {
-                                configurable: true,
-                                set: SetMetaDataTitle});
+                                Object.defineProperty(navigator.mediaSession, "metadata", {
+                                    configurable: true,
+                                    set: SetMetaDataTitle});
+                                }
+                            }
+                            }
                            }
                         }
         
@@ -624,11 +688,21 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                 moviePlayer.wakeUpControls();
 
                             }
+                            const movie_player = document.getElementById('movie_player');
+                            if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
+                            {
+                                if(movie_player !== null && ('getDuration' in movie_player))
+                                {
+                                    if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
+                                    {
                             delete navigator.mediaSession.metadata;
-                            navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
+                            navigator.mediaSession.metadata.title = currentChapterText.textContent;
                             Object.defineProperty(navigator.mediaSession, "metadata", {
                                 configurable: true,
                                 set: SetMetaDataTitle});
+                            }
+                        }
+                        }
                            }
                         }
                     }
