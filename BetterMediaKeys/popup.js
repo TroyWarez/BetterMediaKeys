@@ -16,7 +16,9 @@ const defaultConfig = {
     previousTrackCmd: 'RESTART_VIDEO',
     nextTrackCmd: 'NEXT_VIDEO',
 };
-loopVideos.addEventListener("input", (event) => {
+loopVideos.addEventListener("input", async (event) => {
+    const tabs = await chrome.tabs.query({})
+    chrome.tabs.sendMessage(tabs[0].id, 'test');
     if(event.target.checked) {
     loop_time_range.disabled = false;
     loop_time.hidden = false;
