@@ -9,24 +9,55 @@ const loop_time_range_long = document.querySelector("#durationLong");
 const swapChapterTitle = document.querySelector("#swapChapterTitle");
 
 const defaultConfig = {
-    LoopVidoes: false,
-    minLoopVideoDuration: 0,
+    LoopVideos: false,
+    minLoopVideoDuration: 3600,
     swapTitle: false,
     minSwapTitleVideoDuration: 0,
     previousTrackCmd: 'RESTART_VIDEO',
     nextTrackCmd: 'NEXT_VIDEO',
 };
+const SaveConfig = (config) => {
+    if(config)
+    {
+        localStorage.setItem('config', JSON.stringify(config));
+    }
+}
+const LoadConfig = () => {
+    const localStorageConfig = localStorage.getItem('config');
+    if (localStorageConfig === null) {
+        localStorage.setItem('config', JSON.stringify(defaultConfig));
+    }
+    return JSON.parse(localStorageConfig);
+}
+
+let config = LoadConfig();
+if(!config) {
+    config = defaultConfig;
+    SaveConfig(config);
+}
+loopVideos.checked = config.LoopVideos;
+loop_time_range.value = config.minLoopVideoDuration;
+if(loopVideos.checked) {
+    loop_time_range.disabled = false;
+    loop_time.hidden = false;
+}
 loopVideos.addEventListener("input", async (event) => {
-    const tabs = await chrome.tabs.query({})
-    chrome.tabs.sendMessage(tabs[0].id, 'test');
     if(event.target.checked) {
     loop_time_range.disabled = false;
     loop_time.hidden = false;
+    config.LoopVideos = true;
+    config.minLoopVideoDuration = parseInt(loop_time_range.value);
     }
     else {
     loop_time_range.disabled = true;
     loop_time.hidden = true;
+    config.LoopVideos = false;
+    config.minLoopVideoDuration = 0;
     }
+    SaveConfig(config);
+    // Send the new config to the content script
+    const tabs = await chrome.tabs.query({})
+    chrome.tabs.sendMessage(tabs[0].id, config);
 });
 loop_time_range.addEventListener("input", (event) => {
     if(event.target.value === '3600') {
