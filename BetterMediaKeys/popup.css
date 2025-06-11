@@ -83,7 +83,7 @@ select:focus {
   outline: none;
 
 }
-.RangeInput:active {
+.RangeInput:active:not(:disabled) {
   cursor: grabbing;
   opacity: inherit;
 }
