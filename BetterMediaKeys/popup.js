@@ -38,6 +38,12 @@ if(!config) {
 
 loopVideos.checked = config.LoopVideos;
 loop_time_range.value = config.minLoopVideoDuration;
+if(config.minLoopVideoDuration === 3600) {
+    loop_time.textContent = 'Any duration';
+}
+else {
+    loop_time.textContent = config.minLoopVideoDuration / 60 + ':00';
+}
 if(loopVideos.checked) {
     loop_time_range.disabled = false;
     loop_time.hidden = false;
@@ -49,7 +55,12 @@ if(swapChapterTitle.checked) {
     loop_time_range_long.disabled = false;
     loop_time_long.hidden = false;
 }
-
+if(config.minSwapTitleVideoDuration === 3600) {
+    loop_time_long.textContent = 'Any duration';
+}
+else {
+    loop_time_long.textContent = config.minSwapTitleVideoDuration / 60 + ':00';
+}
 loopVideos.addEventListener("input", async (event) => {
     if(event.target.checked) {
     loop_time_range.disabled = false;
@@ -75,6 +86,8 @@ loop_time_range.addEventListener("input", (event) => {
     else {
     loop_time.textContent = event.target.value / 60 + ':00';
     }
+    config.minLoopVideoDuration = parseInt(event.target.value);
+    SaveConfig(config);
 });
 
 loop_time_range_long.addEventListener("input", (event) => {
@@ -84,6 +97,8 @@ loop_time_range_long.addEventListener("input", (event) => {
     else {
     loop_time_long.textContent = event.target.value / 60 + ':00';
     }
+    config.minSwapTitleVideoDuration = parseInt(event.target.value);
+    SaveConfig(config);
 });
 swapChapterTitle.addEventListener("input", async (event) => {
     if(event.target.checked) {
