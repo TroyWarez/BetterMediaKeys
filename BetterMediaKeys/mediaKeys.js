@@ -5,6 +5,217 @@ var __actionHandler = navigator.mediaSession.setActionHandler;
 var __actionHandlerPrevious = null;
 var __lastClickPrevious = 0;
 var __lastClickNext = 0;
+var __config = {
+    LoopVideos: false,
+    minLoopVideoDuration: 3600,
+    swapTitle: true,
+    minSwapTitleVideoDuration: 3600,
+    previousTrackCmd: 'RESTART_VIDEO',
+    nextTrackCmd: 'NEXT_VIDEO',
+};
+document.addEventListener('bettermediakeys-config', (event) => {
+    const config = event.detail;
+    const urlParams = new URLSearchParams(window.location.search);
+    if( config && 
+        config.LoopVideos !== undefined &&
+        config.minLoopVideoDuration !== undefined && 
+        config.swapTitle !== undefined && 
+        config.minSwapTitleVideoDuration !== undefined && 
+        config.previousTrackCmd !== undefined && 
+        config.nextTrackCmd !== undefined)
+        {
+
+        if(config.LoopVideos === true && config.minLoopVideoDuration >= 0)
+        {
+            if((document.getElementById('movie_player') !== null)
+                && !isShorts
+                && !urlParams.has('list')
+                && ('seekToChapterWithAnimation' in document.getElementById('movie_player')) 
+                && ('getDuration' in document.getElementById('movie_player')) && ('setLoopVideo' in document.getElementById('movie_player')))
+                {
+                    if (document.getElementById('movie_player').getDuration() < config.minLoopVideoDuration || config.minLoopVideoDuration === 3600)
+                        {
+                            document.getElementById('movie_player').setLoopVideo(true);
+                        }
+                        else
+                        {
+                            document.getElementById('movie_player').setLoopVideo(false);
+                        }
+                }
+        }
+        else if(config.LoopVideos === false && !isShorts && !urlParams.has('list') (document.getElementById('movie_player') !== null) && ('setLoopVideo' in document.getElementById('movie_player')))
+        {
+            document.getElementById('movie_player').setLoopVideo(false);
+        }
+        __config = config;
+    }
+  },
+  false,
+);
+const SetTitle = () =>
+{
+    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
+    {
+        delete navigator.mediaSession.metadata;
+        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            set: SetMetaDataTitle});
+    }
+}
+const SetMetaDataTitle = (metadata) =>
+{
+    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
+    {
+        metadata.title = currentChapterText.textContent;
+    }
+    delete navigator.mediaSession.metadata;
+    navigator.mediaSession.metadata = metadata;
+    Object.defineProperty(navigator.mediaSession, "metadata", {
+        configurable: true,
+        set: SetMetaDataTitle});
+}
+
+const SetChapterData = (event) =>
+{
+if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('setActionHandler' in navigator.mediaSession)) {
+
+    switch(event.type)
+    {
+    case 'yt-shorts-reset':
+        {
+            isShorts = true;
+            break;
+        }
+    case 'yt-player-updated':
+        {
+            SetMetaDataTitle();
+            break;
+        }
+    case 'yt-navigate-finish':
+        {
+        const urlParams = new URLSearchParams(window.location.search);
+        if(__config.LoopVideos === true && __config.minLoopVideoDuration >= 0)
+        {
+            if((document.getElementById('movie_player') !== null)
+                && !isShorts
+                && !urlParams.has('list')
+                && ('seekToChapterWithAnimation' in document.getElementById('movie_player')) 
+                && ('getDuration' in document.getElementById('movie_player')) && ('setLoopVideo' in document.getElementById('movie_player')))
+                {
+                    if (document.getElementById('movie_player').getDuration() < __config.minLoopVideoDuration || __config.minLoopVideoDuration === 3600)
+                        {
+                            document.getElementById('movie_player').setLoopVideo(true);
+                        }
+                    else
+                        {
+                            document.getElementById('movie_player').setLoopVideo(false);
+                        }
+                }
+        }
+        else if(__config.LoopVideos === false && !isShorts && !urlParams.has('list') && (document.getElementById('movie_player') !== null) && ('setLoopVideo' in document.getElementById('movie_player')))
+        {
+            document.getElementById('movie_player').setLoopVideo(false);
+        }
+            if((typeof event !== 'undefined')//Cumbersome
+            &&  ('detail' in event)
+            && ('response' in event.detail)
+            && ('response' in event.detail.response)
+            && ('playerOverlays' in event.detail.response.response)
+            && ('playerOverlayRenderer' in event.detail.response.response.playerOverlays)
+            && ('decoratedPlayerBarRenderer' in event.detail.response.response.playerOverlays.playerOverlayRenderer)
+            && ('decoratedPlayerBarRenderer' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
+            && ('playerBar' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
+            && ('multiMarkersPlayerBarRenderer' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
+            && ('markersMap' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
+            && (event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
+        {
+                event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
+                    if('key' in element){
+                    switch(element.key)
+                    {
+                        case 'AUTO_CHAPTERS':
+                            {
+                                ytChapterData = element.value;
+                                break;
+                            }
+                        case 'DESCRIPTION_CHAPTERS':
+                            {
+                                ytChapterData = element.value;
+                                break;
+                            }
+                    }
+                }
+            });
+
+        }
+            if((typeof event !== 'undefined')
+            &&  ('detail' in event)
+            && ('pageType' in event.detail)
+            && (event.detail.pageType === 'shorts'))
+            {
+                isShorts = true;
+            }
+            else {
+                isShorts = false;
+            }
+        break;
+        }
+    case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
+        {
+        if((ytChapterData === null)
+        && (typeof ytInitialData !== 'undefined')
+        && ('playerOverlays' in ytInitialData)
+        && ('playerOverlayRenderer' in ytInitialData.playerOverlays)
+        && ('decoratedPlayerBarRenderer' in ytInitialData.playerOverlays.playerOverlayRenderer)
+        && ('decoratedPlayerBarRenderer' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
+        && ('playerBar' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
+        && ('multiMarkersPlayerBarRenderer' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
+        && ('markersMap' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
+        && (ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
+        {
+            ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
+                if('key' in element){
+                switch(element.key)
+                {
+                    case 'AUTO_CHAPTERS':
+                        {
+                            ytChapterData = element.value;
+                            break;
+                        }
+                    case 'DESCRIPTION_CHAPTERS':
+                        {
+                            ytChapterData = element.value;
+                            break;
+                        }
+                }
+            }
+        });
+                break;
+        }}
+    }
+
+    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+
+    if((currentChapterText) && typeof currentChapterText !== 'undefined' && ('mediaSession' in navigator) && ('metadata' in navigator.mediaSession))
+    {
+        delete navigator.mediaSession.metadata;
+        if(navigator.mediaSession.metadata?.title)
+        {
+            navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        }
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            set: SetMetaDataTitle});
+
+        const chapterTextConfig = { attributes: false, childList: true, subtree: true };
+        const chapterTextobserver = new MutationObserver(SetTitle);
+        chapterTextobserver.observe(currentChapterText, chapterTextConfig);
+    }
+}
+}
 
 Object.defineProperty(navigator.mediaSession, "metadata", {
     configurable: true,
@@ -284,157 +495,3 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
 };
 document.addEventListener('yt-navigate-finish', SetChapterData, true);
 document.addEventListener('DOMContentLoaded', SetChapterData, true);
-document.addEventListener('bettermediakeys-config', (event) => {
-    console.log('BetterMediaKeys Config Event: ', event);
-  },
-  false,
-);
-function SetChapterData (event)
-{
-if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('setActionHandler' in navigator.mediaSession)) {
-
-    switch(event.type)
-    {
-    case 'yt-shorts-reset':
-        {
-            isShorts = true;
-            break;
-        }
-    case 'yt-player-updated':
-        {
-            SetMetaDataTitle();
-            break;
-        }
-    case 'yt-navigate-finish':
-        {
-            const urlParams = new URLSearchParams(window.location.search);
-            if ((document.getElementById('movie_player') !== null) &&
-                 ('seekTo' in document.getElementById('movie_player')) && ('getCurrentTime' in document.getElementById('movie_player')) && ('setLoopVideo' in document.getElementById('movie_player')) && urlParams.has('list') === false  && isShorts === false)
-                {
-                    if (document.getElementById('movie_player').getCurrentTime() < 360)
-                        {
-                            document.getElementById('movie_player').setLoopVideo(true);
-                        }
-                }
-            if((typeof event !== 'undefined')//Cumbersome
-            &&  ('detail' in event)
-            && ('response' in event.detail)
-            && ('response' in event.detail.response)
-            && ('playerOverlays' in event.detail.response.response)
-            && ('playerOverlayRenderer' in event.detail.response.response.playerOverlays)
-            && ('decoratedPlayerBarRenderer' in event.detail.response.response.playerOverlays.playerOverlayRenderer)
-            && ('decoratedPlayerBarRenderer' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
-            && ('playerBar' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
-            && ('multiMarkersPlayerBarRenderer' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
-            && ('markersMap' in event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
-            && (event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
-        {
-                event.detail.response.response.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
-                    if('key' in element){
-                    switch(element.key)
-                    {
-                        case 'AUTO_CHAPTERS':
-                            {
-                                ytChapterData = element.value;
-                                break;
-                            }
-                        case 'DESCRIPTION_CHAPTERS':
-                            {
-                                ytChapterData = element.value;
-                                break;
-                            }
-                    }
-                }
-            });
-
-        }
-            if((typeof event !== 'undefined')
-            &&  ('detail' in event)
-            && ('pageType' in event.detail)
-            && (event.detail.pageType === 'shorts'))
-            {
-                isShorts = true;
-            }
-            else {
-                isShorts = false;
-            }
-        break;
-        }
-    case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
-        {
-        if((ytChapterData === null)
-        && (typeof ytInitialData !== 'undefined')
-        && ('playerOverlays' in ytInitialData)
-        && ('playerOverlayRenderer' in ytInitialData.playerOverlays)
-        && ('decoratedPlayerBarRenderer' in ytInitialData.playerOverlays.playerOverlayRenderer)
-        && ('decoratedPlayerBarRenderer' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer)
-        && ('playerBar' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer)
-        && ('multiMarkersPlayerBarRenderer' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar) 
-        && ('markersMap' in ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer)
-        && (ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap instanceof Array) )
-        {
-            ytInitialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.forEach((element) => {
-                if('key' in element){
-                switch(element.key)
-                {
-                    case 'AUTO_CHAPTERS':
-                        {
-                            ytChapterData = element.value;
-                            break;
-                        }
-                    case 'DESCRIPTION_CHAPTERS':
-                        {
-                            ytChapterData = element.value;
-                            break;
-                        }
-                }
-            }
-        });
-                break;
-        }}
-    }
-
-    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
-
-    if((currentChapterText) && typeof currentChapterText !== 'undefined' && ('mediaSession' in navigator) && ('metadata' in navigator.mediaSession))
-    {
-        delete navigator.mediaSession.metadata;
-        if(navigator.mediaSession.metadata?.title)
-        {
-            navigator.mediaSession.metadata.title = currentChapterText.textContent;
-        }
-        Object.defineProperty(navigator.mediaSession, "metadata", {
-            configurable: true,
-            set: SetMetaDataTitle});
-
-        const chapterTextConfig = { attributes: false, childList: true, subtree: true };
-        const chapterTextobserver = new MutationObserver(SetTitle);
-        chapterTextobserver.observe(currentChapterText, chapterTextConfig);
-    }
-}
-}
-function SetTitle()
-{
-    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
-    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
-    {
-        delete navigator.mediaSession.metadata;
-        navigator.mediaSession.metadata.title = currentChapterText.textContent;
-        Object.defineProperty(navigator.mediaSession, "metadata", {
-            configurable: true,
-            set: SetMetaDataTitle});
-    }
-}
-function SetMetaDataTitle(metadata)
-{
-    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
-    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
-    {
-        metadata.title = currentChapterText.textContent;
-    }
-    delete navigator.mediaSession.metadata;
-    navigator.mediaSession.metadata = metadata;
-    Object.defineProperty(navigator.mediaSession, "metadata", {
-        configurable: true,
-        set: SetMetaDataTitle});
-}
