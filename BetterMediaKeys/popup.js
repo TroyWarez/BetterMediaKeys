@@ -8,6 +8,9 @@ const loop_time_long = document.querySelector("#loop_timeLong");
 const loop_time_range_long = document.querySelector("#durationLong");
 const swapChapterTitle = document.querySelector("#swapChapterTitle");
 
+const previousCmd = document.querySelector("#previous");
+const nextCmd = document.querySelector("#next");
+
 const defaultConfig = {
     LoopVideos: false,
     minLoopVideoDuration: 3600,
@@ -61,6 +64,8 @@ if(config.minSwapTitleVideoDuration === 3600) {
 else {
     loop_time_long.textContent = config.minSwapTitleVideoDuration / 60 + ':00';
 }
+previousCmd.value = config.previousTrackCmd;
+nextCmd.value = config.nextTrackCmd;
 loopVideos.addEventListener("input", async (event) => {
     if(event.target.checked) {
     loop_time_range.disabled = false;
@@ -117,4 +122,12 @@ swapChapterTitle.addEventListener("input", async (event) => {
     // Send the new config to the content script
     const tabs = await chrome.tabs.query({})
     chrome.tabs.sendMessage(tabs[0].id, config);
+});
+nextCmd.addEventListener("input", async (event) => {
+    config.nextTrackCmd = event.target.value;
+    SaveConfig(config);
+});
+previousCmd.addEventListener("input", async (event) => {
+    config.previousTrackCmd = event.target.value;
+    SaveConfig(config);
 });
