@@ -57,7 +57,7 @@ const SetTitle = () =>
     let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
     if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
     {
-        delete navigator.mediaSession.metadata;
+        delete navigator.mediaSession.metadata.title;
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
@@ -263,7 +263,6 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                     });
                 }
                     }
-                    const shortsplayer = document.getElementById('shorts-player');
                     const nextButtonparent = document.getElementById('navigation-button-down');
                     const currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
                     if(!isShorts && (moviePlayer !== null) && ('seekToChapterWithAnimation' in moviePlayer) 
