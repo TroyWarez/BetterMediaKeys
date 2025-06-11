@@ -84,7 +84,7 @@ loopVideos.addEventListener("input", async (event) => {
     const tabs = await chrome.tabs.query({})
     chrome.tabs.sendMessage(tabs[0].id, config);
 });
-loop_time_range.addEventListener("input", (event) => {
+loop_time_range.addEventListener("input", async (event) => {
     if(event.target.value === '3600') {
     loop_time.textContent = 'Any duration';
     }
@@ -93,9 +93,12 @@ loop_time_range.addEventListener("input", (event) => {
     }
     config.minLoopVideoDuration = parseInt(event.target.value);
     SaveConfig(config);
+    // Send the new config to the content script
+    const tabs = await chrome.tabs.query({})
+    chrome.tabs.sendMessage(tabs[0].id, config);
 });
 
-loop_time_range_long.addEventListener("input", (event) => {
+loop_time_range_long.addEventListener("input", async (event) => {
     if(event.target.value === '3600') {
     loop_time_long.textContent = 'Any duration';
     }
@@ -104,6 +107,9 @@ loop_time_range_long.addEventListener("input", (event) => {
     }
     config.minSwapTitleVideoDuration = parseInt(event.target.value);
     SaveConfig(config);
+    // Send the new config to the content script
+    const tabs = await chrome.tabs.query({})
+    chrome.tabs.sendMessage(tabs[0].id, config);
 });
 swapChapterTitle.addEventListener("input", async (event) => {
     if(event.target.checked) {
@@ -126,8 +132,14 @@ swapChapterTitle.addEventListener("input", async (event) => {
 nextCmd.addEventListener("input", async (event) => {
     config.nextTrackCmd = event.target.value;
     SaveConfig(config);
+    // Send the new config to the content script
+    const tabs = await chrome.tabs.query({})
+    chrome.tabs.sendMessage(tabs[0].id, config);
 });
 previousCmd.addEventListener("input", async (event) => {
     config.previousTrackCmd = event.target.value;
     SaveConfig(config);
+    // Send the new config to the content script
+    const tabs = await chrome.tabs.query({})
+    chrome.tabs.sendMessage(tabs[0].id, config);
 });
