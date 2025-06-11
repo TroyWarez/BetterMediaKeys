@@ -12,7 +12,7 @@ const defaultConfig = {
     LoopVideos: false,
     minLoopVideoDuration: 3600,
     swapTitle: false,
-    minSwapTitleVideoDuration: 0,
+    minSwapTitleVideoDuration: 3600,
     previousTrackCmd: 'RESTART_VIDEO',
     nextTrackCmd: 'NEXT_VIDEO',
 };
@@ -35,12 +35,21 @@ if(!config) {
     config = defaultConfig;
     SaveConfig(config);
 }
+
 loopVideos.checked = config.LoopVideos;
 loop_time_range.value = config.minLoopVideoDuration;
 if(loopVideos.checked) {
     loop_time_range.disabled = false;
     loop_time.hidden = false;
 }
+
+swapChapterTitle.checked = config.swapTitle;
+loop_time_range_long.value = config.minSwapTitleVideoDuration;
+if(swapChapterTitle.checked) {
+    loop_time_range_long.disabled = false;
+    loop_time_long.hidden = false;
+}
+
 loopVideos.addEventListener("input", async (event) => {
     if(event.target.checked) {
     loop_time_range.disabled = false;
@@ -52,7 +61,7 @@ loopVideos.addEventListener("input", async (event) => {
     loop_time_range.disabled = true;
     loop_time.hidden = true;
     config.LoopVideos = false;
-    config.minLoopVideoDuration = 0;
+    config.minLoopVideoDuration = 3600;
     }
     SaveConfig(config);
     // Send the new config to the content script
@@ -76,13 +85,21 @@ loop_time_range_long.addEventListener("input", (event) => {
     loop_time_long.textContent = event.target.value / 60 + ':00';
     }
 });
-swapChapterTitle.addEventListener("input", (event) => {
+swapChapterTitle.addEventListener("input", async (event) => {
     if(event.target.checked) {
     loop_time_range_long.disabled = false;
     loop_time_long.hidden = false;
+    config.swapTitle = true;
+    config.minSwapTitleVideoDuration = parseInt(loop_time_range_long.value);
     }
     else {
     loop_time_range_long.disabled = true;
     loop_time_long.hidden = true;
+    config.swapTitle = false;
+    config.minSwapTitleVideoDuration = 3600;
     }
+    SaveConfig(config);
+    // Send the new config to the content script
+    const tabs = await chrome.tabs.query({})
+    chrome.tabs.sendMessage(tabs[0].id, config);
 });
