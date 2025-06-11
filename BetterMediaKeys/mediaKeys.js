@@ -57,7 +57,9 @@ const SetTitle = () =>
     let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
     if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
     {
-        delete navigator.mediaSession.metadata.title;
+        const oldMetaData = navigator.mediaSession.metadata;
+        delete navigator.mediaSession.metadata;
+        navigator.mediaSession.metadata = new MediaMetadata(oldMetaData);
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
