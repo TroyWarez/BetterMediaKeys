@@ -57,6 +57,7 @@ const SetTitle = () =>
     let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
     if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
     {
+        delete navigator.mediaSession.metadata;
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
@@ -315,7 +316,61 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
 
                     }
                     else if(!isShorts && moviePlayer !== null && !('seekToChapterWithAnimation' in moviePlayer) && ('handleGlobalKeyDown' in moviePlayer)){
-                        moviePlayer.handleGlobalKeyDown(39, false, false);
+                            switch(__config.nextTrackCmd)
+                            {
+                                case 'NEXT_VIDEO':
+                                    {
+                                        if(('handleGlobalKeyDown' in moviePlayer))
+                                        {
+                                            moviePlayer.handleGlobalKeyDown(39, false, false);
+                                        }
+                                        break; 
+                                    }
+                                    case 'SKIP_FORWARD_5_SECONDS_VIDEO_ANIMATED':
+                                    {
+                                        if(('handleGlobalKeyDown' in moviePlayer))
+                                        {
+                                            moviePlayer.handleGlobalKeyDown(39, false, false);
+                                        }
+                                        break; 
+                                    }
+                                    case 'SKIP_FORWARD_10_SECONDS_VIDEO_ANIMATED':
+                                    {
+                                        if(('handleGlobalKeyDown' in moviePlayer))
+                                        {
+                                            moviePlayer.handleGlobalKeyDown(76, false, false);
+                                        }
+                                        break; 
+                                    }
+                                    case 'SKIP_FORWARD_5_SECONDS_VIDEO':
+                                    {
+                                        if(('seekBy' in moviePlayer))
+                                        {
+                                            moviePlayer.seekBy(5);
+                                        }
+                                        break; 
+                                    }
+                                    case 'SKIP_FORWARD_10_SECONDS_VIDEO':
+                                    {
+                                        if(('seekBy' in moviePlayer))
+                                        {
+                                            moviePlayer.seekBy(10);
+                                        }
+                                        break; 
+                                    }
+                                    case 'NOTHING':
+                                    {
+                                        break; 
+                                    }
+                                    default:
+                                    {
+                                        if(('handleGlobalKeyDown' in moviePlayer))
+                                        {
+                                            moviePlayer.handleGlobalKeyDown(39, false, false);
+                                        }
+                                        break; 
+                                    }
+                            }
 
                     }
                     else if(moviePlayer !== null && ('nextVideo' in moviePlayer)){
@@ -326,7 +381,55 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
                         }
                         else {
-                            moviePlayer.nextVideo();
+                            switch(__config.nextTrackCmd)
+                            {
+                                case 'NEXT_VIDEO':
+                                    {
+                                        moviePlayer.nextVideo();
+                                        break; 
+                                    }
+                                    case 'SKIP_FORWARD_5_SECONDS_VIDEO_ANIMATED':
+                                    {
+                                        if(('handleGlobalKeyDown' in moviePlayer))
+                                        {
+                                            moviePlayer.handleGlobalKeyDown(39, false, false);
+                                        }
+                                        break; 
+                                    }
+                                    case 'SKIP_FORWARD_10_SECONDS_VIDEO_ANIMATED':
+                                    {
+                                        if(('handleGlobalKeyDown' in moviePlayer))
+                                        {
+                                            moviePlayer.handleGlobalKeyDown(76, false, false);
+                                        }
+                                        break; 
+                                    }
+                                    case 'SKIP_FORWARD_5_SECONDS_VIDEO':
+                                    {
+                                        if(('seekBy' in moviePlayer))
+                                        {
+                                            moviePlayer.seekBy(5);
+                                        }
+                                        break; 
+                                    }
+                                    case 'SKIP_FORWARD_10_SECONDS_VIDEO':
+                                    {
+                                        if(('seekBy' in moviePlayer))
+                                        {
+                                            moviePlayer.seekBy(10);
+                                        }
+                                        break; 
+                                    }
+                                    case 'NOTHING':
+                                    {
+                                        break; 
+                                    }
+                                    default:
+                                    {
+                                        moviePlayer.nextVideo();
+                                        break; 
+                                    }
+                            }
                         }
                     };
                 });
@@ -445,9 +548,73 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                            }
                         }
                     }
-                    else if(!isShorts && moviePlayer !== null && !('seekToChapterWithAnimation' in moviePlayer) && ('handleGlobalKeyDown' in moviePlayer)){
-                        moviePlayer.handleGlobalKeyDown(37, false, false);
-
+                    else if(!isShorts && moviePlayer !== null && !('seekToChapterWithAnimation' in moviePlayer) && ('getCurrentTime' in moviePlayer)){
+                     if (moviePlayer.getCurrentTime() > 3){
+                       switch(__config.previousTrackCmd)
+                            {
+                                case 'RESTART_VIDEO':
+                                    {
+                                        if(('seekTo' in moviePlayer))
+                                        {
+                                            moviePlayer.seekTo(0);
+                                        }
+                                        break; 
+                                    }
+                                    case 'RESTART_VIDEO_ANIMATED':
+                                    {
+                                        if(('seekTo' in moviePlayer) && ('wakeUpControls' in moviePlayer))
+                                        {
+                                            moviePlayer.seekTo(0);
+                                            moviePlayer.wakeUpControls();
+                                        }
+                                        break; 
+                                    }
+                                     case 'GO_BACK_5_SECONDS_VIDEO_ANIMATED':
+                                    {
+                                        if(('handleGlobalKeyDown' in moviePlayer))
+                                        {
+                                            moviePlayer.handleGlobalKeyDown(37, false, false);
+                                        }
+                                        break; 
+                                    }
+                                    case 'GO_BACK_10_SECONDS_VIDEO_ANIMATED':
+                                    {
+                                        if(('handleGlobalKeyDown' in moviePlayer))
+                                        {
+                                            moviePlayer.handleGlobalKeyDown(74, false, false);
+                                        }
+                                        break; 
+                                    }
+                                    case 'GO_BACK_5_SECONDS_VIDEO':
+                                    {
+                                        if(('seekBy' in moviePlayer))
+                                        {
+                                            moviePlayer.seekBy(-5);
+                                        }
+                                        break; 
+                                    }
+                                    case 'GO_BACK_10_SECONDS_VIDEO':
+                                    {
+                                        if(('seekBy' in moviePlayer))
+                                        {
+                                            moviePlayer.seekBy(-10);
+                                        }
+                                        break; 
+                                    }
+                                    case 'NOTHING':
+                                    {
+                                        break; 
+                                    }
+                                    default:
+                                    {
+                                        if(('seekTo' in moviePlayer))
+                                        {
+                                            moviePlayer.seekTo(0);
+                                        }
+                                        break; 
+                                    }
+                            }
+                        }
                     }
                     else if((moviePlayer !== null) && ('seekTo' in moviePlayer)){
                     if( isShorts && (typeof previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild !== 'undefined') && ('click' in previousButtonparent?.firstElementChild?.firstElementChild?.firstElementChild)){
@@ -465,7 +632,70 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                         }
                         }
                         else if (moviePlayer.getCurrentTime() > 3){
-                            moviePlayer.seekTo(0);
+                       switch(__config.previousTrackCmd)
+                            {
+                                case 'RESTART_VIDEO':
+                                    {
+                                        if(('seekTo' in moviePlayer))
+                                        {
+                                            moviePlayer.seekTo(0);
+                                        }
+                                        break; 
+                                    }
+                                    case 'RESTART_VIDEO_ANIMATED':
+                                    {
+                                        if(('seekTo' in moviePlayer) && ('wakeUpControls' in moviePlayer))
+                                        {
+                                            moviePlayer.seekTo(0);
+                                            moviePlayer.wakeUpControls();
+                                        }
+                                        break; 
+                                    }
+                                     case 'GO_BACK_5_SECONDS_VIDEO_ANIMATED':
+                                    {
+                                        if(('handleGlobalKeyDown' in moviePlayer))
+                                        {
+                                            moviePlayer.handleGlobalKeyDown(37, false, false);
+                                        }
+                                        break; 
+                                    }
+                                    case 'GO_BACK_10_SECONDS_VIDEO_ANIMATED':
+                                    {
+                                        if(('handleGlobalKeyDown' in moviePlayer))
+                                        {
+                                            moviePlayer.handleGlobalKeyDown(74, false, false);
+                                        }
+                                        break; 
+                                    }
+                                    case 'GO_BACK_5_SECONDS_VIDEO':
+                                    {
+                                        if(('seekBy' in moviePlayer))
+                                        {
+                                            moviePlayer.seekBy(-5);
+                                        }
+                                        break; 
+                                    }
+                                    case 'GO_BACK_10_SECONDS_VIDEO':
+                                    {
+                                        if(('seekBy' in moviePlayer))
+                                        {
+                                            moviePlayer.seekBy(-10);
+                                        }
+                                        break; 
+                                    }
+                                    case 'NOTHING':
+                                    {
+                                        break; 
+                                    }
+                                    default:
+                                    {
+                                        if(('seekTo' in moviePlayer))
+                                        {
+                                            moviePlayer.seekTo(0);
+                                        }
+                                        break; 
+                                    }
+                            }
                         }
                     };
                     });
