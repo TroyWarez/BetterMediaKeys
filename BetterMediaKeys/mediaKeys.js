@@ -5,6 +5,7 @@ var __actionHandler = navigator.mediaSession.setActionHandler;
 var __actionHandlerPrevious = null;
 var __lastClickPrevious = 0;
 var __lastClickNext = 0;
+
 Object.defineProperty(navigator.mediaSession, "metadata", {
     configurable: true,
     set: SetMetaDataTitle});
@@ -283,7 +284,11 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
 };
 document.addEventListener('yt-navigate-finish', SetChapterData, true);
 document.addEventListener('DOMContentLoaded', SetChapterData, true);
-
+document.addEventListener('bettermediakeys-config', (event) => {
+    console.log('BetterMediaKeys Config Event: ', event);
+  },
+  false,
+);
 function SetChapterData (event)
 {
 if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('setActionHandler' in navigator.mediaSession)) {
