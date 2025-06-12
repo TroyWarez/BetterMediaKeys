@@ -131,7 +131,7 @@ document.addEventListener('bettermediakeys-config', (event) => {
                         }
                 }
         }
-        else if(config.LoopVideos === false && !isShorts && !urlParams.has('list') (document.getElementById('movie_player') !== null) && ('setLoopVideo' in document.getElementById('movie_player')))
+        else if(config.LoopVideos === false && !isShorts && !urlParams.has('list') && (document.getElementById('movie_player') !== null) && ('setLoopVideo' in document.getElementById('movie_player')))
         {
             document.getElementById('movie_player').setLoopVideo(false);
         }
