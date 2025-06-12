@@ -121,7 +121,7 @@ document.addEventListener('bettermediakeys-config', (event) => {
                 && ('seekToChapterWithAnimation' in document.getElementById('movie_player')) 
                 && ('getDuration' in document.getElementById('movie_player')) && ('setLoopVideo' in document.getElementById('movie_player')))
                 {
-                    if (document.getElementById('movie_player').getDuration() < config.minLoopVideoDuration || config.minLoopVideoDuration === 3600)
+                    if (document.getElementById('movie_player').getDuration() >= config.minLoopVideoDuration || config.minLoopVideoDuration === 3600)
                         {
                             document.getElementById('movie_player').setLoopVideo(true);
                         }
@@ -172,7 +172,7 @@ const SetTitle = () =>
 const SetMetaDataTitle = (metadata) =>
 {
     let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
-    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) )
+    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) && metadata?.title  )
     {
         metadata.title = currentChapterText.textContent;
     }
@@ -230,7 +230,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                 && ('seekToChapterWithAnimation' in document.getElementById('movie_player')) 
                 && ('getDuration' in document.getElementById('movie_player')) && ('setLoopVideo' in document.getElementById('movie_player')))
                 {
-                    if (document.getElementById('movie_player').getDuration() < __config.minLoopVideoDuration || __config.minLoopVideoDuration === 3600)
+                    if (document.getElementById('movie_player').getDuration() >= __config.minLoopVideoDuration || __config.minLoopVideoDuration === 3600)
                         {
                             document.getElementById('movie_player').setLoopVideo(true);
                         }
