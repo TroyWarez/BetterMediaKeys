@@ -90,6 +90,7 @@ MediaMetadata = class MediaMetadataEx {
 
    }
  }
+var __mediaMetadataTitle = '';
 var __actionHandlerPrevious = null;
 var __lastClickPrevious = 0;
 var __lastClickNext = 0;
@@ -135,12 +136,27 @@ document.addEventListener('bettermediakeys-config', (event) => {
         {
             document.getElementById('movie_player').setLoopVideo(false);
         }
-        if(config.swapTitle === true && config.minSwapTitleVideoDuration >= 0)
+        if (config.swapTitle && (document.getElementById('movie_player') !== null) && ('getDuration' in document.getElementById('movie_player')) && document.getElementById('movie_player').getDuration() >= config.minSwapTitleVideoDuration || config.swapTitle && config.minSwapTitleVideoDuration === 3600)
         {
-            SetMetaDataTitle();
+        if(document.getElementById('movie_player') !== null && ('getDuration' in document.getElementById('movie_player')))
+            {
+                let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+            if (document.getElementById('movie_player').getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600 && currentChapterText !== null)
+                {
+        delete navigator.mediaSession.metadata;
+        navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            set: SetMetaDataTitle});
+                }
+            }
         }
-        else {
+        else if (__mediaMetadataTitle !== ''){
             delete navigator.mediaSession.metadata;
+            navigator.mediaSession.metadata.title = __mediaMetadataTitle;
+                Object.defineProperty(navigator.mediaSession, "metadata", {
+                    configurable: true,
+                    set: SetMetaDataTitle});
         }
         __config = config;
     }
@@ -183,14 +199,21 @@ const SetMetaDataTitle = (metadata) =>
             {
                 if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                 {
-        delete navigator.mediaSession.metadata;
-        navigator.mediaSession.metadata.title = currentChapterText.textContent;
-        Object.defineProperty(navigator.mediaSession, "metadata", {
-            configurable: true,
-            set: SetMetaDataTitle});
+                delete navigator.mediaSession.metadata;
+                navigator.mediaSession.metadata.title = currentChapterText.textContent;
+                Object.defineProperty(navigator.mediaSession, "metadata", {
+                    configurable: true,
+                    set: SetMetaDataTitle});
+                }
+                else {
+                            delete navigator.mediaSession.metadata;
+                            navigator.mediaSession.metadata.title = __mediaMetadataTitle;
+                            Object.defineProperty(navigator.mediaSession, "metadata", {
+                                configurable: true,
+                                set: SetMetaDataTitle});
+                            }
+                    }
         }
-    }
-    }
 }
 
 const SetChapterData = (event) =>
@@ -209,7 +232,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         const movie_player = document.getElementById('movie_player');
         if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
         {
-            if(movie_player !== null && ('getDuration' in movie_player))
+            if(movie_player !== null && ('getDuration' in movie_player) && __config.swapTitle === true)
             {
                 if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                 {
@@ -286,6 +309,16 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
             else {
                 isShorts = false;
             }
+            if((typeof event !== 'undefined')
+            &&  ('detail' in event)
+            && ('response' in event.detail)
+            && ('playerResponse' in event.detail.response)
+            && ('videoDetails' in event.detail.response.playerResponse)
+            && ('title' in event.detail.response.playerResponse.videoDetails)
+        )
+            {
+                __mediaMetadataTitle = event.detail.response.playerResponse.videoDetails.title;
+            }
         break;
         }
     case 'DOMContentLoaded': // The global varible 'ytInitialData' may contain chapter data which we can use to get ready before the data is rendered.
@@ -340,11 +373,11 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
             set: SetMetaDataTitle});
         }
     }
-    }
 
         const chapterTextConfig = { attributes: false, childList: true, subtree: true };
         const chapterTextobserver = new MutationObserver(SetTitle);
         chapterTextobserver.observe(currentChapterText, chapterTextConfig);
+    }
     }
 }
 }
