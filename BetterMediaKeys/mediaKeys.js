@@ -206,7 +206,17 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         }
     case 'yt-player-updated':
         {
-            SetMetaDataTitle();
+        const movie_player = document.getElementById('movie_player');
+        if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
+        {
+            if(movie_player !== null && ('getDuration' in movie_player))
+            {
+                if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
+                {
+                    SetMetaDataTitle();
+                }
+    }
+    }
             break;
         }
     case 'yt-navigate-finish':
