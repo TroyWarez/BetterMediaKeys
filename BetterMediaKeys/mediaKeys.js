@@ -144,7 +144,7 @@ document.addEventListener('bettermediakeys-config', (event) => {
             if (document.getElementById('movie_player').getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600 && currentChapterText !== null)
                 {
         delete navigator.mediaSession.metadata;
-        if(typeof navigator.mediaSession.metadata !== 'undefined'){
+        if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
         }
         Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -155,7 +155,7 @@ document.addEventListener('bettermediakeys-config', (event) => {
         }
         else if (__mediaMetadataTitle !== ''){
             delete navigator.mediaSession.metadata;
-            if(typeof navigator.mediaSession.metadata !== 'undefined'){
+            if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
             navigator.mediaSession.metadata.title = __mediaMetadataTitle;
             }
                 Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -180,7 +180,7 @@ const SetTitle = () =>
                 if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                 {
         delete navigator.mediaSession.metadata;
-        if(typeof navigator.mediaSession.metadata !== 'undefined'){
+        if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
         }
         Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -206,7 +206,7 @@ const SetMetaDataTitle = (metadata) =>
                 if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                 {
                 delete navigator.mediaSession.metadata;
-                if(typeof navigator.mediaSession.metadata !== 'undefined'){
+                if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
                 navigator.mediaSession.metadata.title = currentChapterText.textContent;
                 }
                 Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -215,7 +215,7 @@ const SetMetaDataTitle = (metadata) =>
                 }
                 else {
                             delete navigator.mediaSession.metadata;
-                            if(typeof navigator.mediaSession.metadata !== 'undefined'){
+                            if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
                             navigator.mediaSession.metadata.title = __mediaMetadataTitle;
                             }
                             Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -377,7 +377,7 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
                 if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                 {
         delete navigator.mediaSession.metadata;
-        if(typeof navigator.mediaSession.metadata !== 'undefined'){
+        if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
         }
         Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -458,7 +458,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                                         {
                                 delete navigator.mediaSession.metadata;
-                                if(typeof navigator.mediaSession.metadata !== 'undefined'){
+                                if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
                                 navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.title.simpleText;
                                 }
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -499,7 +499,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                                         {
                                 delete navigator.mediaSession.metadata;
-                                if(typeof navigator.mediaSession.metadata !== 'undefined'){
+                                if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
                                 navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.title.simpleText;
                                 }
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -703,7 +703,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                                         {
                                 delete navigator.mediaSession.metadata;
-                            if(typeof navigator.mediaSession.metadata !== 'undefined'){
+                            if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
                             navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
                             }
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -757,7 +757,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                     if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                                     {
                             delete navigator.mediaSession.metadata;
-                            if(typeof navigator.mediaSession.metadata !== 'undefined'){
+                            if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
                             navigator.mediaSession.metadata.title = currentChapterText.textContent;
                             }
                             Object.defineProperty(navigator.mediaSession, "metadata", {
