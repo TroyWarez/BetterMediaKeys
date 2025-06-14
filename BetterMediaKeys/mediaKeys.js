@@ -381,7 +381,6 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
         const chapterTextobserver = new MutationObserver(SetTitle);
         chapterTextobserver.observe(currentChapterText, chapterTextConfig);
     }
-    }
 }
 }
 navigator.mediaSession.setActionHandler = function setActionHandler(action, handler)
