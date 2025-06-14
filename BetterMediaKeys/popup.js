@@ -23,6 +23,7 @@ const SaveConfig = (config) => {
     if(config)
     {
         localStorage.setItem('config', JSON.stringify(config));
+        chrome.tabs.query({}, (tabs) => tabs.forEach( tab => chrome.tabs.sendMessage(tab.id, config) ) ).catch(() => {});
     }
 }
 const LoadConfig = () => {
@@ -80,9 +81,6 @@ loopVideos.addEventListener("input", async (event) => {
     config.minLoopVideoDuration = 3600;
     }
     SaveConfig(config);
-    // Send the new config to the content script
-    const tabs = await chrome.tabs.query({})
-    chrome.tabs.sendMessage(tabs[0].id, config);
 });
 loop_time_range.addEventListener("input", async (event) => {
     if(event.target.value === '3600') {
@@ -93,9 +91,6 @@ loop_time_range.addEventListener("input", async (event) => {
     }
     config.minLoopVideoDuration = parseInt(event.target.value);
     SaveConfig(config);
-    // Send the new config to the content script
-    const tabs = await chrome.tabs.query({})
-    chrome.tabs.sendMessage(tabs[0].id, config);
 });
 
 loop_time_range_long.addEventListener("input", async (event) => {
@@ -107,9 +102,6 @@ loop_time_range_long.addEventListener("input", async (event) => {
     }
     config.minSwapTitleVideoDuration = parseInt(event.target.value);
     SaveConfig(config);
-    // Send the new config to the content script
-    const tabs = await chrome.tabs.query({})
-    chrome.tabs.sendMessage(tabs[0].id, config);
 });
 swapChapterTitle.addEventListener("input", async (event) => {
     if(event.target.checked) {
@@ -125,21 +117,12 @@ swapChapterTitle.addEventListener("input", async (event) => {
     config.minSwapTitleVideoDuration = 3600;
     }
     SaveConfig(config);
-    // Send the new config to the content script
-    const tabs = await chrome.tabs.query({})
-    chrome.tabs.sendMessage(tabs[0].id, config);
 });
 nextCmd.addEventListener("input", async (event) => {
     config.nextTrackCmd = event.target.value;
     SaveConfig(config);
-    // Send the new config to the content script
-    const tabs = await chrome.tabs.query({})
-    chrome.tabs.sendMessage(tabs[0].id, config);
 });
 previousCmd.addEventListener("input", async (event) => {
     config.previousTrackCmd = event.target.value;
     SaveConfig(config);
-    // Send the new config to the content script
-    const tabs = await chrome.tabs.query({})
-    chrome.tabs.sendMessage(tabs[0].id, config);
 });

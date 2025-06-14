@@ -88,7 +88,7 @@
 
 <div>
 <form>
- <fieldset class="fieldset">
+ <fieldset class="fieldset" onsubmit="return false;">
   <legend>Next Track Command</legend>
   <select
     type="range"
@@ -96,10 +96,10 @@
     name="next"
     title="Select the command to be performed when the next track button is pressed.">
     <option value="NEXT_VIDEO">Go to the video up next</option>
-    <option value="SKIP_FORWARD_5_SECONDS_VIDEO_ANIMATED">Skip forward 5 seconds (Animated)</option>
-    <option value="SKIP_FORWARD_10_SECONDS_VIDEO_ANIMATED">Skip forward 10 seconds (Animated)</option>
-    <option value="SKIP_FORWARD_5_SECONDS_VIDEO">Skip forward 5 seconds</option>
-    <option value="SKIP_FORWARD_10_SECONDS_VIDEO">Skip forward 10 seconds</option>
+    <option value="GO_FORWARD_5_SECONDS_VIDEO_ANIMATED">Go forward 5 seconds (Animated)</option>
+    <option value="GO_FORWARD_10_SECONDS_VIDEO_ANIMATED">Go forward 10 seconds (Animated)</option>
+    <option value="GO_FORWARD_5_SECONDS_VIDEO">Go forward 5 seconds</option>
+    <option value="GO_FORWARD_10_SECONDS_VIDEO">Go forward 10 seconds</option>
     <option value="NOTHING">Do nothing</option>
   </select>
  </fieldset>

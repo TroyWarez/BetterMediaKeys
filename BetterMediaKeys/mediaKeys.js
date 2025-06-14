@@ -144,7 +144,9 @@ document.addEventListener('bettermediakeys-config', (event) => {
             if (document.getElementById('movie_player').getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600 && currentChapterText !== null)
                 {
         delete navigator.mediaSession.metadata;
+        if(typeof navigator.mediaSession.metadata !== 'undefined'){
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        }
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
             set: SetMetaDataTitle});
@@ -153,7 +155,9 @@ document.addEventListener('bettermediakeys-config', (event) => {
         }
         else if (__mediaMetadataTitle !== ''){
             delete navigator.mediaSession.metadata;
+            if(typeof navigator.mediaSession.metadata !== 'undefined'){
             navigator.mediaSession.metadata.title = __mediaMetadataTitle;
+            }
                 Object.defineProperty(navigator.mediaSession, "metadata", {
                     configurable: true,
                     set: SetMetaDataTitle});
@@ -176,7 +180,9 @@ const SetTitle = () =>
                 if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                 {
         delete navigator.mediaSession.metadata;
+        if(typeof navigator.mediaSession.metadata !== 'undefined'){
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        }
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
             set: SetMetaDataTitle});
@@ -200,14 +206,18 @@ const SetMetaDataTitle = (metadata) =>
                 if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                 {
                 delete navigator.mediaSession.metadata;
+                if(typeof navigator.mediaSession.metadata !== 'undefined'){
                 navigator.mediaSession.metadata.title = currentChapterText.textContent;
+                }
                 Object.defineProperty(navigator.mediaSession, "metadata", {
                     configurable: true,
                     set: SetMetaDataTitle});
                 }
                 else {
                             delete navigator.mediaSession.metadata;
+                            if(typeof navigator.mediaSession.metadata !== 'undefined'){
                             navigator.mediaSession.metadata.title = __mediaMetadataTitle;
+                            }
                             Object.defineProperty(navigator.mediaSession, "metadata", {
                                 configurable: true,
                                 set: SetMetaDataTitle});
@@ -448,7 +458,9 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                                         {
                                 delete navigator.mediaSession.metadata;
+                                if(typeof navigator.mediaSession.metadata !== 'undefined'){
                                 navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.title.simpleText;
+                                }
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
                                     configurable: true,
                                     set: SetMetaDataTitle});
@@ -487,7 +499,9 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                                         {
                                 delete navigator.mediaSession.metadata;
+                                if(typeof navigator.mediaSession.metadata !== 'undefined'){
                                 navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex + 1].chapterRenderer.title.simpleText;
+                                }
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
                                     configurable: true,
                                     set: SetMetaDataTitle});
@@ -509,7 +523,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         }
                                         break; 
                                     }
-                                    case 'SKIP_FORWARD_5_SECONDS_VIDEO_ANIMATED':
+                                    case 'GO_FORWARD_5_SECONDS_VIDEO_ANIMATED':
                                     {
                                         if(('handleGlobalKeyDown' in moviePlayer))
                                         {
@@ -517,7 +531,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         }
                                         break; 
                                     }
-                                    case 'SKIP_FORWARD_10_SECONDS_VIDEO_ANIMATED':
+                                    case 'GO_FORWARD_10_SECONDS_VIDEO_ANIMATED':
                                     {
                                         if(('handleGlobalKeyDown' in moviePlayer))
                                         {
@@ -525,7 +539,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         }
                                         break; 
                                     }
-                                    case 'SKIP_FORWARD_5_SECONDS_VIDEO':
+                                    case 'GO_FORWARD_5_SECONDS_VIDEO':
                                     {
                                         if(('seekBy' in moviePlayer))
                                         {
@@ -533,7 +547,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         }
                                         break; 
                                     }
-                                    case 'SKIP_FORWARD_10_SECONDS_VIDEO':
+                                    case 'GO_FORWARD_10_SECONDS_VIDEO':
                                     {
                                         if(('seekBy' in moviePlayer))
                                         {
@@ -571,7 +585,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         moviePlayer.nextVideo();
                                         break; 
                                     }
-                                    case 'SKIP_FORWARD_5_SECONDS_VIDEO_ANIMATED':
+                                    case 'GO_FORWARD_5_SECONDS_VIDEO_ANIMATED':
                                     {
                                         if(('handleGlobalKeyDown' in moviePlayer))
                                         {
@@ -579,7 +593,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         }
                                         break; 
                                     }
-                                    case 'SKIP_FORWARD_10_SECONDS_VIDEO_ANIMATED':
+                                    case 'GO_FORWARD_10_SECONDS_VIDEO_ANIMATED':
                                     {
                                         if(('handleGlobalKeyDown' in moviePlayer))
                                         {
@@ -587,7 +601,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         }
                                         break; 
                                     }
-                                    case 'SKIP_FORWARD_5_SECONDS_VIDEO':
+                                    case 'GO_FORWARD_5_SECONDS_VIDEO':
                                     {
                                         if(('seekBy' in moviePlayer))
                                         {
@@ -595,7 +609,7 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         }
                                         break; 
                                     }
-                                    case 'SKIP_FORWARD_10_SECONDS_VIDEO':
+                                    case 'GO_FORWARD_10_SECONDS_VIDEO':
                                     {
                                         if(('seekBy' in moviePlayer))
                                         {
@@ -689,7 +703,9 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                         if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                                         {
                                 delete navigator.mediaSession.metadata;
+                            if(typeof navigator.mediaSession.metadata !== 'undefined'){
                             navigator.mediaSession.metadata.title = ytChapterData.chapters[CurrentChapterIndex].chapterRenderer.title.simpleText;
+                            }
                                 Object.defineProperty(navigator.mediaSession, "metadata", {
                                     configurable: true,
                                     set: SetMetaDataTitle});
@@ -741,7 +757,9 @@ navigator.mediaSession.setActionHandler = function setActionHandler(action, hand
                                     if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                                     {
                             delete navigator.mediaSession.metadata;
+                            if(typeof navigator.mediaSession.metadata !== 'undefined'){
                             navigator.mediaSession.metadata.title = currentChapterText.textContent;
+                            }
                             Object.defineProperty(navigator.mediaSession, "metadata", {
                                 configurable: true,
                                 set: SetMetaDataTitle});
