@@ -366,9 +366,10 @@ if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('set
             {
                 if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
                 {
-if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
         delete navigator.mediaSession.metadata;
+        if(typeof navigator.mediaSession.metadata !== 'undefined'){
         navigator.mediaSession.metadata.title = currentChapterText.textContent;
+        }
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
             set: SetMetaDataTitle});
