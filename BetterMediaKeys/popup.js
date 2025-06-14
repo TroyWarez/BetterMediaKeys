@@ -14,7 +14,7 @@ const nextCmd = document.querySelector("#next");
 const defaultConfig = {
     LoopVideos: false,
     minLoopVideoDuration: 3600,
-    swapTitle: false,
+    swapTitle: true,
     minSwapTitleVideoDuration: 3600,
     previousTrackCmd: 'RESTART_VIDEO',
     nextTrackCmd: 'NEXT_VIDEO',
