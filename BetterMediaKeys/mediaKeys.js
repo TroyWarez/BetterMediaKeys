@@ -94,14 +94,17 @@ var __mediaMetadataTitle = '';
 var __actionHandlerPrevious = null;
 var __lastClickPrevious = 0;
 var __lastClickNext = 0;
-var __config = {
+var __config = localStorage.getItem('config');
+if (__config === null) {
+    localStorage.setItem('config', JSON.stringify({
     LoopVideos: false,
     minLoopVideoDuration: 3600,
     swapTitle: true,
     minSwapTitleVideoDuration: 3600,
     previousTrackCmd: 'RESTART_VIDEO',
     nextTrackCmd: 'NEXT_VIDEO',
-};
+}));
+}
 document.addEventListener('bettermediakeys-config', (event) => {
     const config = event.detail;
     const urlParams = new URLSearchParams(window.location.search);
@@ -162,6 +165,7 @@ document.addEventListener('bettermediakeys-config', (event) => {
                     configurable: true,
                     set: SetMetaDataTitle});
         }
+        localStorage.setItem('config', JSON.stringify(config));
         __config = config;
     }
   },

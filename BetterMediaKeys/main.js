@@ -9,15 +9,19 @@ const defaultConfig = {
 const SaveConfig = (config) => {
     if(config)
     {
-        localStorage.setItem('config', JSON.stringify(config));
+        chrome.storage.local.set({'config': config});
     }
 }
 const LoadConfig = () => {
-    const localStorageConfig = localStorage.getItem('config');
-    if (localStorageConfig === null) {
-        localStorage.setItem('config', JSON.stringify(defaultConfig));
+    chrome.storage.local.get('config', (result) => {
+    if (typeof result?.config === 'undefined' || result.config === null) {
+        chrome.storage.local.set({'config': defaultConfig});
+        return null;
     }
-    return JSON.parse(localStorageConfig);
+    const configEvent = new CustomEvent("bettermediakeys-config", { detail: result.config });
+    document.dispatchEvent(configEvent);
+});
+    return defaultConfig;
 }
 let config = LoadConfig();
 if(!config) {

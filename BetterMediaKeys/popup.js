@@ -22,16 +22,27 @@ const defaultConfig = {
 const SaveConfig = (config) => {
     if(config)
     {
-        localStorage.setItem('config', JSON.stringify(config));
-        chrome.tabs.query({}, (tabs) => tabs.forEach( tab => chrome.tabs.sendMessage(tab.id, config) ) ).catch(() => {});
+        chrome.storage.local.set({'config': config});
+        chrome.tabs.query({}, (tabs) => tabs.forEach( tab => chrome.tabs.sendMessage(tab.id, config).catch(() => {}) ) );
     }
 }
 const LoadConfig = () => {
-    const localStorageConfig = localStorage.getItem('config');
-    if (localStorageConfig === null) {
-        localStorage.setItem('config', JSON.stringify(defaultConfig));
+    chrome.storage.local.get('config', (result) => {
+    if (result.config === null) {
+        chrome.storage.local.set({'config': defaultConfig});
+        return defaultConfig;
     }
-    return JSON.parse(localStorageConfig);
+    config = result.config;
+    loopVideos.checked = config.LoopVideos;
+    loop_time_range.value = config.minLoopVideoDuration;
+
+    swapChapterTitle.checked = config.swapTitle;
+    loop_time_range_long.value = config.minSwapTitleVideoDuration;
+
+    previousCmd.value = config.previousTrackCmd;
+    nextCmd.value = config.nextTrackCmd;
+});
+return defaultConfig;
 }
 
 let config = LoadConfig();
@@ -39,7 +50,12 @@ if(!config) {
     config = defaultConfig;
     SaveConfig(config);
 }
-
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+  if (request.message !== undefined && request.message === 'config' ) {
+        sendResponse({ status: 'success', config: config });
+        return true;
+  }
+})
 loopVideos.checked = config.LoopVideos;
 loop_time_range.value = config.minLoopVideoDuration;
 if(config.minLoopVideoDuration === 3600) {
