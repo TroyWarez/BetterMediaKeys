@@ -41,6 +41,28 @@ const LoadConfig = () => {
 
     previousCmd.value = config.previousTrackCmd;
     nextCmd.value = config.nextTrackCmd;
+
+        if(config.minLoopVideoDuration === 3600) {
+            loop_time.textContent = 'Any duration';
+        }
+        else {
+            loop_time.textContent = config.minLoopVideoDuration / 60 + ':00';
+        }
+        if(loopVideos.checked) {
+            loop_time_range.disabled = false;
+            loop_time.hidden = false;
+        }
+        if(swapChapterTitle.checked) {
+            loop_time_range_long.disabled = false;
+            loop_time_long.hidden = false;
+        }
+        if(config.minSwapTitleVideoDuration === 3600) {
+            loop_time_long.textContent = 'Any duration';
+        }
+        else {
+            loop_time_long.textContent = config.minSwapTitleVideoDuration / 60 + ':00';
+        }
+
 });
 return defaultConfig;
 }
