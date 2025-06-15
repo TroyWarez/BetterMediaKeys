@@ -94,7 +94,12 @@ select:focus {
   cursor: grabbing;
   opacity: inherit;
 }
-
+.RangeInput:hover:disabled {
+    cursor: not-allowed;
+}
+.RangeInput:active:disabled {
+    cursor: not-allowed;
+}
 
 
 

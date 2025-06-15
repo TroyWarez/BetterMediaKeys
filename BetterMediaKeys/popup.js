@@ -50,10 +50,12 @@ const LoadConfig = () => {
         }
         if(loopVideos.checked) {
             loop_time_range.disabled = false;
+            loop_time_range.title = 'Videos shorter than this will be looped';
             loop_time.hidden = false;
         }
         if(swapChapterTitle.checked) {
             loop_time_range_long.disabled = false;
+            loop_time_range_long.title = 'Replace the title in the media controls with the current chapter title';
             loop_time_long.hidden = false;
         }
         if(config.minSwapTitleVideoDuration === 3600) {
@@ -88,14 +90,25 @@ else {
 }
 if(loopVideos.checked) {
     loop_time_range.disabled = false;
+    loop_time_range.title = 'Videos shorter than this will be looped';
     loop_time.hidden = false;
 }
-
+else {
+    loop_time_range.disabled = true;
+    loop_time_range.title = '';
+    loop_time.hidden = true;
+}
 swapChapterTitle.checked = config.swapTitle;
 loop_time_range_long.value = config.minSwapTitleVideoDuration;
 if(swapChapterTitle.checked) {
     loop_time_range_long.disabled = false;
+    loop_time_range_long.title = 'Replace the title in the media controls with the current chapter title';
     loop_time_long.hidden = false;
+}
+else {
+    loop_time_range_long.disabled = true;
+    loop_time_range_long.title = '';
+    loop_time_long.hidden = true;
 }
 if(config.minSwapTitleVideoDuration === 3600) {
     loop_time_long.textContent = 'Any duration';
@@ -108,12 +121,14 @@ nextCmd.value = config.nextTrackCmd;
 loopVideos.addEventListener("input", async (event) => {
     if(event.target.checked) {
     loop_time_range.disabled = false;
+    loop_time_range.title = 'Videos shorter than this will be looped';
     loop_time.hidden = false;
     config.LoopVideos = true;
     config.minLoopVideoDuration = parseInt(loop_time_range.value);
     }
     else {
     loop_time_range.disabled = true;
+    loop_time_range.title = '';
     loop_time.hidden = true;
     config.LoopVideos = false;
     config.minLoopVideoDuration = 3600;
@@ -144,12 +159,14 @@ loop_time_range_long.addEventListener("input", async (event) => {
 swapChapterTitle.addEventListener("input", async (event) => {
     if(event.target.checked) {
     loop_time_range_long.disabled = false;
+    loop_time_range_long.title = 'Replace the title in the media controls with the current chapter title';
     loop_time_long.hidden = false;
     config.swapTitle = true;
     config.minSwapTitleVideoDuration = parseInt(loop_time_range_long.value);
     }
     else {
     loop_time_range_long.disabled = true;
+    loop_time_range_long.title = '';
     loop_time_long.hidden = true;
     config.swapTitle = false;
     config.minSwapTitleVideoDuration = 3600;
