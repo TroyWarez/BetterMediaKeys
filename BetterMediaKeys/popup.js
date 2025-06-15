@@ -28,7 +28,7 @@ const SaveConfig = (config) => {
 }
 const LoadConfig = () => {
     chrome.storage.local.get('config', (result) => {
-    if (result.config === null) {
+    if (typeof result.config?.LoopVideos === 'undefined') {
         chrome.storage.local.set({'config': defaultConfig});
         return defaultConfig;
     }
