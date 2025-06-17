@@ -53,10 +53,22 @@ const LoadConfig = () => {
             loop_time_range.title = 'Videos shorter than this will be looped';
             loop_time.hidden = false;
         }
+        else 
+        {
+            loop_time_range.disabled = true;
+            loop_time_range.title = '';
+            loop_time.hidden = true;
+        }
         if(swapChapterTitle.checked) {
             loop_time_range_long.disabled = false;
             loop_time_range_long.title = 'Replace the title in the media controls with the current chapter title';
             loop_time_long.hidden = false;
+        }
+        else 
+        {
+            loop_time_range_long.disabled = true;
+            loop_time_range_long.title = '';
+            loop_time_long.hidden = true;
         }
         if(config.minSwapTitleVideoDuration === 3600) {
             loop_time_long.textContent = 'Any duration';
