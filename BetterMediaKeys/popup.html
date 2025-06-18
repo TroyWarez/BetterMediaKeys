@@ -14,7 +14,7 @@
   <h2>Settings</h2>
   <b>(Shorts and Playlists will not be affected)</b>
 </div>
-<div class="toggle">
+<div class="toggle" title="Toggle Looping Videos">
 <label class="switch">
   <input type="checkbox" title="Toggle Looping Videos" id="loopVideos">
   <span class="slider round"></span>
@@ -24,7 +24,7 @@
 
 <div class="wrapperRange">
 
-  <label for="duration" class="rangeLabel">Only loop videos shorter than:</label>
+  <label for="duration" class="rangeLabel" title="Videos shorter than this will be looped">Only loop videos shorter than:</label>
   <input disabled title="Videos shorter than this will be looped" id="duration" class="RangeInput" type="range" name="km" min=60 max=3600 step=60 value=3600 list="markers">
   <output><b id="loop_time" hidden>Any duration</b></output>
   <datalist id="markers">

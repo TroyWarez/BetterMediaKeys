@@ -4,6 +4,40 @@ var isShorts = false;
 var __actionHandler = navigator.mediaSession.setActionHandler;
 var __mediaMetadata = new MediaMetadata({ });
 var __ActiveMediaMetadata = null;
+const SetMetaDataTitle = (metadata) =>
+{
+    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
+    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) && metadata?.title  )
+    {
+        metadata.title = currentChapterText.textContent;
+    }
+        const movie_player = document.getElementById('movie_player');
+        if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
+        {
+            if(movie_player !== null && ('getDuration' in movie_player))
+            {
+                if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
+                {
+                delete navigator.mediaSession.metadata;
+                if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
+                navigator.mediaSession.metadata.title = currentChapterText.textContent;
+                }
+                Object.defineProperty(navigator.mediaSession, "metadata", {
+                    configurable: true,
+                    set: SetMetaDataTitle});
+                }
+                else {
+                            delete navigator.mediaSession.metadata;
+                            if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
+                            navigator.mediaSession.metadata.title = __mediaMetadataTitle;
+                            }
+                            Object.defineProperty(navigator.mediaSession, "metadata", {
+                                configurable: true,
+                                set: SetMetaDataTitle});
+                            }
+                    }
+        }
+}
 MediaMetadata = class MediaMetadataEx {
     constructor(init) {
         
@@ -57,7 +91,8 @@ MediaMetadata = class MediaMetadataEx {
         }
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
-            set: this.SetMetaDataTitle});
+            set: this.SetMetaDataTitle,
+            get: this.GetMetaData});
    }
    SetMetaData(metadata) {
     if(( metadata === null ) || ( typeof metadata?.bTrusted === 'undefined' ))
@@ -89,6 +124,9 @@ MediaMetadata = class MediaMetadataEx {
     }
 
    }
+    GetMetaData () {
+                return __mediaMetadata;
+            }
  }
 var __mediaMetadataTitle = '';
 var __actionHandlerPrevious = null;
@@ -195,41 +233,6 @@ const SetTitle = () =>
     }
     }
 }
-const SetMetaDataTitle = (metadata) =>
-{
-    let currentChapterText = document.getElementsByClassName('ytp-chapter-title-content')[0];
-    if(typeof currentChapterText !== 'undefined' && currentChapterText.textContent !== '' && ('mediaSession' in navigator) && metadata?.title  )
-    {
-        metadata.title = currentChapterText.textContent;
-    }
-        const movie_player = document.getElementById('movie_player');
-        if (__config.swapTitle === true && __config.minSwapTitleVideoDuration >= 0)
-        {
-            if(movie_player !== null && ('getDuration' in movie_player))
-            {
-                if (movie_player.getDuration() >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600)
-                {
-                delete navigator.mediaSession.metadata;
-                if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
-                navigator.mediaSession.metadata.title = currentChapterText.textContent;
-                }
-                Object.defineProperty(navigator.mediaSession, "metadata", {
-                    configurable: true,
-                    set: SetMetaDataTitle});
-                }
-                else {
-                            delete navigator.mediaSession.metadata;
-                            if(typeof navigator.mediaSession.metadata !== 'undefined' && navigator.mediaSession.metadata !== null){
-                            navigator.mediaSession.metadata.title = __mediaMetadataTitle;
-                            }
-                            Object.defineProperty(navigator.mediaSession, "metadata", {
-                                configurable: true,
-                                set: SetMetaDataTitle});
-                            }
-                    }
-        }
-}
-
 const SetChapterData = (event) =>
 {
 if ((typeof navigator !== 'undefined') && ('mediaSession' in navigator) && ('setActionHandler' in navigator.mediaSession)) {

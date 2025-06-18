@@ -1,6 +1,6 @@
 {
   "name": "Better Media Keys for YouTube", 
-  "version": "1.0.2.6",
+  "version": "1.0.2.7",
   "description": "Use your media keys to navigate YouTube chapters, videos and Shorts.",
   "action": {
     "default_popup": "popup.html"
