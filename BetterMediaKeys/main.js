@@ -9,17 +9,17 @@ const defaultConfig = {
 const SaveConfig = (config) => {
     if(config)
     {
-        chrome.storage.local.set({'config': config});
+        browser.storage.local.set({'config': config});
     }
 }
 const LoadConfig = () => {
-    chrome.storage.local.get('config', (result) => {
+    browser.storage.local.get('config', (result) => {
     if (typeof result?.config === 'undefined' || result.config === null) {
-        chrome.storage.local.set({'config': defaultConfig});
+        browser.storage.local.set({'config': defaultConfig});
         return null;
     }
-    const configEvent = new CustomEvent("bettermediakeys-config", { detail: result.config });
-    document.dispatchEvent(configEvent);
+        const event = new CustomEvent('bettermediakeys-config', { detail: cloneInto(result.config, document.defaultView) });
+        document.dispatchEvent(event);
 });
     return defaultConfig;
 }
@@ -28,7 +28,7 @@ if(!config) {
     config = defaultConfig;
     SaveConfig(config);
 }
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.LoopVideos !== undefined &&
       request.minLoopVideoDuration !== undefined &&
       request.swapTitle !== undefined &&
@@ -41,20 +41,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 config = defaultConfig;
                 SaveConfig(config);
         }
-        const configEvent = new CustomEvent("bettermediakeys-config", { detail: config });
-        document.dispatchEvent(configEvent);
-        sendResponse({ status: 'success', config: config });
+        const event = new CustomEvent('bettermediakeys-config', { detail: cloneInto(config, document.defaultView) });
+        document.dispatchEvent(event);
   }
 })
 const script = document.createElement('script');
-script.src = chrome.runtime.getURL('mediaKeys.js');
-document.documentElement.appendChild(script);
+script.src = browser.runtime.getURL('mediaKeys.js');
 script.onload = () => {
         let config = LoadConfig();
         if(!config) {
                 config = defaultConfig;
                 SaveConfig(config);
         }
-        const configEvent = new CustomEvent("bettermediakeys-config", { detail: config });
-        document.dispatchEvent(configEvent);
+        const event = new CustomEvent('bettermediakeys-config', { detail: cloneInto(config, document.defaultView) });
+        document.dispatchEvent(event);
 };
+document.documentElement.appendChild(script);

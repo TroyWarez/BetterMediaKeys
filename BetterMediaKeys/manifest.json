@@ -18,6 +18,11 @@
     "all_frames": true
     }
    ],
+   "browser_specific_settings": {
+  "gecko": {
+    "id": "TroyWarez@troysdomain.com"
+  }
+  },
     "permissions": [
         "storage"
     ],
@@ -26,8 +31,7 @@
     "matches": [
       "https://*.youtube.com/*",
       "https://www.youtube-nocookie.com/*"
-    ],
-    "exclude_matches": ["https://music.youtube.com/*", "https://accounts.youtube.com/*"]
+    ]
   }],
    "icons": {
     "16": "icons/icon16.png",

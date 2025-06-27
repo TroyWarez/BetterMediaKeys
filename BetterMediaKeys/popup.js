@@ -22,14 +22,14 @@ const defaultConfig = {
 const SaveConfig = (config) => {
     if(config)
     {
-        chrome.storage.local.set({'config': config});
-        chrome.tabs.query({}, (tabs) => tabs.forEach( tab => chrome.tabs.sendMessage(tab.id, config).catch(() => {}) ) );
+        browser.storage.local.set({'config': config});
+        browser.tabs.query({}, (tabs) => tabs.forEach( tab => browser.tabs.sendMessage(tab.id, config).catch(() => {}) ) );
     }
 }
 const LoadConfig = () => {
-    chrome.storage.local.get('config', (result) => {
+    browser.storage.local.get('config', (result) => {
     if (typeof result.config?.LoopVideos === 'undefined') {
-        chrome.storage.local.set({'config': defaultConfig});
+        browser.storage.local.set({'config': defaultConfig});
         return defaultConfig;
     }
     config = result.config;
@@ -86,7 +86,7 @@ if(!config) {
     config = defaultConfig;
     SaveConfig(config);
 }
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.message !== undefined && request.message === 'config' ) {
         sendResponse({ status: 'success', config: config });
         return true;

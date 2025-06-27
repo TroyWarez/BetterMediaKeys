@@ -6,16 +6,14 @@ body {
     color: #545454;
     margin-left: 1rem;
     margin-right: 1rem;
-    margin-top: 1rem;
-    min-width: 17rem;
-    min-height: 21rem;
-    justify-content: space-between;
+    width: 22rem;
 }
 body > * {
   font-family: system-ui;
 }
 h2 {
     font-weight: 500;
+    margin-top: 0px;
 }
 @media (prefers-color-scheme: dark) {
     body {
@@ -46,7 +44,7 @@ legend {
 datalist {
   display: flex;
   justify-content: space-evenly;
-  width: 135px;
+  width: 168px;
   font-size: small;
 }
 
@@ -72,11 +70,10 @@ select:focus {
     display: flex;
     align-items: center;
     margin-top: 1rem;
-    margin-bottom: 1rem;
 }
 .toggleLabel {
   margin-left: 1rem;
-  font-size: larger;
+  font-size: medium;
 }
 .wrapperRange {
   display: inline-block;
