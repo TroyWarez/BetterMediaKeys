@@ -11,6 +11,7 @@ BetterMediaKeys is an open-source browser extension that works with Chromium-bas
   <b>Download:</b>
   <a href="https://chromewebstore.google.com/detail/hgkdlkhheakimlklkhaokglbgokjplaj">Chrome</a>
   <a href="https://microsoftedge.microsoft.com/addons/detail/bettermediakeys/cnmnmildigcbajiojdonmiaafacbcaoi">Edge</a>
+  <a href="https://addons.mozilla.org/en-CA/firefox/addon/better-media-keys-for-youtube/">Firefox</a>
 </p>
 
 ### Question: What are the differences between BetterMediaKeys and Tweaks for YouTube with global shortcuts?
@@ -19,7 +20,7 @@ BetterMediaKeys default behaviour is similar to Tweaks for YouTube with the perv
 <b>BetterMediaKeys does not effect the handling of the hardware media keys browser wide. A major limitation with using any media keys as a global shortcut on Chromium is that it does not allow for any website to use your media keys and some of the media session api. You'll lose the ability to see video thumbnails and titles on the lockscreen mini player and it does not allow for control when your device is locked. Other sites that use your media keys will no longer work, such as Spotify.<b>
 - BetterMediaKeys does not go back to the previous video, only to the beginning of the current video.
 - BetterMediaKeys does not require any configuration or global shortcuts.
-- BetterMediaKeys will restart the current chapter from the begining instead of going to the previous chapter, if the video time is beyond the first five seconds of the chapter start. This is similar to how the music site works with playlists.
+- BetterMediaKeys will restart the current chapter from the begining instead of going to the previous chapter, if the video time is beyond the first three seconds of the chapter start. This is similar to how the music site works with playlists.
 - BetterMediaKeys will set the lockscreen mini player title to the chapter title. Useful for single video music compilations/playlists.
 
 
