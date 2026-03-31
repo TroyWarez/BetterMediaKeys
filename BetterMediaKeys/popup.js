@@ -18,6 +18,9 @@ const defaultConfig = {
     minSwapTitleVideoDuration: 3600,
     previousTrackCmd: 'RESTART_VIDEO',
     nextTrackCmd: 'NEXT_VIDEO',
+    IgnoreChapters: false,
+    IgnoreShorts: false,
+    IgnorePlaylists: false,
 };
 const SaveConfig = (config) => {
     if(config)

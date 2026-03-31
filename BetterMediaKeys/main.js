@@ -5,6 +5,9 @@ const defaultConfig = {
     minSwapTitleVideoDuration: 3600,
     previousTrackCmd: 'RESTART_VIDEO',
     nextTrackCmd: 'NEXT_VIDEO',
+    IgnoreChapters: false,
+    IgnoreShorts: false,
+    IgnorePlaylists: false,
 };
 const SaveConfig = (config) => {
     if(config)
@@ -12,29 +15,37 @@ const SaveConfig = (config) => {
         chrome.storage.local.set({'config': config});
     }
 }
-const LoadConfig = () => {
-    chrome.storage.local.get('config', (result) => {
-    if (typeof result?.config === 'undefined' || result.config === null) {
-        chrome.storage.local.set({'config': defaultConfig});
-        return null;
+const LoadConfig = async () => {
+    try
+    {
+        const result = await chrome.storage.local.get('config', (result) => {
+        if (typeof result.config === 'undefined' || result.config === null) {
+            chrome.storage.local.set({'config': defaultConfig});
+        }});
+        const configEvent = new CustomEvent("bettermediakeys-config", { detail: result.config });
+        document.dispatchEvent(configEvent);
+        return result.config;
     }
-    const configEvent = new CustomEvent("bettermediakeys-config", { detail: result.config });
-    document.dispatchEvent(configEvent);
-});
-    return defaultConfig;
-}
+    catch (e)
+    {
+        return defaultConfig;
+    }
+};
 let config = LoadConfig();
 if(!config) {
     config = defaultConfig;
     SaveConfig(config);
 }
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, sendResponse) => {
   if (request.LoopVideos !== undefined &&
       request.minLoopVideoDuration !== undefined &&
       request.swapTitle !== undefined &&
       request.minSwapTitleVideoDuration !== undefined &&
       request.previousTrackCmd !== undefined &&
-      request.nextTrackCmd !== undefined) {
+      request.nextTrackCmd !== undefined &&
+      request.IgnoreChapters !== undefined &&
+      request.IgnoreShorts !== undefined &&
+      request.IgnorePlaylists !== undefined) {
       SaveConfig(request);
       let config = LoadConfig();
         if(!config) {
