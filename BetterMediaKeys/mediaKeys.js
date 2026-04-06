@@ -24,7 +24,7 @@ const DEFAULT_CONFIG = {
     IgnorePlaylists: false,
 };
 
-let __config = { ...DEFAULT_CONFIG, ...JSON.parse(localStorage.getItem('config') || '{}') };
+let __config = { ...DEFAULT_CONFIG, ...JSON.parse(localStorage.getItem('BetterMediakeysSettings') || '{}') };
 
 // --- Helpers ---
 const getMoviePlayer = () => document.getElementById('movie_player');
@@ -116,6 +116,8 @@ const handleNextTrackCommand = (player) => {
         case 'NOTHING':
             break;
         case 'NEXT_VIDEO':
+            player.nextVideo?.();
+            break;
         case 'GO_FORWARD_5_SECONDS_VIDEO_ANIMATED':
         default:
             player.handleGlobalKeyDown?.(39, false, false); // Right Arrow
@@ -182,7 +184,7 @@ const onConfigUpdate = (event) => {
         updateMediaMetadataTitle(__mediaMetadataTitle);
     }
 
-    localStorage.setItem('config', JSON.stringify(config));
+    localStorage.setItem('BetterMediakeysSettings', JSON.stringify(config));
     __config = config;
 };
 

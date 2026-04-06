@@ -12,19 +12,23 @@ const defaultConfig = {
 const SaveConfig = (config) => {
     if(config)
     {
-        chrome.storage.local.set({'config': config});
+        chrome.storage.local.set({'BetterMediakeysSettings': config});
     }
 }
 const LoadConfig = async () => {
     try
     {
-        const result = await chrome.storage.local.get('config', (result) => {
-        if (typeof result.config === 'undefined' || result.config === null) {
-            chrome.storage.local.set({'config': defaultConfig});
-        }});
-        const configEvent = new CustomEvent("bettermediakeys-config", { detail: result.config });
-        document.dispatchEvent(configEvent);
-        return result.config;
+        const result = await chrome.storage.local.get('BetterMediakeysSettings', (result) => {
+        if ( typeof result === 'undefined' ||
+             typeof result.BetterMediakeysSettings === 'undefined' ||
+             result.BetterMediakeysSettings === null) {
+            chrome.storage.local.set({'BetterMediakeysSettings': defaultConfig});
+        }
+        const BetterMediakeysSettingsEvent = new CustomEvent("bettermediakeys-config", { detail: result.BetterMediakeysSettings });
+        document.dispatchEvent(BetterMediakeysSettingsEvent);
+        return result.BetterMediakeysSettings;
+    });
+
     }
     catch (e)
     {

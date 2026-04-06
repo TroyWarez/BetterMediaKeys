@@ -49,10 +49,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
 });
     if (request.action === "updateSettings") {
-        __BetterMediakeysSettings = request.settings;
+        __BetterMediakeysSettings = request.BetterMediakeysSettings;
         chrome.storage.local.set({ 'BetterMediakeysSettings': __BetterMediakeysSettings });
-    }
+    } 
     else if (request.action === "getSettings") {
-        sendResponse({ settings: __BetterMediakeysSettings });
-    }
+        // Get from storage and then send response
+        chrome.storage.local.get(['BetterMediakeysSettings'], (result) => {
+            sendResponse({ settings: result.BetterMediakeysSettings || __BetterMediakeysSettings });
+        });
+        return true;
 });

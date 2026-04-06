@@ -22,177 +22,90 @@ const defaultConfig = {
     IgnoreShorts: false,
     IgnorePlaylists: false,
 };
-const SaveConfig = (config) => {
-    if(config)
-    {
-        chrome.storage.local.set({'config': config});
-        chrome.tabs.query({}, (tabs) => tabs.forEach( tab => chrome.tabs.sendMessage(tab.id, config).catch(() => {}) ) );
-    }
-}
+
+let config = { ...defaultConfig }; // Initialize with defaults
+
+// 1. Helper function to update all UI elements based on a config object
+const updateUI = (currentConfig) => {
+    loopVideos.checked = currentConfig.LoopVideos;
+    loop_time_range.value = currentConfig.minLoopVideoDuration;
+    swapChapterTitle.checked = currentConfig.swapTitle;
+    loop_time_range_long.value = currentConfig.minSwapTitleVideoDuration;
+    previousCmd.value = currentConfig.previousTrackCmd;
+    nextCmd.value = currentConfig.nextTrackCmd;
+
+    // Handle "Any duration" labels and visibility
+    loop_time.textContent = currentConfig.minLoopVideoDuration === 3600 ? 'Any duration' : (currentConfig.minLoopVideoDuration / 60) + ':00';
+    loop_time_range.disabled = !currentConfig.LoopVideos;
+    loop_time.hidden = !currentConfig.LoopVideos;
+
+    loop_time_long.textContent = currentConfig.minSwapTitleVideoDuration === 3600 ? 'Any duration' : (currentConfig.minSwapTitleVideoDuration / 60) + ':00';
+    loop_time_range_long.disabled = !currentConfig.swapTitle;
+    loop_time_long.hidden = !currentConfig.swapTitle;
+};
+
+// 2. The proper Load function
 const LoadConfig = () => {
-    chrome.storage.local.get('config', (result) => {
-    if (typeof result.config?.LoopVideos === 'undefined') {
-        chrome.storage.local.set({'config': defaultConfig});
-        return defaultConfig;
-    }
-    config = result.config;
-    loopVideos.checked = config.LoopVideos;
-    loop_time_range.value = config.minLoopVideoDuration;
+    chrome.storage.local.get('BetterMediakeysSettings', (result) => {
+        if (result.BetterMediakeysSettings) {
+            config = result.BetterMediakeysSettings;
+        } else {
+            config = defaultConfig;
+            chrome.storage.local.set({ 'BetterMediakeysSettings': defaultConfig });
+        }
+        updateUI(config); // Update UI ONLY after data is received
+    });
+};
 
-    swapChapterTitle.checked = config.swapTitle;
-    loop_time_range_long.value = config.minSwapTitleVideoDuration;
+// 3. The proper Save function (with your requested tab query)
+const SaveConfig = (newConfig) => {
+    chrome.storage.local.set({ 'BetterMediakeysSettings': newConfig });
+    
+    // Only message the active tab in current window to avoid "Receiving end" errors
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        tabs.forEach(tab => {
+            chrome.tabs.sendMessage(tab.id, newConfig, (response) => {
+                if (chrome.runtime.lastError) return; // Silent catch for connection errors
+            });
+        });
+    });
+};
 
-    previousCmd.value = config.previousTrackCmd;
-    nextCmd.value = config.nextTrackCmd;
+LoadConfig();
 
-        if(config.minLoopVideoDuration === 3600) {
-            loop_time.textContent = 'Any duration';
-        }
-        else {
-            loop_time.textContent = config.minLoopVideoDuration / 60 + ':00';
-        }
-        if(loopVideos.checked) {
-            loop_time_range.disabled = false;
-            loop_time_range.title = 'Videos shorter than this will be looped';
-            loop_time.hidden = false;
-        }
-        else 
-        {
-            loop_time_range.disabled = true;
-            loop_time_range.title = '';
-            loop_time.hidden = true;
-        }
-        if(swapChapterTitle.checked) {
-            loop_time_range_long.disabled = false;
-            loop_time_range_long.title = 'Replace the title in the media controls with the current chapter title';
-            loop_time_long.hidden = false;
-        }
-        else 
-        {
-            loop_time_range_long.disabled = true;
-            loop_time_range_long.title = '';
-            loop_time_long.hidden = true;
-        }
-        if(config.minSwapTitleVideoDuration === 3600) {
-            loop_time_long.textContent = 'Any duration';
-        }
-        else {
-            loop_time_long.textContent = config.minSwapTitleVideoDuration / 60 + ':00';
-        }
-
-});
-return defaultConfig;
-}
-
-let config = LoadConfig();
-if(!config) {
-    config = defaultConfig;
-    SaveConfig(config);
-}
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-  if (request.message !== undefined && request.message === 'config' ) {
-        sendResponse({ status: 'success', config: config });
-        return true;
-  }
-})
-loopVideos.checked = config.LoopVideos;
-loop_time_range.value = config.minLoopVideoDuration;
-if(config.minLoopVideoDuration === 3600) {
-    loop_time.textContent = 'Any duration';
-}
-else {
-    loop_time.textContent = config.minLoopVideoDuration / 60 + ':00';
-}
-if(loopVideos.checked) {
-    loop_time_range.disabled = false;
-    loop_time_range.title = 'Videos shorter than this will be looped';
-    loop_time.hidden = false;
-}
-else {
-    loop_time_range.disabled = true;
-    loop_time_range.title = '';
-    loop_time.hidden = true;
-}
-swapChapterTitle.checked = config.swapTitle;
-loop_time_range_long.value = config.minSwapTitleVideoDuration;
-if(swapChapterTitle.checked) {
-    loop_time_range_long.disabled = false;
-    loop_time_range_long.title = 'Replace the title in the media controls with the current chapter title';
-    loop_time_long.hidden = false;
-}
-else {
-    loop_time_range_long.disabled = true;
-    loop_time_range_long.title = '';
-    loop_time_long.hidden = true;
-}
-if(config.minSwapTitleVideoDuration === 3600) {
-    loop_time_long.textContent = 'Any duration';
-}
-else {
-    loop_time_long.textContent = config.minSwapTitleVideoDuration / 60 + ':00';
-}
-previousCmd.value = config.previousTrackCmd;
-nextCmd.value = config.nextTrackCmd;
-loopVideos.addEventListener("input", async (event) => {
-    if(event.target.checked) {
-    loop_time_range.disabled = false;
-    loop_time_range.title = 'Videos shorter than this will be looped';
-    loop_time.hidden = false;
-    config.LoopVideos = true;
-    config.minLoopVideoDuration = parseInt(loop_time_range.value);
-    }
-    else {
-    loop_time_range.disabled = true;
-    loop_time_range.title = '';
-    loop_time.hidden = true;
-    config.LoopVideos = false;
-    config.minLoopVideoDuration = 3600;
-    }
+// --- EVENT LISTENERS ---
+loopVideos.addEventListener("input", (event) => {
+    config.LoopVideos = event.target.checked;
+    if (!config.LoopVideos) config.minLoopVideoDuration = 3600;
+    updateUI(config);
     SaveConfig(config);
 });
-loop_time_range.addEventListener("input", async (event) => {
-    if(event.target.value === '3600') {
-    loop_time.textContent = 'Any duration';
-    }
-    else {
-    loop_time.textContent = event.target.value / 60 + ':00';
-    }
+
+loop_time_range.addEventListener("input", (event) => {
     config.minLoopVideoDuration = parseInt(event.target.value);
+    updateUI(config);
+    SaveConfig(config);
+});
+loop_time_range_long.addEventListener("input", (event) => {
+    config.minLoopVideoDuration = parseInt(event.target.value);
+    updateUI(config);
     SaveConfig(config);
 });
 
-loop_time_range_long.addEventListener("input", async (event) => {
-    if(event.target.value === '3600') {
-    loop_time_long.textContent = 'Any duration';
-    }
-    else {
-    loop_time_long.textContent = event.target.value / 60 + ':00';
-    }
-    config.minSwapTitleVideoDuration = parseInt(event.target.value);
-    SaveConfig(config);
-});
 swapChapterTitle.addEventListener("input", async (event) => {
-    if(event.target.checked) {
-    loop_time_range_long.disabled = false;
-    loop_time_range_long.title = 'Replace the title in the media controls with the current chapter title';
-    loop_time_long.hidden = false;
-    config.swapTitle = true;
-    config.minSwapTitleVideoDuration = parseInt(loop_time_range_long.value);
-    }
-    else {
-    loop_time_range_long.disabled = true;
-    loop_time_range_long.title = '';
-    loop_time_long.hidden = true;
-    config.swapTitle = false;
-    config.minSwapTitleVideoDuration = 3600;
-    }
+    config.minLoopVideoDuration = parseInt(event.target.value);
+    updateUI(config);
     SaveConfig(config);
 });
-nextCmd.addEventListener("input", async (event) => {
-    config.nextTrackCmd = event.target.value;
-    SaveConfig(config);
-});
+
 previousCmd.addEventListener("input", async (event) => {
     config.previousTrackCmd = event.target.value;
+    updateUI(config);
+    SaveConfig(config);
+});
+
+nextCmd.addEventListener("input", async (event) => {
+    config.nextTrackCmd = event.target.value;
+    updateUI(config);
     SaveConfig(config);
 });
