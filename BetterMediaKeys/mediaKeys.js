@@ -1,11 +1,5 @@
-/**
- * Better Media Keys - Refactored for Readability
- * Logic preserved exactly as original.
- */
-
 // --- Global State ---
 let ytChapterData = null;
-let ytVistedVideos = [];
 let isShorts = false;
 let __mediaMetadataTitle = '';
 let __actionHandlerPrevious = null;
@@ -147,6 +141,9 @@ const handlePreviousTrackCommand = (player) => {
             break;
         case 'NOTHING':
             break;
+        case 'PREVIOUS_VIDEO':
+            history.back();
+            break;
         case 'RESTART_VIDEO':
         default:
             player.seekTo?.(0);
@@ -227,15 +224,6 @@ const onPlayerNavigate = (event) => {
             const videoDetails = event.detail?.response?.playerResponse?.videoDetails;
             if (videoDetails?.title) {
                 __mediaMetadataTitle = videoDetails.title;
-            }
-
-            // Visited History logic
-            const videoId = event.detail?.endpoint?.watchEndpoint?.videoId;
-            if (videoId && !urlParams.has('list')) {
-                if (!isShorts) ytVistedVideos.push(videoId);
-                else ytVistedVideos = [];
-            } else {
-                ytVistedVideos = [];
             }
             break;
 

@@ -60,9 +60,7 @@ const LoadConfig = () => {
 // 3. The proper Save function (with your requested tab query)
 const SaveConfig = (newConfig) => {
     chrome.storage.local.set({ 'BetterMediakeysSettings': newConfig });
-    
-    // Only message the active tab in current window to avoid "Receiving end" errors
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({}, (tabs) => {
         tabs.forEach(tab => {
             chrome.tabs.sendMessage(tab.id, newConfig, (response) => {
                 if (chrome.runtime.lastError) return; // Silent catch for connection errors
