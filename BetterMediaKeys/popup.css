@@ -8,11 +8,12 @@ body {
     margin-right: 1rem;
     margin-top: 1rem;
     min-width: 17rem;
-    min-height: 42rem;
     justify-content: space-between;
 }
 body > * {
   font-family: system-ui;
+  margin-top: 0.25rem;
+  margin-bottom: 0.1rem;
 }
 .containerOutlined {
     border: solid 1px rgb(121, 118, 118);
