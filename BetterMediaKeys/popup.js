@@ -8,6 +8,9 @@ const loop_time_long = document.querySelector("#loop_timeLong");
 const loop_time_range_long = document.querySelector("#durationLong");
 const swapChapterTitle = document.querySelector("#swapChapterTitle");
 
+const applyStandardVideos = document.querySelector("#applyStandardVideos");
+const applyStandardVideosAndShorts = document.querySelector("#applyStandardVideosAndShorts");
+
 const previousCmd = document.querySelector("#previous");
 const nextCmd = document.querySelector("#next");
 
@@ -92,6 +95,23 @@ loop_time_range_long.addEventListener("input", (event) => {
 
 swapChapterTitle.addEventListener("input", async (event) => {
     config.minLoopVideoDuration = parseInt(event.target.value);
+    updateUI(config);
+    SaveConfig(config);
+});
+
+applyStandardVideos.addEventListener("input", async (event) => {
+    config.IgnoreChapters = event.target.value;
+    config.IgnoreShorts = false;
+    config.IgnorePlaylists = false;
+    updateUI(config);
+    SaveConfig(config);
+});
+
+applyStandardVideosAndShorts.addEventListener("input", async (event) => {
+    config.IgnoreChapters = event.target.value;
+    config.IgnoreShorts = event.target.value;
+    config.IgnorePlaylists = event.target.value;
+    applyStandardVideos.checked = event.target.checked;
     updateUI(config);
     SaveConfig(config);
 });

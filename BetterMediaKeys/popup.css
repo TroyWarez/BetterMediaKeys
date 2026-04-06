@@ -8,11 +8,17 @@ body {
     margin-right: 1rem;
     margin-top: 1rem;
     min-width: 17rem;
-    min-height: 21rem;
+    min-height: 42rem;
     justify-content: space-between;
 }
 body > * {
   font-family: system-ui;
+}
+.containerOutlined {
+    border: solid 1px rgb(121, 118, 118);
+    border-radius: 3.14px;
+    padding: 0.5rem;
+    width: 95%;
 }
 h2 {
     font-weight: 500;
