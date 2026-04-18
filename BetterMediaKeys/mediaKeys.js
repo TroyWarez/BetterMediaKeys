@@ -228,7 +228,7 @@ const onPlayerNavigate = (event) => {
             break;
 
         case 'DOMContentLoaded':
-            if (!__config.IgnoreChapters && ytChapterData === null && typeof ytInitialData !== 'undefined') {
+            if (ytChapterData === null && typeof ytInitialData !== 'undefined') {
                 const chapters = extractChapters(ytInitialData);
                 if (chapters) ytChapterData = chapters;
             }
@@ -256,7 +256,7 @@ navigator.mediaSession.setActionHandler = function(action, handler) {
                 const player = getMoviePlayer();
                 const chapterElement = getChapterTitleElement();
 
-                if (player?.getWatchNextResponse && !__config.IgnoreChapters && ytChapterData === null) {
+                if (player?.getWatchNextResponse && ytChapterData === null) {
                     ytChapterData = extractChapters(player.getWatchNextResponse());
                 }
 
@@ -296,7 +296,7 @@ navigator.mediaSession.setActionHandler = function(action, handler) {
                 const player = getMoviePlayer();
                 const chapterElement = getChapterTitleElement();
 
-                if (player?.getWatchNextResponse && !__config.IgnoreChapters && ytChapterData === null) {
+                if (player?.getWatchNextResponse && ytChapterData === null) {
                     ytChapterData = extractChapters(player.getWatchNextResponse());
                 }
 
