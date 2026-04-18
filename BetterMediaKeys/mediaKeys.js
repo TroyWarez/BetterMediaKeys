@@ -141,7 +141,7 @@ const handlePreviousTrackCommand = (player) => {
             break;
         case 'NOTHING':
             break;
-        case 'PREVIOUS_VIDEO':
+        case 'PREVIOUS_PAGE':
             history.back();
             break;
         case 'RESTART_VIDEO':
