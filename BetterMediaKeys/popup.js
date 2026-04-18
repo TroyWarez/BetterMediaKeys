@@ -31,6 +31,8 @@ let config = { ...defaultConfig }; // Initialize with defaults
 // 1. Helper function to update all UI elements based on a config object
 const updateUI = (currentConfig) => {
     loopVideos.checked = currentConfig.LoopVideos;
+    applyStandardVideos.checked = currentConfig.IgnoreChapters;
+    applyStandardVideosAndShorts.checked = currentConfig.IgnoreShorts && currentConfig.IgnorePlaylists && currentConfig.IgnoreChapters;
     loop_time_range.value = currentConfig.minLoopVideoDuration;
     swapChapterTitle.checked = currentConfig.swapTitle;
     loop_time_range_long.value = currentConfig.minSwapTitleVideoDuration;
@@ -94,13 +96,13 @@ loop_time_range_long.addEventListener("input", (event) => {
 });
 
 swapChapterTitle.addEventListener("input", async (event) => {
-    config.minLoopVideoDuration = parseInt(event.target.value);
+    config.swapTitle = parseInt(event.target.value);
     updateUI(config);
     SaveConfig(config);
 });
 
 applyStandardVideos.addEventListener("input", async (event) => {
-    config.IgnoreChapters = event.target.value;
+    config.IgnoreChapters = event.target.checked;
     config.IgnoreShorts = false;
     config.IgnorePlaylists = false;
     updateUI(config);
@@ -108,9 +110,9 @@ applyStandardVideos.addEventListener("input", async (event) => {
 });
 
 applyStandardVideosAndShorts.addEventListener("input", async (event) => {
-    config.IgnoreChapters = event.target.value;
-    config.IgnoreShorts = event.target.value;
-    config.IgnorePlaylists = event.target.value;
+    config.IgnoreChapters = event.target.checked;
+    config.IgnoreShorts = event.target.checked;
+    config.IgnorePlaylists = event.target.checked;
     applyStandardVideos.checked = event.target.checked;
     updateUI(config);
     SaveConfig(config);

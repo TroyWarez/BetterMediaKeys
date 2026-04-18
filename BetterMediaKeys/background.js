@@ -58,4 +58,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sendResponse({ settings: result.BetterMediakeysSettings || __BetterMediakeysSettings });
         });
         return true;
-});
+}});

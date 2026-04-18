@@ -40,7 +40,7 @@ if(!config) {
     config = defaultConfig;
     SaveConfig(config);
 }
-chrome.runtime.onMessage.addListener((request, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.LoopVideos !== undefined &&
       request.minLoopVideoDuration !== undefined &&
       request.swapTitle !== undefined &&
