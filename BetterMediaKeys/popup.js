@@ -90,13 +90,14 @@ loop_time_range.addEventListener("input", (event) => {
     SaveConfig(config);
 });
 loop_time_range_long.addEventListener("input", (event) => {
-    config.minLoopVideoDuration = parseInt(event.target.value);
+    config.minSwapTitleVideoDuration = parseInt(event.target.value);
     updateUI(config);
     SaveConfig(config);
 });
 
 swapChapterTitle.addEventListener("input", async (event) => {
-    config.swapTitle = parseInt(event.target.value);
+    config.swapTitle = event.target.checked;
+    if (!config.swapTitle) config.minSwapTitleVideoDuration = 3600;
     updateUI(config);
     SaveConfig(config);
 });
