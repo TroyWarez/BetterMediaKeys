@@ -247,7 +247,7 @@ const onPlayerNavigate = (event) => {
 
 const originalSetActionHandler = navigator.mediaSession.setActionHandler;
 
-navigator.mediaSession.setActionHandler = function(action, handler) {
+navigator.mediaSession.setActionHandler = (action, handler) => {
     const urlParams = new URLSearchParams(window.location.search);
 
     if (handler === null) {
