@@ -25,17 +25,30 @@ const getMoviePlayer = () => document.getElementById('movie_player');
 const getShortsPlayer = () => document.getElementById('shorts-player');
 const getChapterTitleElement = () => document.getElementsByClassName('ytp-chapter-title-content')[0];
 
-const updateMediaMetadataTitle = (title) => {
-    if (!navigator.mediaSession.metadata) return;
-    
+const updateMediaMetadataTitle = (title) => {   // FIX ME
     // We delete and redefine to bypass the custom setter logic when we want a direct update
-    delete navigator.mediaSession.metadata;
-    navigator.mediaSession.metadata.title = title;
-    
-    Object.defineProperty(navigator.mediaSession, "metadata", {
-        configurable: true,
-        set: setMetaDataTitleHandler
-    });
+        const metadata = navigator.mediaSession.metadata;
+        Object.defineProperty(navigator.mediaSession, "metadata", {
+            configurable: true,
+            get: () => metadata,
+        });
+        navigator.mediaSession.metadata.title = title;
+};
+
+// --- Core Logic Functions ---
+
+const syncChapterTitle = () => {
+    const chapterElement = getChapterTitleElement();
+    const player = getMoviePlayer();
+
+    if (chapterElement?.textContent && 'mediaSession' in navigator) {
+        if (__config.swapTitle && player?.getDuration) {
+            const duration = player.getDuration();
+            if (duration >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600) {
+                updateMediaMetadataTitle(chapterElement.textContent);
+            }
+        }
+    }
 };
 
 /**
@@ -53,45 +66,6 @@ const extractChapters = (source) => {
         }
     }
     return null;
-};
-
-// --- Core Logic Functions ---
-
-const setMetaDataTitleHandler = (metadata) => {
-    const player = getMoviePlayer();
-    const chapterElement = getChapterTitleElement();
-
-    if (__config.swapTitle && player?.getDuration) {
-        const duration = player.getDuration();
-        const meetsThreshold = duration >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600;
-
-        if (meetsThreshold && chapterElement?.textContent && metadata?.title) {
-            metadata.title = chapterElement.textContent;
-        } else if (!meetsThreshold && __mediaMetadataTitle !== '') {
-            metadata.title = __mediaMetadataTitle;
-        }
-    }
-
-    delete navigator.mediaSession.metadata;
-    navigator.mediaSession.metadata = metadata;
-    Object.defineProperty(navigator.mediaSession, "metadata", {
-        configurable: true,
-        set: setMetaDataTitleHandler
-    });
-};
-
-const syncChapterTitle = () => {
-    const chapterElement = getChapterTitleElement();
-    const player = getMoviePlayer();
-
-    if (chapterElement?.textContent && 'mediaSession' in navigator) {
-        if (__config.swapTitle && player?.getDuration) {
-            const duration = player.getDuration();
-            if (duration >= __config.minSwapTitleVideoDuration || __config.minSwapTitleVideoDuration === 3600) {
-                updateMediaMetadataTitle(chapterElement.textContent);
-            }
-        }
-    }
 };
 
 const handleNextTrackCommand = (player) => {
@@ -361,13 +335,6 @@ navigator.mediaSession.setActionHandler = (action, handler) => {
 
     originalSetActionHandler.call(this, action, handler);
 };
-
-// --- Initialization ---
-
-Object.defineProperty(navigator.mediaSession, "metadata", {
-    configurable: true,
-    set: setMetaDataTitleHandler
-});
 
 document.addEventListener('bettermediakeys-config', onConfigUpdate, false);
 document.addEventListener('yt-navigate-finish', onPlayerNavigate, true);
