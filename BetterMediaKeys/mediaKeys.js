@@ -74,7 +74,7 @@ const setMetaDataTitleHandler = (metadata) => {
     }
 
     delete navigator.mediaSession.metadata;
-    navigator.mediaSession.metadata = metadata;
+    navigator.mediaSession.metadata = new MediaMetadata(metadata);
     Object.defineProperty(navigator.mediaSession, "metadata", {
         configurable: true,
         set: setMetaDataTitleHandler
