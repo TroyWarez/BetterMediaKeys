@@ -28,8 +28,9 @@ const getChapterTitleElement = () => document.getElementsByClassName('ytp-chapte
 const updateMediaMetadataTitle = (title) => {
 
     delete navigator.mediaSession.metadata;
-    navigator.mediaSession.metadata = new MediaMetadata(navigator.mediaSession.metadata);
-    navigator.mediaSession.metadata.title = title;
+    const newMetadata = new MediaMetadata(navigator.mediaSession.metadata);
+    newMetadata.title = title;
+    navigator.mediaSession.metadata = newMetadata;
     Object.defineProperty(navigator.mediaSession, "metadata", {
         configurable: true,
         set: setMetaDataTitleHandler
