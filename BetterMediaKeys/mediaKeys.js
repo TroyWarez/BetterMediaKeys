@@ -26,12 +26,10 @@ const getShortsPlayer = () => document.getElementById('shorts-player');
 const getChapterTitleElement = () => document.getElementsByClassName('ytp-chapter-title-content')[0];
 
 const updateMediaMetadataTitle = (title) => {
-    
-    // We delete and redefine to bypass the custom setter logic when we want a direct update
+
     delete navigator.mediaSession.metadata;
-    if (navigator.mediaSession.metadata === null) return; // If it's null, it means the setter was called and we should not proceed to avoid loops
+
     navigator.mediaSession.metadata.title = title;
-    
     navigator.mediaSession.metadata = new MediaMetadata(navigator.mediaSession.metadata);
     Object.defineProperty(navigator.mediaSession, "metadata", {
         configurable: true,
