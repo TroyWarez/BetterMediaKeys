@@ -224,6 +224,12 @@ const onPlayerNavigate = (event) => {
             if (videoDetails?.title) {
                 __mediaMetadataTitle = videoDetails.title;
             }
+
+            delete navigator.mediaSession.metadata;
+            Object.defineProperty(navigator.mediaSession, "metadata", {
+                configurable: true,
+                set: setMetaDataTitleHandler
+            });
             break;
 
         case 'DOMContentLoaded':
@@ -246,7 +252,7 @@ const onPlayerNavigate = (event) => {
 
 const originalSetActionHandler = navigator.mediaSession.setActionHandler;
 
-navigator.mediaSession.setActionHandler = (action, handler) => {
+navigator.mediaSession.setActionHandler = function(action, handler) {
     const urlParams = new URLSearchParams(window.location.search);
 
     if (handler === null) {
