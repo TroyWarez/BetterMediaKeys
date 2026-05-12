@@ -182,6 +182,18 @@ const __BMKHandler = {
             this.updateMediaMetadataTitle(this.__mediaMetadataTitle);
         }
 
+        // Handle Playlists
+        if (urlParams.has('list')) {
+            if (config.IgnorePlaylists) {
+                if (this.__actionHandlerPrevious) {
+                    navigator.mediaSession.setActionHandler('previoustrack', this.__actionHandlerPrevious);
+                }
+            }
+        } else if (this.__actionHandlerPrevious) {
+            navigator.mediaSession.setActionHandler('previoustrack', () => {
+                const player = this.getMoviePlayer();
+            });
+        }
         localStorage.setItem('BetterMediakeysSettings', JSON.stringify(config));
         this.__config = config;
     },
@@ -269,7 +281,10 @@ const __BMKHandler = {
                             self.ytChapterData = self.extractChapters(player.getWatchNextResponse());
                         }
 
-                        if (!self.isShorts && player?.seekToChapterWithAnimation && chapterElement?.textContent) {
+                        if (self.__config.IgnoreChapters) {
+                            self.handleNextTrackCommand(player);
+                        }
+                        else if (!self.isShorts && player?.seekToChapterWithAnimation && chapterElement?.textContent) {
                             const idx = self.ytChapterData?.chapters?.findIndex(c => c.chapterRenderer.title.simpleText === chapterElement.textContent);
                             if (idx !== -1 && (idx + 1) < self.ytChapterData.chapters.length) {
                                 player.seekToChapterWithAnimation(idx + 1);
@@ -308,8 +323,12 @@ const __BMKHandler = {
                         if (player?.getWatchNextResponse && self.ytChapterData === null) {
                             self.ytChapterData = self.extractChapters(player.getWatchNextResponse());
                         }
+                        
 
-                        if (!self.isShorts && player?.seekToChapterWithAnimation && chapterElement?.textContent) {
+                        if (self.__config.IgnoreChapters) {
+                            self.handlePreviousTrackCommand(player);
+                        }
+                        else if (!self.isShorts && player?.seekToChapterWithAnimation && chapterElement?.textContent) {
                             const idx = self.ytChapterData?.chapters?.findIndex(c => c.chapterRenderer.title.simpleText === chapterElement.textContent);
                             if (idx !== -1) {
                                 const startTime = (self.ytChapterData.chapters[idx].chapterRenderer.timeRangeStartMillis + 5000) / 1000;
@@ -349,9 +368,6 @@ const __BMKHandler = {
                                 self.__lastClickPrevious = Date.now() + 1000;
                             }
                         } 
-                        else if (player?.getCurrentTime() > 3) {
-                            self.handlePreviousTrackCommand(player);
-                        }
                     });
                     return;
                 }
