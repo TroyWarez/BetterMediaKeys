@@ -103,6 +103,9 @@ select:focus {
 .RangeInput:hover:disabled {
     cursor: not-allowed;
 }
+.RangeInput:hover {
+    cursor: pointer;
+}
 .RangeInput:active:disabled {
     cursor: not-allowed;
 }
