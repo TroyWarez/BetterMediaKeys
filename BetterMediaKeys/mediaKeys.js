@@ -4,6 +4,7 @@ const __BMKHandler = {
     isShorts: false,
     __mediaMetadataTitle: '',
     __actionHandlerPrevious: null,
+    __actionHandlerNext: null,
     __lastClickNext: 0,
     __lastClickPrevious: 0,
 
@@ -180,19 +181,6 @@ const __BMKHandler = {
             }
         } else if (this.__mediaMetadataTitle !== '') {
             this.updateMediaMetadataTitle(this.__mediaMetadataTitle);
-        }
-
-        // Handle Playlists
-        if (urlParams.has('list')) {
-            if (config.IgnorePlaylists) {
-                if (this.__actionHandlerPrevious) {
-                    navigator.mediaSession.setActionHandler('previoustrack', this.__actionHandlerPrevious);
-                }
-            }
-        } else if (this.__actionHandlerPrevious) {
-            navigator.mediaSession.setActionHandler('previoustrack', () => {
-                const player = this.getMoviePlayer();
-            });
         }
         localStorage.setItem('BetterMediakeysSettings', JSON.stringify(config));
         this.__config = config;
@@ -375,11 +363,35 @@ const __BMKHandler = {
             else if (urlParams.has('list') && action === 'previoustrack' && !self.isShorts) {
                 self.__actionHandlerPrevious = handler;
                 self.originalSetActionHandler.call(this, 'previoustrack', () => {
+
+                    if (self.__config.IgnorePlaylists)
+                     {
+                        self.handlePreviousTrackCommand(self.getMoviePlayer());
+                     }
+                     else
+                     {
                     const player = self.getMoviePlayer();
                     self.__actionHandlerPrevious.call(this, 'previoustrack', {});
                     if (player?.getCurrentTime() > 3) {
                         player.seekTo(0);
                     }
+                    }
+                });
+                return;
+            }
+            else if (urlParams.has('list') && action === 'nexttrack' && !self.isShorts) {
+                self.__actionHandlerNext = handler;
+                self.originalSetActionHandler.call(this, 'nexttrack', function() {
+
+                    if (self.__config.IgnorePlaylists)
+                     {
+                        self.handleNextTrackCommand(self.getMoviePlayer());
+                     }
+                     else
+                     {
+                        self.__actionHandlerNext();
+                     }
+
                 });
                 return;
             }
