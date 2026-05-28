@@ -29,11 +29,18 @@ const __BMKHandler = {
     getChapterTitleElement: () => document.getElementsByClassName('ytp-chapter-title-content')[0],
 
     updateMediaMetadataTitle(title) {
+
+        const newMetadata = new MediaMetadata();
         delete navigator.mediaSession.metadata;
-        const newMetadata = new MediaMetadata(navigator.mediaSession.metadata);
         newMetadata.title = title;
-        navigator.mediaSession.metadata = newMetadata;
+        newMetadata.album = navigator.mediaSession.metadata?.album || '';
+        newMetadata.artist = navigator.mediaSession.metadata?.artist || '';
+        newMetadata.artwork = navigator.mediaSession.metadata?.artwork || [];
+
+   
+        navigator.mediaSession.metadata = new MediaMetadata();
         
+        navigator.mediaSession.metadata = newMetadata;
         Object.defineProperty(navigator.mediaSession, "metadata", {
             configurable: true,
             set: (metadata) => this.setMetaDataTitleHandler(metadata)
