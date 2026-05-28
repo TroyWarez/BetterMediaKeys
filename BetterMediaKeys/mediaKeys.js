@@ -319,7 +319,7 @@ const __BMKHandler = {
                             self.ytChapterData = self.extractChapters(player.getWatchNextResponse());
                         }
 
-                        if (self.__config.IgnoreChapters) {
+                        if (self.__config.IgnoreChapters && !self.isShorts) {
                             self.handleNextTrackCommand(player);
                         }
                         else if (!self.isShorts && player?.seekToChapterWithAnimation && chapterElement?.textContent) {
@@ -363,7 +363,7 @@ const __BMKHandler = {
                         }
                         
 
-                        if (self.__config.IgnoreChapters) {
+                        if (self.__config.IgnoreChapters && !self.isShorts) {
                             self.handlePreviousTrackCommand(player);
                         }
                         else if (!self.isShorts && player?.seekToChapterWithAnimation && chapterElement?.textContent) {
