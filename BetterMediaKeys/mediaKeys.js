@@ -2,6 +2,7 @@ const __BMKHandler = {
     // --- Global State ---
     ytChapterData: null,
     isShorts: false,
+    isEmbedded: window.location.pathname.includes('/embed/'),
     __mediaMetadataTitle: '',
     __actionHandlerPrevious: null,
     __actionHandlerNext: null,
@@ -108,7 +109,14 @@ const __BMKHandler = {
         
         switch (this.__config.nextTrackCmd) {
             case 'GO_FORWARD_10_SECONDS_VIDEO_ANIMATED':
+                if (!this.isEmbedded)
+                {
                 player.handleGlobalKeyDown?.(76, false, false); // 'L'
+                }
+                else
+                {
+                    player.seekBy?.(10);
+                }
                 break;
             case 'GO_FORWARD_5_SECONDS_VIDEO':
                 player.seekBy?.(5);
@@ -119,11 +127,25 @@ const __BMKHandler = {
             case 'NOTHING':
                 break;
             case 'NEXT_VIDEO':
-                player.nextVideo?.();
+                if (!this.isEmbedded)
+                {
+                    player.nextVideo?.();
+                }
+                else
+                {
+                    player.seekBy?.(10);
+                }
                 break;
             case 'GO_FORWARD_5_SECONDS_VIDEO_ANIMATED':
             default:
+                if (!this.isEmbedded)
+                {
                 player.handleGlobalKeyDown?.(39, false, false); // Right Arrow
+                }
+                else
+                {
+                    player.seekBy?.(5);
+                }
                 break;
         }
     },
@@ -137,10 +159,24 @@ const __BMKHandler = {
                 player.wakeUpControls?.();
                 break;
             case 'GO_BACK_5_SECONDS_VIDEO_ANIMATED':
+                if (!this.isEmbedded)
+                {
                 player.handleGlobalKeyDown?.(37, false, false); // Left Arrow
+                }
+                else
+                {
+                    player.seekBy?.(-10);
+                }
                 break;
             case 'GO_BACK_10_SECONDS_VIDEO_ANIMATED':
+                if (!this.isEmbedded)
+                {
                 player.handleGlobalKeyDown?.(74, false, false); // 'J'
+                }
+                else
+                {
+                    player.seekBy?.(-10);
+                }
                 break;
             case 'GO_BACK_5_SECONDS_VIDEO':
                 player.seekBy?.(-5);
@@ -151,7 +187,14 @@ const __BMKHandler = {
             case 'NOTHING':
                 break;
             case 'PREVIOUS_PAGE':
+                if (!this.isEmbedded)
+                {
                 history.back();
+                }
+                else
+                {
+                    player.seekBy?.(-10);
+                }
                 break;
             case 'RESTART_VIDEO':
             default:
@@ -362,7 +405,10 @@ const __BMKHandler = {
                                 prevBtn.click();
                                 self.__lastClickPrevious = Date.now() + 1000;
                             }
-                        } 
+                        }
+                        else {
+                            self.handlePreviousTrackCommand(player);
+                        }
                     });
                     return;
                 }
