@@ -30,16 +30,10 @@ const __BMKHandler = {
     getChapterTitleElement: () => document.getElementsByClassName('ytp-chapter-title-content')[0],
 
     updateMediaMetadataTitle(title) {
-
-        const newMetadata = new MediaMetadata();
         delete navigator.mediaSession.metadata;
-        newMetadata.title = title;
-        newMetadata.album = navigator.mediaSession.metadata?.album || '';
-        newMetadata.artist = navigator.mediaSession.metadata?.artist || '';
-        newMetadata.artwork = navigator.mediaSession.metadata?.artwork || [];
 
-   
-        navigator.mediaSession.metadata = new MediaMetadata();
+        navigator.mediaSession.metadata.title = title;
+        navigator.mediaSession.metadata = new MediaMetadata(navigator.mediaSession.metadata);
         
         navigator.mediaSession.metadata = newMetadata;
         Object.defineProperty(navigator.mediaSession, "metadata", {
@@ -256,6 +250,12 @@ const __BMKHandler = {
                 break;
 
             case 'yt-navigate-finish':
+                        // Set up MutationObserver for chapter changes
+        const chapterElement = this.getChapterTitleElement();
+        if (chapterElement) {
+            this.syncChapterTitle();
+            new MutationObserver(() => this.syncChapterTitle()).observe(chapterElement, { attributes: true, childList: true, subtree: true });
+        }
                 // Update Shorts status
                 this.isShorts = event.detail?.pageType === 'shorts';
 
@@ -290,13 +290,6 @@ const __BMKHandler = {
                     if (chapters) this.ytChapterData = chapters;
                 }
                 break;
-        }
-
-        // Set up MutationObserver for chapter changes
-        const chapterElement = this.getChapterTitleElement();
-        if (chapterElement) {
-            this.syncChapterTitle();
-            new MutationObserver(() => this.syncChapterTitle()).observe(chapterElement, { childList: true, subtree: true });
         }
     },
 
